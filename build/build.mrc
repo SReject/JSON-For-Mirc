@@ -1,6 +1,10 @@
 alias -l jsEsc return $replace($1-, \, \\, ", \")
 
 alias JSONForMircBuild {
+  if ($lock(com)) { 
+    $bEcho(Error, Unable to continue due an COM lock into the mIRC Options).error
+    return
+  }
   var %close = $false, %dir   = $gettok($scriptdir, 1--2, $asc(\)) $+ \, %src   = %dir $+ src\, %out   = %dir $+ builds\, %error, %bvar  = 1, %com   = JSONForMircBuild, %com2  = JSONForMircBuildResult
   $bEcho(Init, Setting build resource location to: $scriptdir).info
   $bEcho(Init, Setting source directory to: %src).info
