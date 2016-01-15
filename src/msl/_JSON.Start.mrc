@@ -1,4 +1,8 @@
 alias -l _JSON.Start {
+  if ($lock(com)) {
+    set -u %_JSONForMirc:Error Unable to continue due an COM lock into mIRC Options
+    return $false
+  }
   var %Error, %com1 = $_JSON.Com(Wrapper), %com2 = $_JSON.Com(JSEngine)
   if ($com(%com1) && $com(%com2)) {
     return $true
