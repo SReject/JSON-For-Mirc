@@ -1,5 +1,5 @@
-/*jslint windows: true, sloppy: true */
-/*globals Handle: true, Http: false, trim: false, formatResult: false*/
+/*jslint windows:true, sloppy:true */
+/*globals Handle:true, trim:false, formatResult: false, Http:false*/
 Handle = (function () {
 
     // Handle constructor to be returned later
@@ -63,134 +63,109 @@ Handle = (function () {
 
         // return handle status: "FATAL_ERROR", "HTTP_PENDING", or "PARSED"
         status: function () {
-            return formatResult(this.status);
+            return this.status;
+        },
+
+        // returns the stringified value of parsed json
+        toString: function () {
+            if (this.status !== "PARSED") {
+                throw new Error("JSON_NOT_PARSED");
+            }
+            try {
+                return JSON.stringify(this.json);
+            } catch (e) {
+                throw new Error("STRINGIFY_FAILED");
+            }
         },
 
         // sets a pending HTTP Requests' method
         httpSetMethod: function (method) {
             if (!this.http) {
-                return formatResult(null, "HTTP_NOT_REQUEST");
+                throw new Error("HTTP_NOT_IN_USE");
             }
-            try {
-                this.http.setRequestMethod(method);
-                return formatResult();
-            } catch (e) {
-                return formatResult(null, e.message);
-            }
+            this.http.setRequestMethod(method);
+            return true;
         },
 
         // Stores the specified header for a pending HTTP Request
         httpSetHeader: function (name, value) {
             if (!this.http) {
-                return formatResult(null, "HTTP_NOT_REQUEST");
+                throw new Error("HTTP_NOT_IN_USE");
             }
-            try {
-                this.http.setRequestHeader(name, value);
-                return formatResult();
-            } catch (e) {
-                return formatResult(null, e.message);
-            }
+            this.http.setRequestHeader(name, value);
+            return true;
         },
 
         // Performs a pending HTTP Request and attempts to parse the response
         httpFetch: function (data) {
             if (!this.http) {
-                return formatResult(null, "HTTP_NOT_REQUEST");
+                throw new Error("HTTP_NOT_IN_USE");
             }
             try {
                 this.http.fetch(data);
                 this.json = JSON.parse(this.http.responseBody());
                 this.state = "PARSED";
-                return formatResult();
+                return true;
             } catch (e) {
                 this.state = "FATAL_ERROR";
-                return formatResult(null, e.message);
+                throw e;
             }
         },
 
         // Returns the full response(status + statusText + headers + body)
         httpResponse: function () {
             if (!this.http) {
-                return formatResult(null, "HTTP_NOT_REQUEST");
+                throw new Error("HTTP_NOT_IN_USE");
             }
-            try {
-                return formatResult(this.http.getResponse());
-            } catch (e) {
-                return formatResult(null, e.message);
-            }
+            return this.http.getResponse();
         },
 
         // returns the response head(status + statustext + headers)
         httpHead: function () {
             if (!this.http) {
-                return formatResult(null, "HTTP_NOT_REQUEST");
+                throw new Error("HTTP_NOT_IN_USE");
             }
-            try {
-                return formatResult(this.http.getResponseHead());
-            } catch (e) {
-                return formatResult(null, e.message);
-            }
-
+            return this.http.getResponseHead();
         },
 
         // returns the response status code
         httpStatus: function () {
             if (!this.http) {
-                return formatResult(null, "HTTP_NOT_REQUEST");
+                throw new Error("HTTP_NOT_IN_USE");
             }
-            try {
-                return formatResult(this.http.getResponseStatus());
-            } catch (e) {
-                return formatResult(null, e.message);
-            }
+            return this.http.getResponseStatus();
         },
 
         // returns the response status text
         httpStatusText: function () {
             if (!this.http) {
-                return formatResult(null, "HTTP_NOT_REQUEST");
+                throw new Error("HTTP_NOT_IN_USE");
             }
-            try {
-                return formatResult(this.http.getResponseStatusText());
-            } catch (e) {
-                return formatResult(null, e.message);
-            }
+            return this.http.getResponseStatusText();
         },
 
         // returns a list of response headers
         httpHeaders: function () {
             if (!this.http) {
-                return formatResult(null, "HTTP_NOT_REQUEST");
+                throw new Error("HTTP_NOT_IN_USE");
             }
-            try {
-                return formatResult(this.http.getResponseHeaders());
-            } catch (e) {
-                return formatResult(null, e.message);
-            }
+            return this.http.getResponseHeaders();
         },
 
         // returns the value of the specified response header
         httpHeader: function (name) {
             if (!this.http) {
-                return formatResult(null, "HTTP_NOT_REQUEST");
+                throw new Error("HTTP_NOT_IN_USE");
             }
-            try {
-                return formatResult(this.http.getResponseHeader(name));
-            } catch (e) {
-                return formatResult(null, e.message);
-            }
+            return this.http.getResponseHeader(name);
         },
 
         // returns the response body as text
         httpBody: function () {
             if (!this.http) {
-                return formatResult(null, "HTTP_NOT_REQUEST");
+                throw new Error("HTTP_NOT_IN_USE");
             }
-            try {
-                return formatResult(this.http.getResponseBody());
-            } catch (e) {
-                return formatResult(null, e.message);
-            }
+            return this.http.getResponseBody();
         }
     };
 
