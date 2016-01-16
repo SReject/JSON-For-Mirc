@@ -1,5 +1,5 @@
-/*jslint windows: true, sloppy: true*/
-/*globals Http: true, trim: false*/
+/*jslint sloppy:true, windows:true*/
+/*globals trim:false, Http:true*/
 
 // create an Http variable in the global scope
 Http = (function (httpObjs) {
@@ -182,4 +182,6 @@ Http = (function (httpObjs) {
 
     // return the constructor
     return Http;
-}([]));
+
+// Supply a list of acceptable HTTP Request objects
+}(['MSXML2.SERVERXMLHTTP.6.0', 'MSXML2.SERVERXMLHTTP.3.0', 'MSXML2.SERVERXMLHTTP', 'MSXML2.XMLHTTP.6.0', 'MSXML2.XMLHTTP.3.0', 'Microsoft.XMLHTTP']));

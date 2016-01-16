@@ -1,7 +1,7 @@
-/*jslint windows:true, sloppy:true, evil:true, regexp:true, forin:true*/
-/*globals hasProp:false, GLOBAL:true*/
+/*jslint sloppy:true, windows:true, evil:true, regexp:true, forin:true*/
+/*globals ROOT:false, hasProp:false*/
 (function () {
-    if (typeof JSON === 'object') {
+    if (typeof ROOT.JSON === 'object') {
         return;
     }
     function f(n) {
@@ -50,7 +50,7 @@
         }
         return '{' + r.join(',') + '}';
     };
-    GLOBAL.JSON = {
+    ROOT.JSON = {
         stringify: function (v) {
             if (v) {
                 return v.toJSON();

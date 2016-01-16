@@ -1,10 +1,10 @@
 {
     "js": [
-        "globals.js",
-        "utilities.js",
+        "Head.js",
         "JSON.js",
         "Http.js",
-        "Handle.js"
+        "Handle.js",
+        "HandleManagement.js"
     ],
     "msl": []
 }

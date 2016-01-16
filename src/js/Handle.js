@@ -1,5 +1,5 @@
-/*jslint windows:true, sloppy:true */
-/*globals Handle:true, trim:false, formatResult: false, Http:false*/
+/*jslint sloppy:true, windows:true */
+/*globals trim:false, Http:false, Handle:true*/
 Handle = (function () {
 
     // Handle constructor to be returned later
