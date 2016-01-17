@@ -1,125 +1,133 @@
 alias -l jsEsc return $replace($1-, \, \\, ", \")
 
+alias -l bError {
+  if ($1) {
+    if ($com(JSONForMircError)) .comclose $v1
+    if ($com(JSONForMircBuild)) .comclose $v1
+  }
+  echo -a 04[ERROR] $2-
+  halt
+}
+alias -l bEcho {
+  var %c = 12
+  if ($1 == -w) {
+    %c = 07
+  }
+  if ($1 == -s) {
+    %c = 03
+  }
+  if ($1 == -d) {
+    %c = 13
+  }
+  echo -a $+(,%c,[,$2,]) $3-
+}
+
+
 alias JSONForMircBuild {
-  var %close = $false, %dir   = $gettok($scriptdir, 1--2, $asc(\)) $+ \, %src   = %dir $+ src\, %out   = %dir $+ builds\, %error, %bvar  = 1, %com   = JSONForMircBuild, %com2  = JSONForMircBuildResult
-  $bEcho(Init, Setting build resource location to: $scriptdir).info
-  $bEcho(Init, Setting source directory to: %src).info
-  $bEcho(Init, Setting output directory to: %out).info
+  if ($lock(com)) {
+    bError 0 COM interface locked via mIRC options
+  }
+
+  var %close, %dir, %src, %out, %error, %bvar, %com, %com2
+
+  %close = $false
+  %dir = $gettok($scriptdir, 1--2, $asc(\)) $+ \
+  %src = %dir $+ src\
+  %out = %dir $+ builds\
+  %error
+  %bvar = 1
+  %com = JSONForMircBuild
+  %com2  = JSONForMircBuildError
+
+  bEcho -i INIT Set build resource location to: $scriptdir
+  bEcho -i INIT Set source directory to: %src
+  bEcho -i INIT Set output directory to: %out
+
   while ($bvar(& $+ buildjs $+ %bvar, 0)) inc %bvar
   %bvar = &buildjs $+ %bvar
-  $bEcho(Init, Setting build.js bvar to %bvar).info
-  $bEcho(Init, Looking for build.js)
+  bEcho -i INIT Set build.js bvar to: %bvar
+
+
+  bEcho -i INIT Looking for build.js in $scriptdir
   if (!$isfile($scriptdirbuild.js)) {
-    %Error = build.js not found
+    bError 0 build.js not found in $scriptdir
   }
-  else {
-    $bEcho(init, build.js located).ok
-    $bEcho(init, Looking for build.json)
-    if (!$isfile($scriptdirbuild.json)) {
-      %Error = build.json not found
-    }
-    else {
-      $bEcho(Init, build.json located).ok
-      $bEcho(Setup, Reading contents of build.js).info
-      %Error = Unable to read the contents of build.js
-      bread $qt($scriptdirbuild.js) 0 $file($scriptdirbuild.js).size %bvar
-      %Error = $null
-      if (!$bvar(%bvar, 0)) {
-        %Error = No data read from build.js
-      }
-      else {
-        $bEcho(Setup, Successfully read the contents of build.js).ok
-        $bEcho(Setup, Supplying parameters to build.js).info
-        if ($bfind(%bvar, 1, __PARAMETERS__) < 1) {
-          %Error = Unable to locate parameter placement in build.js
-        }
-        else {
-          bcopy -c %bvar 1 %bvar 1 $calc($v1 - 1)
-          bset -t %bvar $calc($bvar(%bvar, 0) +1) $qt($jsEsc($scriptdirbuild.json)) , $qt($jsEsc(%src)) , $qt($jsEsc(%out)) ));
-          %close = $true
-          if ($com(%com)) .comclose $v1
-          if ($com(%com2)) .comclose $v1
-          $bEcho(Start, Creating MSScriptControl.ScriptControl instance).info
-          .comopen %com MSScriptControl.ScriptControl
-          if (!$com(%com) || $comerr) {
-            %Error = Unable to create MSScriptControl.ScriptControl instance
-          }
-          else {
-            $bEcho(Start, MSScriptControl.ScriptControl instance created).ok
+  bEcho -s INIT build.js located
 
-            $bEcho(Start, Setting language to JScript).info
-            if (!$com(%com, language, 4, bstr, jscript) || $comerr) {
-              %Error = Unable to set language
-            }
-            else {
-              $bEcho(Start, Language set to JScript).ok
-              $bEcho(Start, Running build.js)
-              if (!$com(%com, ExecuteStatement, 1, &bstr, %bvar) || $comerr) {
-                %Error = Unable to run build.js
-              }
-              else {
-                $bEcho(Finalizing, Retrieving reference to result variable).info
 
-                if (!$com(%com, Eval, 3, bstr, result, dispatch* %com2) || $comerr) {
-                  %Error = Unable to access build result variable
-                }
-                elseif (!$com(%com2)) {
-                  %Error = Reference to result variable not created
-                }
-                else {
-                  $bEcho(Finalizing, Reference to result variable created).ok
-                  $bEcho(Finalizing, Retrieving error status from result variable).info
-                  if (!$com(%com2, error, 2) || $comerr) {
-                    %Error = Unable to retrieve error status
-                  }
-                  elseif ($com(%com2).result) {
-                    %Error = $v1
-                  }
-                  else {
-                    $bEcho(Finalizing, Retrieving result response from result variable).info
-                    if (!$com(%com2, result, 2) || $comerr) {
-                      %Error = Unable to retrieve result response from result variable
-                    }
-                    elseif ($com(%com2).result) {
-                      $bEcho(DONE, Build Successful: $v1).done
-                    }
-                    else {
-                      $bEcho(DONE, Build Successful).done
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+  bEcho -i INIT looking for build.json in $scriptdir
+  if (!$isfile($scriptdirbuild.json)) {
+    bError 0 build.json not found in $scriptdir
   }
+  bEcho -s INIT build.json found
+
+
+  bEcho -i SETUP Reading contents of build.js
+  %Error = Unable to read the contents of build.js
+  bread $qt($scriptdirbuild.js) 0 $file($scriptdirbuild.js).size %bvar
+  if (!$bvar(%bvar, 0)) {
+    bError 0 No data read from build.js
+  }
+  %Error = $null
+  bEcho -s SETUP Successfully read the contents of build.js
+
+
+  bEcho -i SETUP Supplying parameters to build.js
+  if ($bfind(%bvar, 1, __PARAMETERS__) < 1) {
+    bError 0 Unable to locate parameter placement in build.js
+  }
+  %Error = Unable to supply parameters to build.js
+  bcopy -c %bvar 1 %bvar 1 $calc($v1 - 1)
+  bset -t %bvar $calc($bvar(%bvar, 0) +1) $qt($jsEsc($scriptdirbuild.json)) , $qt($jsEsc(%src)) , $qt($jsEsc(%out)) ));
+  %Error = $null
+  bEcho -s SETUP Successfully supplied parameters to build.js
+
+
+  %close = $true
+  if ($com(%com)) .comclose $v1
+  if ($com(%com2)) .comclose $v1
+
+
+  bEcho -i START Creating MSScriptControl.ScriptControl instance
+  .comopen %com MSScriptControl.ScriptControl
+  if (!$com(%com) || $comerr) {
+    bError 1 Unable to create MSScriptControl.ScriptControl instance
+  }
+  bEcho -s START MSScriptControl.ScriptControl instance created
+
+
+  bEcho -i START Setting language to JScript
+  if (!$com(%com, language, 4, bstr, jscript) || $comerr) {
+    bError 1 Unable to set language
+  }
+  bEcho -s START Language set
+
+
+  bEcho -i BUILD Running build.js
+  if (!$com(%com, Eval, 1, &bstr, %bvar) || $comerr) {
+    if ($com(%com, Error, 2, dispatch* %com2) && !$comerr && $com(%com2) && $com(%com2, Description, 2) && !$comerr && $com(%com2).result) {
+      bError 1 build.js ended in error: $v1
+    }
+    bError 1 build.js ended in error (unknown reason)
+  }
+  bEcho -s BUILD build.js ran
+
+
+  bEcho -i BUILD Retrieving build.js result
+  if ($com(%com).result !== ok) {
+    bError 1 $v1
+  }
+  bEcho -s DONE Build successful
+
+
   :error
   %Error = $iif($error && !%Error, $error, %Error)
   reseterror
   if (%close) {
-    if ($com(%com)) .comclose $v1
     if ($com(%com2)) .comclose $v1
+    if ($com(%com)) .comclose $v1
   }
   if (%Error) {
-    $bEcho(Error, %Error).error
+    bError $iif(%close, 1, 0) %Error
   }
-}
-
-alias -l bEcho {
-  var %c = 12
-  if ($prop == error) {
-    %c = 04
-  }
-  if ($prop == warn) {
-    %c = 07
-  }
-  if ($prop == ok) {
-    %c = 03
-  }
-  if ($prop == done) {
-    %c = 13
-  }
-  echo -a $+(,%c,[JSONForMirc Build: $1,,%c,]) $2-
 }
