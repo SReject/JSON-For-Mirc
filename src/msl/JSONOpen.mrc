@@ -17,7 +17,7 @@
 alias JSONOpen {
   if ($isid) return
 
-  var %Error, %Switches, %BVar, %UnsetBVar
+  var %Error, %Switches, %Name, %Type, %Source, %Unset, %ErrorCom
   if (!$_JSON.Start) {
     %Error =  $JSONError
   }
@@ -76,41 +76,62 @@ alias JSONOpen {
 
     ;; Checks passed, attempt to create handle
     else {
+      %Name = $1
+      %Source = $_JSON.TmpBVar
+      %Type = text
+      %Wait = $false
+      %Unset = $true
 
-      ;; HTTP request handle
+      ;; Variable setup
       if (u isincs %Switches) {
-        if (!$_JSON.Create($1, $2).url [ $+ [ $iif(w isin %Switches, wait) ] ]) {
-          %Error = %_JSONForMirc:Error
-        }
+        bset -t %Source 1 $2
+        %Type = url
+        %Wait = $iif(w isin %Switches, $true)
       }
-
-      ;; local handle
+      elseif (b isincs %Switches) {
+        %Source = $2
+        %Unset = $false
+      }
+      elseif (f isincs %Switches) {
+        bread $qt($file($2-)) 0 $file($2-).size %Source
+      }
       else {
-
-        ;; store input in a bvar if need be
-        if (b isincs %Switches) {
-          %BVar = $2
+        bset -t %source 1 $2-
+      }
+      
+      %ErrorCom = $_JSON.Com(Error)
+      
+      ;; Call the JS function to create a handle:
+      ;;   Handle.create(name, source, type, wait)
+      if (!$com($_JSON.Com(Handle), create, 1, bstr, %Name, &bstr, %Source, bstr, %Type, bool, %Wait) || $comerr) {
+      
+        ;; Attempt to retrieve the error message
+        if (!$com($_JSON.Com(Wrapper), Error, 2, dispatch* %ErrorCom) || $comerr || !$com(%ErrorCom)) {
+          %Error = Unable to create Handle (Unable to retrieve reason)
         }
         else {
-          %BVar = $_JSON.TmpBVar
-          %UnsetBVar = $true
-          if (f isincs %switches) {
-            bread $qt($file($2-)) 0 $file($2-).size %BVar
+          ;; Get the error message
+          if (!$com(%ErrorCom, Description, 2) || $comerr) {
+            %Error = Unable to create Handle (Unable to retrieve reason)
+          }
+          elseif ($com(%ErrorCom).result) {
+            %Error = $v1
           }
           else {
-            bset -t %BVar 1 $2-
+            %Error = Unable to create handle (Unable to retrieve reason)
           }
-        }
 
-        ;; attempt to create the handle
-        if (!$_JSON.Create($1, %BVar)) {
-          %Error = %_JSONForMirc:Error
+          ;; Clear the error
+          noop $com(%ErrorCom, Clear, 1)
         }
+        
+        ;; Close the Error com
+        if ($com(%ErrorCom)) .comclose $v1
       }
 
       ;; If handle creation succeeded, and the d switch is specified, start a timer to close the handle
-      if (!%Error && d isincs %Switches) {
-        $+(.timerJSONForMircClose:, $1) 1 0 JSONClose $1
+      if ((!%Error || %Error !== "NAME_IN_USE") && d isincs %Switches) {
+        $+(.timerJSONForMirc:Close, $1) 1 0 JSONClose $1
       }
     }
   }
@@ -118,7 +139,7 @@ alias JSONOpen {
   ;; Error handling
   :error
   %Error = $iif($error, $v1, %Error)
-  if (%UnsetBVar) bunset %BVar
+  if (%Unset) bunset %Source
   if (%Error) {
     set -u %JSONForMirc:Error $v1
     reseterror

@@ -20,18 +20,12 @@ alias JSONHttpMethod {
   elseif ($0 !== 2) {
     %Error = Invalid parameters
   }
-  elseif (!$regex($1, /^[a-z][a-z\d_.:\-]+$/i)) {
-    %Error = Invalid handler name: Must start with a letter and contain only letters numbers _ . : and -
-  }
-  elseif (!$_JSON.Exists($1)) {
-    %Error = Handle does not exist  
-  }
   elseif (!$istok(GET POST PUT DEL, $2, 32)) {
     %Error = Invalid method
   }
   
   ;; Attempt to set the header
-  elseif (!$_JSON.Set($1, HttpMethod, $upper($2)) {
+  elseif (!$_JSON.HandleCall($1, httpSetMethod, bstr, $upper($2)) {
     %Error = $JSONError
   }
 
@@ -67,12 +61,6 @@ alias JSONHttpHeader {
   elseif ($0 < 3) {
     %Error = Invalid parameters
   }
-  elseif (!$regex($1, /^[a-z][a-z\d_.:\-]+$/i)) {
-    %Error = Invalid handler name: Must start with a letter and contain only letters numbers _ . : and -
-  }
-  elseif (!$_JSON.Exists($1)) {
-    %Error = Handle does not exist  
-  }
   else {
   
     ; Trim excessive whitespace and any trailing ":"
@@ -82,7 +70,7 @@ alias JSONHttpHeader {
     }
     
     ; Attempt to set the header
-    elseif (!$_JSON.Set($1, HttpHeader, %Header, $3-)) {
+    elseif (!$_JSON.HandleCall($1, httpSetHeader, bstr, %Header, bstr, $3-)) {
       %Error = $JSONError
     }
   }
@@ -140,11 +128,8 @@ alias JSONHttpFetch {
     elseif (%Switches && $0 < 2) {
       %Error = Missing parameters
     }
-
-    ;; Validate name parameter
-    elseif (!$regex($1, /^[a-z][a-z\d_.:\-]+$/i)) {
-      %Error = Invalid handler name: Must start with a letter and contain only letters numbers _ . : and -
-    }
+    
+    ;; Validate parameters
     elseif (b isincs %Switches && $0 !== 2) {
       %Error = Invalid bvar: Cannot contain spaces
     }
@@ -182,8 +167,8 @@ alias JSONHttpFetch {
         }
       }
       
-      ;; attempt to fetch
-      if (!$_JSON.Call($1, httpFetch, &bstr, %BVar)) {
+      ;; Attempt to fetch
+      if (!$_JSON.HandleCall($1, httpFetch, &bstr, %BVar)) {
         %Error = $JSONError
       }
     }
