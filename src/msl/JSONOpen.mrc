@@ -98,39 +98,15 @@ alias JSONOpen {
       else {
         bset -t %source 1 $2-
       }
-      
-      %ErrorCom = $_JSON.Com(Error)
-      
+
       ;; Call the JS function to create a handle:
       ;;   Handle.create(name, source, type, wait)
-      if (!$com($_JSON.Com(Handle), create, 1, bstr, %Name, &bstr, %Source, bstr, %Type, bool, %Wait) || $comerr) {
-      
-        ;; Attempt to retrieve the error message
-        if (!$com($_JSON.Com(Wrapper), Error, 2, dispatch* %ErrorCom) || $comerr || !$com(%ErrorCom)) {
-          %Error = Unable to create Handle (Unable to retrieve reason)
-        }
-        else {
-          ;; Get the error message
-          if (!$com(%ErrorCom, Description, 2) || $comerr) {
-            %Error = Unable to create Handle (Unable to retrieve reason)
-          }
-          elseif ($com(%ErrorCom).result) {
-            %Error = $v1
-          }
-          else {
-            %Error = Unable to create handle (Unable to retrieve reason)
-          }
-
-          ;; Clear the error
-          noop $com(%ErrorCom, Clear, 1)
-        }
-        
-        ;; Close the Error com
-        if ($com(%ErrorCom)) .comclose $v1
+      if (!$_JSON.CallFunct(Handle, create, 1, bstr, %Name, &bstr, %Source, bstr, %Type, bool, %Wait) || $comerr) {
+        %Error = $JSONError
       }
 
-      ;; If handle creation succeeded, and the d switch is specified, start a timer to close the handle
-      if ((!%Error || %Error !== "NAME_IN_USE") && d isincs %Switches) {
+      ;; If the d switch is specified, start a timer to close the handle
+      elseif (d isincs %Switches) {
         $+(.timerJSONForMirc:Close, $1) 1 0 JSONClose $1
       }
     }
@@ -140,6 +116,7 @@ alias JSONOpen {
   :error
   %Error = $iif($error, $v1, %Error)
   if (%Unset) bunset %Source
+  if (%ErrorCom && $com(%ErrorCom)) .comclose $v1
   if (%Error) {
     set -u %JSONForMirc:Error $v1
     reseterror

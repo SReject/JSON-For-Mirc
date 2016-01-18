@@ -23,7 +23,7 @@ alias -l _JSON.Start {
   else {
 
     ;; cleanup from a previously failed start
-    if ($com(%Mamager)) .comclose $v1
+    if ($com(%Manager)) .comclose $v1
     if ($com(%Engine)) .comclose $v1
     if ($com(%Wrapper)) .comclose $v1
 
