@@ -1,9 +1,3 @@
-/** To Do:
-***     $_JSON.Exists(name)
-***     $_JSON.Create(name, source)[.url[wait]]
-***     $_JSON.Set(name, property, ...) - May switch to more generic functionality via: $_JSON.Call() 
-**/
-
 /** $_JSON.Start
 ***     Returns either the wrapper com name, the JS Engine com name, Handle Manager com name, or a com name thats not in use
 **/
@@ -26,14 +20,21 @@ alias -l _JSON.TmpBvar {
   return &JSONForMirc:Tmp: $+ %n
 }
 
-/** $_JSON.TmpBVar
+/** $_JSON.TmpFile
 ***     Returns a new temp file path
 **/
 alias -l _JSON.TmpFile {
-  var %n = $ticks * 1000
-  while ($isfile($scriptdirJSONForMirc $+ %n $+ .tmp)) inc %n
-  if ($prop == quote) return $qt($scriptdirJSONForMirc $+ %n $+ .tmp)
-  return $scriptdirJSONForMirc $+ %n $+ .tmp
+  var %dir = $nofile($mircini) $+ \data\, %n = $ticks * 1000
+  
+  ;; create the directory ..\data\JSONForMirc\
+  if (!$isdir(%dir)) mkdir %dir
+  %dir = %dir $+ JSONForMirc\
+  if (!$isdir(%dir)) mkdir %dir $+ JSONForMirc\
+  
+
+  while ($isfile(%dir $+ JSONForMirc $+ %n $+ .tmp)) inc %n
+  if ($prop == quote) return $qt(%dur $+ JSONForMirc $+ %n $+ .tmp)
+  return %dur $+ JSONForMirc $+ %n $+ .tmp
 }
 
 /** /JSONError -c

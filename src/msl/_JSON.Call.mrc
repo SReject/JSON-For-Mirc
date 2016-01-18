@@ -55,7 +55,12 @@ alias -l _JSON.CallFunct {
 
 
 alias -l _JSON.CallHandleFunct {
-  var %Error, %RefCom = $_JSON.Com
+  var %Error, %CloseRef, %RefCom = $_JSON.Com
+  /*
+  Add support for passed ReferenceComs instead of just a handle name
+  */
+  
+  
   if (!$_JSON.CallFunct(Manager, get, 1, bstr, $1, dispatch* %RefCom)) {
     %Error = $JSONError
   }
