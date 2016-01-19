@@ -24,7 +24,7 @@ alias -l _JSON.TmpBvar {
 ***     Returns a new temp file path
 **/
 alias -l _JSON.TmpFile {
-  var %dir = $nofile($mircini) $+ \data\, %n = $ticks * 1000
+  var %dir = $nofile($mircini) $+ data\, %n = $ticks * 1000
   
   ;; create the directory ..\data\JSONForMirc\
   if (!$isdir(%dir)) mkdir %dir

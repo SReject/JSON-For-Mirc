@@ -23,6 +23,7 @@ alias JSONOpen {
   }
   else {
 
+    ;; seperate switches from parameters
     if (-* iswm $1) {
       %Switches = $mid($1, 2-)
       tokenize 32 $2-
@@ -86,7 +87,7 @@ alias JSONOpen {
       if (u isincs %Switches) {
         bset -t %Source 1 $2
         %Type = url
-        %Wait = $iif(w isin %Switches, $true)
+        if (w isincs %Switches) %Wait = $true
       }
       elseif (b isincs %Switches) {
         %Source = $2
