@@ -5,14 +5,14 @@
 ROOT.handles = {};
 ROOT.handlesByIndex = [];
 
-
 // Result Wrapper
-function Result(parent, index, value) {
-    this.parent   = parent;
-    this.index    = index;
-    this.type     = getType(value);
-    this.value    = value;
-    this.isParent = /^(?:array|object)$/.test(this.type);
+function Result(name, parent, index, value) {
+    this.name      = name;
+    this.parent    = parent;
+    this.index     = index;
+    this.type      = getType(value);
+    this.value     = value;
+    this.isParent  = /^(?:array|object)$/.test(this.type);
 
     if (this.type === "string" || this.type === "array") {
         this.length = value.length;
@@ -83,6 +83,7 @@ Handle.getName = function (index) {
 Handle.traverse = function () {
     var args = Array.prototype.slice.call(arguments),
         ref = args.shift(),
+        name,
         parent,
         index,
         type,
@@ -113,6 +114,9 @@ Handle.traverse = function () {
     } else {
         throw new Error("INVALID_REFERENCE");
     }
+    
+    // get the handle name from the reference
+    name = ref.name;
 
     // begin looping over the arguments
     while (args.length) {
@@ -156,7 +160,7 @@ Handle.traverse = function () {
     }
 
     // return a new TraverseResult instance
-    return new Result(parent, index, ref);
+    return new Result(name, parent, index, ref);
 };
 
 // Sets the reference to the specified value
