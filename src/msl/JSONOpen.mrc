@@ -6,16 +6,18 @@
 ***     -f: @Source is a file
 ***     -u: @Source is a url
 ***     -w: Specified with -u; The HTTP request will wait to fetch data so method and headers can be so
-*** 
+***
 ***     @Handle - (required):
 ***         Name to be used to reference the JSON handle
 ***
 ***     @Source:
 ***         The JSON source
 ***         Dependant on switches it can be plain text, a bvar, a file or a url
-**/ 
+**/
 alias JSONOpen {
   if ($isid) return
+
+  _JSON.Log Calling~/JSONOpen $1-
 
   var %Error, %Switches, %Name, %Type, %Source, %Unset, %ErrorCom
   if (!$_JSON.Start) {
@@ -52,7 +54,7 @@ alias JSONOpen {
       %Error = Invalid handler name: Must start with a letter and contain only letters numbers _ . : and -
     }
     elseif ($_JSON.Exists($1)) {
-      %Error = Name in use    
+      %Error = Name in use
     }
 
     ;; Validate parameters
@@ -121,5 +123,9 @@ alias JSONOpen {
   if (%Error) {
     set -u %JSONForMirc:Error $v1
     reseterror
+    _JSON.Log Error /JSONOpen~ $+ %error
+  }
+  else {
+    _JSON.Log ok /JSONOpen~ Successfully created %Name
   }
 }

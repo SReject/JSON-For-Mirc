@@ -6,6 +6,11 @@
 alias -l _JSON.Start {
   if (!$isid) return
 
+  ;; debug message
+  scon -r var % $+ param % $+ param $!+ , $!+ $*
+  %param = $regsubex(%param, /^\s*\x2C/g, )
+  _JSON.Log Calling~$_JSON.Start( $+ %params $+ )
+
   ;; Variables declaration
   var %Error, %Close = $false, %Wrapper = $_JSON.Com(Wrapper), %Engine = $_JSON.Com(Engine), %Manager = $_JSON.Com(Manager), %JScript
 
@@ -13,13 +18,11 @@ alias -l _JSON.Start {
   if ($lock(com)) {
     %Error = COM interface locked via mIRC options
   }
-  
+
   ;; I all coms are open assume they are JSONForMirc's so return $true
   elseif ($com(%Wrapper) && $com(%Engine) && $com(%Manager)) {
     return $true
   }
-  
-  
   else {
 
     ;; cleanup from a previously failed start
@@ -29,7 +32,7 @@ alias -l _JSON.Start {
 
     ;; Update 'close' variable so if an error occurs created coms are closed
     %Close = $true
-    
+
     ;; Get the JScript to be executed
     %JScript = $_JSON.JScript
 
@@ -58,7 +61,7 @@ alias -l _JSON.Start {
     elseif (!$com(%Engine)) {
       %Error = Unable to create a reference to the ScriptControl's JSEngine
     }
-    
+
     ;; Attempt to get a reference to the JScript's Handle manager
     elseif (!$com(%Engine, Handle, 2, dispatch* %Manager) || $comerr) {
       %Error = Referencing the JScript's Handle manager failed
@@ -80,7 +83,9 @@ alias -l _JSON.Start {
       if ($com(%Engine)) .comclose $v1
       if ($com(%Wrapper)) .comclose $v1
     }
+    _JSON.Log error $!_JSON.Start~ $+ %Error
     return $false
   }
+  _JSON.Log ok $!_JSON.Start~Call Successful
   return $true
 }

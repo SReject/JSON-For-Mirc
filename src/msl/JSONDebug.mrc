@@ -1,3 +1,55 @@
+/**
+*** _JSON.Log [[@prefix]~]@message
+**/
+;; Use a group so that the log alias is only active when debugging is enabled
+#JSONForMirc:Debug on
+alias -l _JSON.Log {
+  if (!$window(@JSONForMircDebug)) {
+    JSONDebug off
+  }
+  else {
+    var %color, %prefix, %msg
+    if ($1 == Error) {
+      %color = 04
+    }
+    elseif ($1 == Info) {
+      %color = 03
+    }
+    elseif ($1 == Warn) {
+      %color = 07
+    }
+    elseif ($1 == Ok) {
+      %color = 12
+    }
+    
+    if (%color) {
+      tokenize 32 $2-
+    }
+    else {
+      %color = 03
+    }
+
+    if ($1 == ~) {
+      %prefix = JSONForMirc
+      %msg = $2-
+    }
+    elseif ($left($1, 1) == ~) {
+      %prefix = JSONForMirc
+      %msg = $mid($1-, 2-)
+    }
+    else {
+      %prefix = $gettok($1-, 1, 126)
+      %msg = $gettok($1-, 2-, 126)
+    }
+    
+    aline @JSONForMircDebug $+($chr(3), %color, [, %prefix ,]) %msg
+  }
+}
+#JSONForMirc:Debug end
+;; if debug is disabled, mIRC will fall back to using this alias for logging
+alias -l _JSON.Log noop
+
+
 /** $JSONDebug
 ***     Returns $true if JSONForMirc debugging is enabled, $false otherwise
 ***
@@ -51,60 +103,6 @@ alias JSONDebug {
   }
 }
 
-;; Use a group so that the log alias is only active when debugging is enabled
-#JSONForMirc:Debug on
-
-
-/*
-/_JSON.Log @Type [[@Prefix]~]@Msg
-*/
-alias -l _JSON.Log {
-  if (!$window(@JSONForMircDebug)) {
-    JSONDebug off
-  }
-  else {
-    var %color, %prefix, %msg
-    if ($1 == Error) {
-      %color = 04
-    }
-    elseif ($1 == Info) {
-      %color = 03
-    }
-    elseif ($1 == Warn) {
-      %color = 07
-    }
-    elseif ($1 == Ok) {
-      %color = 12
-    }
-    
-    if (%color) {
-      tokenize 32 $2-
-    }
-    else {
-      %color = 03
-    }
-
-    if ($1 == ~) {
-      %prefix = JSONForMirc
-      %msg = $2-
-    }
-    elseif ($left($1, 1) == ~) {
-      %prefix = JSONForMirc
-      %msg = $mid($1-, 2-)
-    }
-    else {
-      %prefix = $gettok($1-, 1, 126)
-      %msg = $gettok($1-, 2-, 126)
-    }
-    
-    aline @JSONForMircDebug $+($chr(3), %color, [, %prefix ,]) %msg
-  }
-}
-#JSONForMirc:Debug end
-
-;; if debug is disabled, mIRC will fall back to using this alias for logging
-alias -l _JSON.Log noop
-
 ;; When the debug window closes, disable debugging
 on *:CLOSE:@JSONForMircDebug:{
   JSONDebug off
@@ -114,7 +112,7 @@ on *:CLOSE:@JSONForMircDebug:{
 ;;
 ;; TO DO: Save menu
 menu @JSONForMircDebug {
-  .Save: noop
+  .Save: if ($window(@JSONForMircDebug) && $line(@JSONForMircDebug, 0) && $sfile($nofile($mircini) $+ JSONForMirc.log, Save As, Save)) { savebuf -a @JSONForMircDebug $qt($v1) }
   .-
   .Clear: clear -@ @JSONForMircDebug
   .Disable: JSONDebug off

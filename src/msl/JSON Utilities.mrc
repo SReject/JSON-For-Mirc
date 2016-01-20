@@ -1,4 +1,4 @@
-/** $_JSON.Start
+/** $_JSON.Com
 ***     Returns either the wrapper com name, the JS Engine com name, Handle Manager com name, or a com name thats not in use
 **/
 alias -l _JSON.Com {
@@ -8,15 +8,17 @@ alias -l _JSON.Com {
 
   var %n = $ticks * 1000
   while ($com(JSONForMirc:Tmp: $+ %n)) inc %n
+  _JSON.Log $!_JSON.Com~Returning JSONForMirc:Tmp: $+ %n as temporary COM
   return JSONForMirc:Tmp: $+ %n
 }
 
 /** $_JSON.TmpBVar
 ***     Returns the name of a new bvar
 **/
-alias -l _JSON.TmpBvar { 
+alias -l _JSON.TmpBVar {
   var %n = $ticks * 1000
   while ($bvar(JSONForMirc:Tmp: $+ %n, 0)) inc %n
+  _JSON.Log $!_JSON.TmpBVar~Returning &JSONForMirc:Tmp: $+ %n as temporary binary variable
   return &JSONForMirc:Tmp: $+ %n
 }
 
@@ -25,14 +27,15 @@ alias -l _JSON.TmpBvar {
 **/
 alias -l _JSON.TmpFile {
   var %dir = $nofile($mircini) $+ data\, %n = $ticks * 1000
-  
+
   ;; create the directory ..\data\JSONForMirc\
   if (!$isdir(%dir)) mkdir %dir
   %dir = %dir $+ JSONForMirc\
   if (!$isdir(%dir)) mkdir %dir $+ JSONForMirc\
-  
+
 
   while ($isfile(%dir $+ JSONForMirc $+ %n $+ .tmp)) inc %n
+  _JSON.Log $!_JSON.TmpFile~Returning %dur $+ JSONForMirc $+ %n $+ .tmp as temporary file
   if ($prop == quote) return $qt(%dur $+ JSONForMirc $+ %n $+ .tmp)
   return %dur $+ JSONForMirc $+ %n $+ .tmp
 }
@@ -45,7 +48,10 @@ alias -l _JSON.TmpFile {
 **/
 alias JSONError {
   if ($isid) return %_JSONForMirc:Error
-  if ($1- == -c) unset %_JSONForMirc:Error
+  if ($1- == -c) {
+    _JSONLog /JSONError -c~Clearing Error $+ $iif(%_JSONForMirc:Error,: $v1)
+    unset %_JSONForMirc:Error
+  }
 }
 
 /** $JSONVersion
