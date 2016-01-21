@@ -33,11 +33,32 @@ alias -l _JSON.TmpFile {
   %dir = %dir $+ JSONForMirc\
   if (!$isdir(%dir)) mkdir %dir $+ JSONForMirc\
 
-
   while ($isfile(%dir $+ JSONForMirc $+ %n $+ .tmp)) inc %n
   _JSON.Log $!_JSON.TmpFile~Returning %dur $+ JSONForMirc $+ %n $+ .tmp as temporary file
   if ($prop == quote) return $qt(%dur $+ JSONForMirc $+ %n $+ .tmp)
   return %dur $+ JSONForMirc $+ %n $+ .tmp
+}
+
+/** $_JSON.ParseInputs
+***    Parse inputs so they can be safely passed to the com
+**/
+alias -l _JSON.ParseInputs {
+  set -u0 %_JSONForMirc:Tmp:InputCount $calc(%_JSONForMirc:Tmp:InputCount + 1)
+  if ($1 && %_JSONForMirc:Tmp:InputCount < $1) {
+    return
+  }
+  if ($2 isnum 0-) return integer, $+ $1
+  var %BVar = $_JSON.TmpBVar
+  bset -t %BVar 1 $_JSON.UnEscape($2)
+  return &bstr, $+ %BVar
+}
+
+/** $_JSON.UnEscape
+***     Handles the unescaping of inputs prior to com calls
+**/
+alias -l _JSON.UnEscape {
+  if ("*" !iswm $1) return $1
+  return $mid($1, 2-, -1)
 }
 
 /** /JSONError -c
@@ -63,4 +84,12 @@ alias JSONError {
 alias JSONVersion {
   if ($1 === short) return 2000000.0001
   return JSON for mIRC by SReject v2.0.0001 @ http://github.com/SReject/JSON-For-Mirc
+}
+
+/** $JSONEscape()
+***     Escapes inputs so they are assumed as keys
+**/
+alias JSONEscape {
+  if ($1 !isnum) return $1
+  return " $+ $1 $+ "
 }

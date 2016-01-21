@@ -305,15 +305,3 @@ alias JSON {
     return %Result
   }
 }
-
-
-alias -l _JSON.ParseInputs {
-  set -u0 %_JSONForMirc:Tmp:InputCount $calc(%_JSONForMirc:Tmp:InputCount + 1)
-  if ($1 && %_JSONForMirc:Tmp:InputCount < $1) {
-    return
-  }
-  if ($1 isnum 0-) return integer, $+ $1
-  var %BVar = $_JSON.TmpBVar
-  bset -t %BVar 1 $2
-  return &bstr, $+ %BVar
-}

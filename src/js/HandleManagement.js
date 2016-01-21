@@ -134,18 +134,29 @@ Handle.traverse = function () {
         }
 
         // if the reference is an object and the child is a valid index
-        if (type !== "array" && typeof child === "number" && /^\d+$/.test(String(child))) {
+        if (type !== "array") {
+            if (typeof child === "number" && /^\d+$/.test(String(child))) {
 
-            // if the child is greater than the number of items in the object
-            // update the working reference to null and continue with the loop
-            keys = Object.keys(ref);
-            if (child >= keys.length) {
-                ref = null;
-                continue;
+                // if the child is greater than the number of items in the object
+                // update the working reference to null and continue with the loop
+                keys = Object.keys(ref);
+                if (child >= keys.length) {
+                    ref = null;
+                    continue;
+                }
+
+                // get the nth item name from the reference to use as the child argument
+                child = keys[child];
             }
-
-            // get the nth item name from the reference to use as the child argument
-            child = keys[child];
+            else if (!hasProp(ref, child)) {
+                keys = Object.keys(ref);
+                for (i = 0; i < keys.length; i += 1) {
+                    if (child.toLowerCase() == keys[i].toLowerCase()) {
+                        child = keys[i];
+                        break;
+                    }
+                }
+            }
         }
 
         // convert the child argument to a string
