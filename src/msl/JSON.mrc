@@ -10,7 +10,7 @@ alias JSON {
 
   ;; variable setup
   var %Error, %Result, %RefCom, %RefCom2, %ToBVar, %ToFile, %RemFile, %ApdCrlf, %FileSize, %Prop, %BVar, %Result, %Index
-  
+
 
   if (!$0) {
     %Error = Missing Parameters
@@ -70,10 +70,10 @@ alias JSON {
     }
 
     if (!%Error && !$len(%Result) && $com(%RefCom)) {
-    
+
       ;; handle output delegation for httpResponse httpHead httpHeaders httpBody and ValueTo
       if ($0 > 1) && ($prop == HttpResponse || $prop == HttpHead || $prop == HttpHeaders || $prop == HttpBody || $prop == ValueTo) {
-      
+
         ;; parameter count check
         if ($prop == ValueTo && $0 < 3) || ($prop != ValueTo && $0 !== 3) {
           %Error = Invalid parameters for $!JSON(). $+ $prop
@@ -122,7 +122,7 @@ alias JSON {
           if ($count(%ToFile, :) > 1) {
             %Error = Illegal filename: Contains multiple ":" characters
           }
-          
+
           ;; if a is specified, check if the file exists
           elseif (a isincs $2 && $isfile(%ToFile) && $file(%ToFile).size) {
             %FileSize = $v1
@@ -188,7 +188,7 @@ alias JSON {
           }
         }
       }
-      
+
       ;; Traversal handling
       elseif (!$prop || $istok(Type Length IsParent Value ValueTo, $prop, 32)) {
 
@@ -200,28 +200,28 @@ alias JSON {
         %param = $null
         unset %_JSONForMirc:InputCount
         scid $cid % $+ param = $!addtok(% $+ param , $!_JSON.ParseInputs( %index , $* ) , 44)
-        
+
         ;; traverse the reference to the required index
         if (!$_JSON.CallFunct(manager, traverse, 1, dispatch, %RefCom, [ %param ] , dispatch* %RefCom2)) {
           %Error = $JSONError
         }
-        
+
         ;; make sure a result object was returned
         elseif (!$com(%RefCom2)) {
           %Error = Traversing did not create a reference
         }
-        
+
         ;; If no prop, use the reference created as the result
         elseif (!$prop) {
           %Result = %RefCom2
         }
-        
+
         ;; $JSON().Type $JSON().Length and $JSON().IsParent delegation
         elseif ($prop == Type || $prop == Length || $prop == IsParent) {
-        
+
           ;; get prop name
           %Prop = $matchTok(type length isParent, $Prop, 32)
-          
+
           ;; attempt to get the property value
           if (!$_JSON.CallFunct(%RefCom2, %Prop, 2)) {
             %Error = $JSONError
@@ -231,7 +231,7 @@ alias JSON {
           }
           .comclose %RefCom2
         }
-        
+
         ;; $JSON().Value and $JSON().ValueTo
         elseif ($prop == Value || $prop == ValueTo) {
           if (!$_JSON.CallFunct(%RefCom2, type, 2)) {
@@ -255,7 +255,7 @@ alias JSON {
       else {
         %Error = Unknown property: $prop
       }
-            
+
       if (!%Error && !%Result) {
 
         ;; If required, copy the temp bvar into the user specified bvar

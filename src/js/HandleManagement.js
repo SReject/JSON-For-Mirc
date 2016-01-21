@@ -114,7 +114,7 @@ Handle.traverse = function () {
     } else {
         throw new Error("INVALID_REFERENCE");
     }
-    
+
     // get the handle name from the reference
     name = ref.name;
 
