@@ -1,91 +1,91 @@
-/*jslint sloppy:true, windows:true, evil:true, regexp:true, nomen:true*/
-/*global __PARAMETERS__:true*/
-(function (buildjson, source, output) {
-    var fso = new ActiveXObject("Scripting.FileSystemObject"), files, file, i, js = [], msl = [], out = [];
-
-    function fileRead(file) {
-        if (!fso.FileExists(file)) {
-            throw new Error("File does not Exist");
-        }
-        var ado = new ActiveXObject("ADODB.Stream"), data = "";
-        ado.Open();
-        ado.Charset = "utf-8";
-        try {
-            ado.LoadFromFile(file);
-            data = ado.ReadText();
-        } catch (e) {
-            ado.close();
-            throw new Error("Unable to read file");
-        }
-        ado.close();
-        return data;
+var fso = new ActiveXObject("Scripting.FileSystemObject");
+function fileRead(file) {
+    if (!fso.FileExists(file)) {
+        throw new Error("File does not Exist");
     }
-    function fileWrite(file, data) {
-        if (fso.FileExists(file)) {
-            throw new Error("File already exists");
-        }
-        var ado = new ActiveXObject("ADODB.Stream");
-        ado.Open();
-        ado.WriteText(data);
-        try {
-            ado.SaveToFile(file);
-        } catch (e) {
-            ado.close();
-            throw new Error("Unable to write to file");
-        }
+    var ado = new ActiveXObject("ADODB.Stream"), data = "";
+    ado.Open();
+    ado.Charset = "utf-8";
+    try {
+        ado.LoadFromFile(file);
+        data = ado.ReadText();
+    } catch (e) {
         ado.close();
+        throw new Error("Unable to read file");
     }
-    function shrinkJS(data) {
-        function replacer(match, chr) {
-            return chr;
-        }
-        var i, line, isBlockComment = false;
-        data = data.replace(/(?:\s|^)\/\/.*/g, "").split(/\s*[\r\n]\s*/g);
-        for (i = 0; i < data.length; i += 1) {
-            line = String(data[i]);
-            if (isBlockComment) {
-                if (line.indexOf("*/") > -1) {
-                    isBlockComment = false;
-                }
-                data[i] = "";
-            } else if (line.indexOf("/*") > -1) {
-                if (line.indexOf("*/") === -1) {
-                    isBlockComment = true;
-                } else {
-                    isBlockComment = false;
-                }
-                data[i] = "";
+    ado.close();
+    return data;
+}
+function fileWrite(file, data) {
+    if (fso.FileExists(file)) {
+        throw new Error("File already exists");
+    }
+    var ado = new ActiveXObject("ADODB.Stream");
+    ado.Open();
+    ado.WriteText(data);
+    try {
+        ado.SaveToFile(file);
+    } catch (e) {
+        ado.close();
+        throw new Error("Unable to write to file");
+    }
+    ado.close();
+}
+function shrinkJS(data) {
+    function replacer(match, chr) {
+        return chr;
+    }
+    var i, line, isBlockComment = false;
+    data = data.replace(/(?:\s|^)\/\/.*/g, "").split(/\s*[\r\n]\s*/g);
+    for (i = 0; i < data.length; i += 1) {
+        line = String(data[i]);
+        if (isBlockComment) {
+            if (line.indexOf("*/") > -1) {
+                isBlockComment = false;
+            }
+            data[i] = "";
+        } else if (line.indexOf("/*") > -1) {
+            if (line.indexOf("*/") === -1) {
+                isBlockComment = true;
             } else {
-                data[i] = line.replace(/\s*([\&\|\:\?\;\(\)\{\}\[\]\=\+\-<\>\!\,])\s*/g, replacer).replace(/^\s+$/g, "");
+                isBlockComment = false;
             }
+            data[i] = "";
+        } else {
+            data[i] = line.replace(/\s*([\&\|\:\?\;\(\)\{\}\[\]\=\+\-<\>\!\,])\s*/g, replacer).replace(/^\s+$/g, "");
         }
-        return data.join("").replace(/\;\s*\}/g, "}").replace(/return (["'])/g, function (m, c) {
-            return "return" + c;
-        });
     }
-    function shrinkMSL(data) {
-        var i, line, isBlockComment = false;
-        data = data.replace(/^\s*;/g, "").split(/\s*[\r\n]\s*/g);
-        for (i = 0; i < data.length; i += 1) {
-            line = String(data[i]);
-            if (isBlockComment) {
-                if (line.indexOf("*/") > -1) {
-                    isBlockComment = false;
-                }
-                data[i] = "";
-            } else if (line.indexOf("/*") > -1) {
-                if (line.indexOf("*/") === -1) {
-                    isBlockComment = true;
-                } else {
-                    isBlockComment = false;
-                }
-                data[i] = "";
-            } else if (/^\s*;/g.test(line)) {
-                data[i] = "";
+    return data.join("").replace(/\;\s*\}/g, "}").replace(/return (["'])/g, function (m, c) {
+        return "return" + c;
+    });
+}
+function shrinkMSL(data) {
+    var i, line, isBlockComment = false;
+    data = data.replace(/^\s*;.*$/g, "").split(/\r\n/g);
+    for (i = 0; i < data.length; i += 1) {
+        line = String(data[i]);
+        if (isBlockComment) {
+            if (line.indexOf("*/") > -1) {
+                isBlockComment = false;
             }
+            data[i] = "";
+        } else if (line.indexOf("/*") > -1) {
+            if (line.indexOf("*/") === -1) {
+                isBlockComment = true;
+            } else {
+                isBlockComment = false;
+            }
+            data[i] = "";
+        } else if (/^\s*;/g.test(line)) {
+            data[i] = "";
         }
-        return data.join("\r\n").replace(/\s*\r\n/g, "\r\n");
     }
+    return data.join("\r\n").replace(/[\r\n\s]*\n/g, "\r\n");
+}
+
+
+(function (buildjson, source, output) {
+    var files, file, i, js = [], msl = [], out = [];
 
     if (!fso.FileExists(buildjson)) {
         throw new Error("build.json does not exist");

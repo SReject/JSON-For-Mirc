@@ -6,5 +6,15 @@
         "Handle.js",
         "HandleManagement.js"
     ],
-    "msl": []
+    "msl": [
+        "JSON.mrc",
+        "_JSON.Call.mrc",
+        "_JSON.Start.mrc",
+        "JSON Utilities.mrc",
+        "JSONOpen.mrc",
+        "JSONHttp.mrc",
+        "JSONDebug.mrc"
+    ]
 }
+
+
