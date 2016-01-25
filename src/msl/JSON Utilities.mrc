@@ -93,3 +93,25 @@ alias JSONEscape {
   if ($1 !isnum) return $1
   return " $+ $1 $+ "
 }
+
+/** $_JSONVersion.WildcardToRegex(@input)
+***     Converts the input wildcard matchtext to a regex pattern
+**/
+alias -l $_JSON.WildcardToRegex {
+  return $+(^, $regsubex($1-,/([\Q$^|[]{}()\/.+\E])|(&(?= |$))|([?*]+)/g, $_JSON.WildcardToRegexRep(\t)), $chr(36))
+}
+alias -l $_JSON.WildcardToRegexRep {
+  if ($1 == &) {
+    return \S+\b
+  }
+  if ($1 !isin *?) {
+    return \ $+ $1
+  }
+  if (? !isin $1) {
+    return .*
+  }
+  if ($count($1,?) < 5) {
+    return $str(.,$v1) $+ $iif(* isin $1,+)
+  }
+  return $+(.,$chr(123),$count($1,?),$iif(* isin $1,$chr(44)),$chr(125))
+}

@@ -281,7 +281,7 @@ Handle.toString = function (index) {
 };
 
 // lists all matching handles formatted as string delimited by space
-Handle.list = function (matchtext, switches, asArray) {
+Handle.list = function (matchtext, asArray) {
     var i, handleList = ROOT.handlesByIndex, output = [];
 
     // If matchtext isn't specified, return all handle names
@@ -299,7 +299,7 @@ Handle.list = function (matchtext, switches, asArray) {
 
     // compile regex to be used for matching
     try {
-        matchtext = new RegExp(matchtext, switches || "");
+        matchtext = new RegExp(matchtext, "i");
     } catch (ee) {
         throw new Error("INVALID_MATCHTEXT");
     }
@@ -321,7 +321,7 @@ Handle.list = function (matchtext, switches, asArray) {
 };
 
 // Closes all matching handles and returns the number of handles closed
-Handle.close = function (matchtext, switches) {
+Handle.close = function (matchtext) {
     // Require matchtext to be specified so a bad script won't close all handles
     if (matchtext === undefined || matchtext === null || matchtext === "") {
         throw new Error("INVALID_MATCHTEXT");
