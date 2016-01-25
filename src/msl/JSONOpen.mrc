@@ -16,10 +16,12 @@
 **/
 alias JSONOpen {
   if ($isid) return
+  
+  var %Error, %Switches, %Name, %Type, %Source, %Wait, %Unset, %ErrorCom
 
   _JSON.Log Calling~/JSONOpen $1-
 
-  var %Error, %Switches, %Name, %Type, %Source, %Unset, %ErrorCom
+
   if (!$_JSON.Start) {
     %Error =  $JSONError
   }
@@ -52,9 +54,6 @@ alias JSONOpen {
     ;; Validate name parameter
     elseif (!$regex($1, /^[a-z][a-z\d_.:\-]+$/i)) {
       %Error = Invalid handler name: Must start with a letter and contain only letters numbers _ . : and -
-    }
-    elseif ($_JSON.Exists($1)) {
-      %Error = Name in use
     }
 
     ;; Validate parameters
@@ -104,7 +103,7 @@ alias JSONOpen {
 
       ;; Call the JS function to create a handle:
       ;;   Handle.create(name, source, type, wait)
-      if (!$_JSON.CallFunct(Handle, create, 1, bstr, %Name, &bstr, %Source, bstr, %Type, bool, %Wait) || $comerr) {
+      if (!$_JSON.Call(Manager, create, 1, bstr, %Name, &bstr, %Source, bstr, %Type, bool, %Wait) || $comerr) {
         %Error = $JSONError
       }
 

@@ -147,12 +147,12 @@ alias JSON {
       if ($istok(Status HttpResponse HttpHead HttpStatus HttpStatusText HttpHeaders HttpHeader HttpBody, $prop, 32)) {
 
         ;; Attempt to get JSON Handle reference from RefCom
-        if (!$_JSON.CallFunct(%RefCom, name, 2)) {
+        if (!$_JSON.Call(%RefCom, name, 2)) {
           %Error = $JSONError
         }
         elseif ($com(%RefCom).result {
           %RefCom2 = $_JSON.Com
-          if (!$_JSON.CallFunct(Manager, get, 1, bstr, $v1, dispatch* %RefCom2)) {
+          if (!$_JSON.Call(Manager, get, 1, bstr, $v1, dispatch* %RefCom2)) {
             %Error = $JSONError
           }
           elseif (!$com(%RefCom2)) {
@@ -167,7 +167,7 @@ alias JSON {
 
           ;; Handle HttpHeader requests
           if ($prop == HttpHeader) {
-              if (!$_JSON.CallFunct(%RefCom2, httpHeader, 1, bstr, $2)) {
+              if (!$_JSON.Call(%RefCom2, httpHeader, 1, bstr, $2)) {
                 %Error = $JSONError
               }
               else {
@@ -179,7 +179,7 @@ alias JSON {
           else {
             %Prop = $matchTok(status httpResponse httpHead httpStatus httpStatusText httpHeaders httpBody, $lower($prop), 1, 32)
             %BVar = $_JSON.TmpBVar
-            if (!$_JSON.CallFunct(%RefCom2, %Prop, 1)) {
+            if (!$_JSON.Call(%RefCom2, %Prop, 1)) {
               %Error = $JSONError
             }
             elseif (!$com(%RefCom2, %BVar).result) {
@@ -202,7 +202,7 @@ alias JSON {
         scid $cid % $+ param = $!addtok(% $+ param , $!_JSON.ParseInputs( %index , $* ) , 44)
 
         ;; traverse the reference to the required index
-        if (!$_JSON.CallFunct(manager, traverse, 1, dispatch, %RefCom, [ %param ] , dispatch* %RefCom2)) {
+        if (!$_JSON.Call(manager, traverse, 1, dispatch, %RefCom, [ %param ] , dispatch* %RefCom2)) {
           %Error = $JSONError
         }
 
@@ -223,7 +223,7 @@ alias JSON {
           %Prop = $matchTok(type length isParent, $Prop, 32)
 
           ;; attempt to get the property value
-          if (!$_JSON.CallFunct(%RefCom2, %Prop, 2)) {
+          if (!$_JSON.Call(%RefCom2, %Prop, 2)) {
             %Error = $JSONError
           }
           else {
@@ -234,7 +234,7 @@ alias JSON {
 
         ;; $JSON().Value and $JSON().ValueTo
         elseif ($prop == Value || $prop == ValueTo) {
-          if (!$_JSON.CallFunct(%RefCom2, type, 2)) {
+          if (!$_JSON.Call(%RefCom2, type, 2)) {
             %Error = Unable to determine reference type
           }
           else {
@@ -242,7 +242,7 @@ alias JSON {
             if (%type == object || %type == array) {
               %Error = Cannot return a value for containers
             }
-            elseif (!$_JSON.CallFunct(%RefCom2, value, 2)) {
+            elseif (!$_JSON.Call(%RefCom2, value, 2)) {
               %Error = Unable to get the value property
             }
             else {

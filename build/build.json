@@ -7,13 +7,14 @@
         "HandleManagement.js"
     ],
     "msl": [
-        "JSON.mrc",
-        "_JSON.Call.mrc",
         "_JSON.Start.mrc",
         "JSON Utilities.mrc",
+        "JSON.mrc",
         "JSONOpen.mrc",
         "JSONHttp.mrc",
-        "JSONDebug.mrc"
+        "JSONClose.mrc",
+        "JSONDebug.mrc",
+        "on Unload.mrc"
     ]
 }
 

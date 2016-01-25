@@ -82,10 +82,8 @@ function shrinkMSL(data) {
     }
     return data.join("\r\n").replace(/[\r\n\s]*\n/g, "\r\n");
 }
-
-
 (function (buildjson, source, output) {
-    var files, file, i, js = [], msl = [], out = [];
+    var files, file, i, js = [], msl = [], out = [], shell, zip;
 
     if (!fso.FileExists(buildjson)) {
         throw new Error("build.json does not exist");
@@ -114,7 +112,6 @@ function shrinkMSL(data) {
     if (Object.prototype.toString.call(files.msl) !== "[object Array]") {
         throw new Error("build.json's msl property is not an array");
     }
-
     js = ["(function () {"];
     for (i = 0; i < files.js.length; i += 1) {
         file = source + "js\\" + files.js[i];
@@ -124,17 +121,11 @@ function shrinkMSL(data) {
         js.push(fileRead(file));
     }
     js.push("}())");
-
-    fileWrite(output + "built.js", js.join("\r\n"));
-
-
     js = shrinkJS(js.join("\r\n"));
     for (i = 0; i < js.length; i += 3500) {
         out.push("  bset -t $1 $calc($bvar($1,0)+1) " + js.substr(i, 3500));
     }
-    js = "alias -l _JSON.JScript {\r\n  bunset $1\r\n" + out.join("\r\n") + "\r\n  return $1\r\n}";
-
-
+    js = "alias -l _JSON.JScript {\r\n  bunset $1\r\n" + out.join("\r\n") + "\r\n  return $1\r\n}\r\n";
     for (i = 0; i < files.msl.length; i += 1) {
         file = source + "msl\\" + files.msl[i];
         if (!fso.FileExists(file)) {
@@ -143,6 +134,7 @@ function shrinkMSL(data) {
         msl.push(fileRead(file));
     }
     msl = shrinkMSL(msl.join("\r\n"));
-    fileWrite(output + "test.txt", js + "\r\n" + msl);
+    fileWrite(output + "JSONForMirc.mrc", js + msl);
+    
     return "OK";
 }(__PARAMETERS__));

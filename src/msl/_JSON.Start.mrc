@@ -34,7 +34,7 @@ alias -l _JSON.Start {
     %Close = $true
 
     ;; Get the JScript to be executed
-    %JScript = $_JSON.JScript
+    %JScript = $_JSON.JScript($_JSON.TmpBVar)
 
     ;; Create the required MSScriptControl instance
     ;; set the language and timeout length

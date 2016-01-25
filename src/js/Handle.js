@@ -18,7 +18,7 @@ Handle = (function () {
         if (typeof type !== "string") {
             throw new TypeError("'type' must be a string");
         }
-        if (/^(?:text|http)$/i.test(type = trim(type.toLowerCase()))) {
+        if (!/^(?:text|http)$/i.test(type = trim(type.toLowerCase()))) {
             throw new TypeError("'type' unknown");
         }
         if (type === "http" && !Http.found) {

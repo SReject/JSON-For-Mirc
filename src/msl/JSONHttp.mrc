@@ -27,7 +27,7 @@ alias JSONHttpMethod {
   }
 
   ;; Attempt to set the header
-  elseif (!$_JSON.CallHandleFunct($1, httpSetMethod, bstr, $upper($2)) {
+  elseif (!$_JSON.CallHandle($1, httpSetMethod, bstr, $upper($2)) {
     %Error = $JSONError
   }
 
@@ -80,7 +80,7 @@ alias JSONHttpHeader {
     }
 
     ; Attempt to set the header
-    elseif (!$_JSON.CallHandleFunct($1, httpSetHeader, bstr, %Header, bstr, $3-)) {
+    elseif (!$_JSON.CallHandle($1, httpSetHeader, bstr, %Header, bstr, $3-)) {
       %Error = $JSONError
     }
   }
@@ -163,7 +163,7 @@ alias JSONHttpFetch {
 
     ;; If no data is to be passed, just fetch
     elseif (!%Switches) {
-      if (!$_JSON.CallHandleFunct($1, httpFetch)) {
+      if (!$_JSON.CallHandle($1, httpFetch)) {
         %Error = $JSONError
       }
     }
@@ -186,7 +186,7 @@ alias JSONHttpFetch {
       }
 
       ;; Attempt to fetch
-      if (!$_JSON.CallHandleFunct($1, httpFetch, &bstr, %BVar)) {
+      if (!$_JSON.CallHandle($1, httpFetch, &bstr, %BVar)) {
         %Error = $JSONError
       }
     }
