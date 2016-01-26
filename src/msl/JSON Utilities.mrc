@@ -29,7 +29,9 @@ alias -l _JSON.Com {
 **/
 alias -l _JSON.TmpBVar {
   var %n = $ticks * 1000
-  while ($bvar(JSONForMirc:Tmp: $+ %n, 0)) inc %n
+  while ($bvar(JSONForMirc:Tmp: $+ %n, 0)) {
+    inc %n
+  }
   _JSON.Log $!_JSON.TmpBVar~Returning &JSONForMirc:Tmp: $+ %n as temporary binary variable
   return &JSONForMirc:Tmp: $+ %n
 }
@@ -42,13 +44,21 @@ alias -l _JSON.TmpFile {
   var %dir = $nofile($mircini) $+ data\, %n = $ticks * 1000
 
   ;; create the directory ..\data\JSONForMirc\
-  if (!$isdir(%dir)) mkdir %dir
+  if (!$isdir(%dir)) {
+    mkdir %dir
+  }
   %dir = %dir $+ JSONForMirc\
-  if (!$isdir(%dir)) mkdir %dir $+ JSONForMirc\
+  if (!$isdir(%dir)) {
+    mkdir %dir $+ JSONForMirc\
+  }
 
-  while ($isfile(%dir $+ JSONForMirc $+ %n $+ .tmp)) inc %n
+  while ($isfile(%dir $+ JSONForMirc $+ %n $+ .tmp)) {
+    inc %n
+  }
   _JSON.Log $!_JSON.TmpFile~Returning %dur $+ JSONForMirc $+ %n $+ .tmp as temporary file
-  if ($prop == quote) return $qt(%dur $+ JSONForMirc $+ %n $+ .tmp)
+  if ($prop == quote) {
+    return $qt(%dur $+ JSONForMirc $+ %n $+ .tmp)
+  }
   return %dur $+ JSONForMirc $+ %n $+ .tmp
 }
 
@@ -61,7 +71,9 @@ alias -l _JSON.ParseInputs {
   if ($1 && %_JSONForMirc:Tmp:InputCount < $1) {
     return
   }
-  if ($2 isnum 0-) return integer, $+ $1
+  if ($2 isnum 0-) {
+    return integer, $+ $1
+  }
   var %BVar = $_JSON.TmpBVar
   bset -t %BVar 1 $_JSON.UnEscape($2)
   return &bstr, $+ %BVar
@@ -72,7 +84,9 @@ alias -l _JSON.ParseInputs {
 ***     Handles the unescaping of inputs prior to com calls
 **/
 alias -l _JSON.UnEscape {
-  if ("*" !iswm $1) return $1
+  if ("*" !iswm $1) {
+    return $1
+  }
   return $mid($1, 2-, -1)
 }
 
@@ -239,7 +253,9 @@ alias -l _JSON.CallHandle {
 ***     Returns the last error to occur from a JSONForMirc call
 **/
 alias JSONError {
-  if ($isid) return %_JSONForMirc:Error
+  if ($isid) {
+    return %_JSONForMirc:Error
+  }
   if ($1- == -c) {
     _JSONLog /JSONError -c~Clearing Error $+ $iif(%_JSONForMirc:Error,: $v1)
     unset %_JSONForMirc:Error
@@ -254,7 +270,9 @@ alias JSONError {
 ***     Returns the numerical representation of the current JSONForMirc version
 **/
 alias JSONVersion {
-  if ($1 === short) return 2000000.0001
+  if ($1 === short) {
+    return 2000000.0001
+  }
   return JSON for mIRC by SReject v2.0.0001 @ http://github.com/SReject/JSON-For-Mirc
 }
 
@@ -263,6 +281,8 @@ alias JSONVersion {
 ***     Escapes inputs so they are assumed as keys
 **/
 alias JSONEscape {
-  if ($1 !isnum) return $1
+  if ($1 !isnum) {
+    return $1
+  }
   return " $+ $1 $+ "
 }

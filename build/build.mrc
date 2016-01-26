@@ -23,7 +23,7 @@ alias -l bEcho {
 }
 
 
-alias JSONForMircBuild {
+alias build {
   if ($lock(com)) {
     bError 0 COM interface locked via mIRC options
   }
@@ -131,4 +131,20 @@ alias JSONForMircBuild {
   if (%Error) {
     bError $iif(%close, 1, 0) %Error
   }
+}
+
+alias rebuild {
+  if ($window(@JSONForMircDebug)) close -@ @JSONForMircDebug
+  unset %_JSONForMirc:*
+  bunset &JSONForMirc:*
+  var %x = 1, %com, %out = $gettok($scriptdir, 1--2, $asc(\)) $+ \builds\JSONForMirc.mrc
+  while ($com(%x)) {
+    %com = $v1
+    if (JSONForMirc:* iswm %com) .comclose %com
+    inc %x
+  }
+  if ($script(%out)) .unload -rs $qt(%out)
+  if ($isfile(%out)) .remove %out
+  build
+  load -rs $qt(%out)
 }

@@ -9,8 +9,11 @@
 ***         Valid methods are GET, POST, PUT or DEL
 **/
 alias JSONHttpMethod {
-  if ($isid) return
+  if ($isid) {
+    return
+  }
 
+  ;; Log the call
   _JSON.Log Calling~/JSONHttpMethod $1-
 
   var %Error
@@ -57,7 +60,9 @@ alias JSONHttpMethod {
 ***         The value of the header to set
 **/
 alias JSONHttpHeader {
-  if ($isid) return
+  if ($isid) {
+    return
+  }
 
   ;; Output debug message
   _JSON.Log Calling~/JSONHttpHeader $1-
@@ -112,7 +117,9 @@ alias JSONHttpHeader {
 ***         Valid values are a bvar(switch dependant), a file path(switch dependant), or if assumed to be plain text
 **/
 alias JSONHttpFetch {
-  if ($isid) return
+  if ($isid) {
+    return
+  }
 
   ;; Output debug message
   _JSON.Log Calling~/JSONHttpFetch $1-
@@ -195,7 +202,9 @@ alias JSONHttpFetch {
   ;;  Error handling
   :error
   %Error = $iif($error, $v1, %Error)
-  if (%UnsetBVar) bunset %BVar
+  if (%UnsetBVar) {
+    bunset %BVar
+  }
   if (%Error) {
     set -u %_JSONForMirc:Error $v1
     reseterror

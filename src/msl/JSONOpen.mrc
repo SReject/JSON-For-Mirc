@@ -17,17 +17,18 @@
 alias JSONOpen {
   if ($isid) return
   
+  ;; Variable declaration
   var %Error, %Switches, %Name, %Type, %Source, %Wait, %Unset, %ErrorCom
 
+  ;; Log the call
   _JSON.Log Calling~/JSONOpen $1-
-
 
   if (!$_JSON.Start) {
     %Error =  $JSONError
   }
   else {
 
-    ;; seperate switches from parameters
+    ;; Seperate switches from parameters
     if (-* iswm $1) {
       %Switches = $mid($1, 2-)
       tokenize 32 $2-
@@ -88,7 +89,9 @@ alias JSONOpen {
       if (u isincs %Switches) {
         bset -t %Source 1 $2
         %Type = url
-        if (w isincs %Switches) %Wait = $true
+        if (w isincs %Switches) {
+          %Wait = $true
+        }
       }
       elseif (b isincs %Switches) {
         %Source = $2
@@ -118,7 +121,9 @@ alias JSONOpen {
   :error
   %Error = $iif($error, $v1, %Error)
   if (%Unset) bunset %Source
-  if (%ErrorCom && $com(%ErrorCom)) .comclose $v1
+  if (%ErrorCom && $com(%ErrorCom)) {
+    .comclose $v1
+  }
   if (%Error) {
     set -u %JSONForMirc:Error $v1
     reseterror

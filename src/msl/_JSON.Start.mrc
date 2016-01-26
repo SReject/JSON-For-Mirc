@@ -4,14 +4,14 @@
 ***     Returns $true if successful, $false if not
 **/
 alias -l _JSON.Start {
-  if (!$isid) return
-
+  if (!$isid) {
+    return
+  }
+  
   ;; debug message
-  scon -r var % $+ param % $+ param $!+ , $!+ $*
-  %param = $regsubex(%param, /^\s*\x2C/g, )
-  _JSON.Log Calling~$_JSON.Start( $+ %params $+ )
-
-  ;; Variables declaration
+  _JSON.Log Calling~$_JSON.Start()
+  
+  ;; variable declaration
   var %Error, %Close = $false, %Wrapper = $_JSON.Com(Wrapper), %Engine = $_JSON.Com(Engine), %Manager = $_JSON.Com(Manager), %JScript
 
   ;; COM interface lock check
@@ -26,9 +26,15 @@ alias -l _JSON.Start {
   else {
 
     ;; cleanup from a previously failed start
-    if ($com(%Manager)) .comclose $v1
-    if ($com(%Engine)) .comclose $v1
-    if ($com(%Wrapper)) .comclose $v1
+    if ($com(%Manager)) {
+      .comclose $v1
+    }
+    if ($com(%Engine)) {
+      .comclose $v1
+    }
+    if ($com(%Wrapper)) {
+      .comclose $v1
+    }
 
     ;; Update 'close' variable so if an error occurs created coms are closed
     %Close = $true
@@ -74,14 +80,22 @@ alias -l _JSON.Start {
   ;; Cleanup and return $true if successful, $false otherwise
   :error
   %Error = $iif($error, $v1, %Error)
-  if ($bvar(%JScript, 0)) bunset %JScript
+  if ($bvar(%JScript, 0)) {
+    bunset %JScript
+  }
   if (%Error) {
     set -u %_JSONForMirc:Error $v1
     reseterror
     if (%Close) {
-      if ($com(%Manager)) .comclose $v1
-      if ($com(%Engine)) .comclose $v1
-      if ($com(%Wrapper)) .comclose $v1
+      if ($com(%Manager)) {
+        .comclose $v1
+      }
+      if ($com(%Engine)) {
+        .comclose $v1
+      }
+      if ($com(%Wrapper)) {
+        .comclose $v1
+      }
     }
     _JSON.Log error $!_JSON.Start~ $+ %Error
     return $false

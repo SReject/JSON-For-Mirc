@@ -1,16 +1,15 @@
 alias JSON {
-  if (!$isid) return
-
-  ;; Create a list of parameters
-  scid $cid var % $+ param = % $+ param $!+ , $!+ $*
-  %param = $mid(%param, 2-)
-
-  ;; Output debug message
-  _JSON.Log Calling~$JSON( $+ %param $+ )
+  if (!$isid) {
+    return
+  }
 
   ;; variable setup
-  var %Error, %Result, %RefCom, %RefCom2, %ToBVar, %ToFile, %RemFile, %ApdCrlf, %FileSize, %Prop, %BVar, %Result, %Index
-
+  var %Param, %Error, %Result, %RefCom, %RefCom2, %ToBVar, %ToFile, %RemFile, %ApdCrlf, %FileSize, %Prop, %BVar, %Result, %Index
+  
+  ;; Create a list of parameters and output debug message
+  scid $cid var % $+ param = % $+ param $!+ , $!+ $*
+  %Param = $mid(%Param, 2-)
+  _JSON.Log Calling~$JSON( $+ %Param $+ )
 
   if (!$0) {
     %Error = Missing Parameters

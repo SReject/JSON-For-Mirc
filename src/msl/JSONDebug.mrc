@@ -72,7 +72,9 @@ alias JSONDebug {
 
   ;; If id: return the state ($true if enabled, $false otherwise)
   if ($isid) {
-    if ($group(#JSONForMirc:Debug) == on) return $true
+    if ($group(#JSONForMirc:Debug) == on) {
+      return $true
+    }
     return $false
   }
   
@@ -91,7 +93,7 @@ alias JSONDebug {
   
   ;; As command: if no parameter was specified toggle the debugging state
   elseif (!$0) {
-    if ($group(#JSONForMirc:Debug) != on) {
+    if ($group(#JSONForMirc:Debug) != on || !$window(@JSONForMircDebg)) {
       if (!$window(@JSONForMircDebug)) {
         window @JSONForMircDebug
       }
