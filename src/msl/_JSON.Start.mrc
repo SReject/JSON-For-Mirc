@@ -7,10 +7,10 @@ alias -l _JSON.Start {
   if (!$isid) {
     return
   }
-  
+
   ;; debug message
   _JSON.Log Calling~$_JSON.Start()
-  
+
   ;; variable declaration
   var %Error, %Close = $false, %Wrapper = $_JSON.Com(Wrapper), %Engine = $_JSON.Com(Engine), %Manager = $_JSON.Com(Manager), %JScript
 

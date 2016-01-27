@@ -7,7 +7,7 @@ on *:UNLOAD:{
     }
     inc %x
   }
-  
+
   if ($window(@JSONForMircDebug)) {
     .close -@ @JSONForMircDebug
   }

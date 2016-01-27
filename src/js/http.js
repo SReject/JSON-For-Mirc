@@ -48,6 +48,7 @@ Http = (function (httpObjs) {
         this.method = "GET";
         this.headers = [];
         this.state = "PENDING";
+        this.timeout = 30000;
 
         // call the fetch function if 'doFetch' was supplied
         if (doFetch) {
@@ -105,6 +106,16 @@ Http = (function (httpObjs) {
             this.headers.push({"name": name, "value": value});
         },
 
+        setTimeout: function (value) {
+            if (this.state !== "PENDING") {
+                throw new Error("NOT_PENDING");
+            }
+            if (typeof value !== "number" || value < 1 || String(value).indexOf(".") > -1) {
+                throw new Error("TIMEOUT_INVALID");
+            }
+            this.timeout = value * 1000;
+        }
+
         // function to perform the HTTP request
         fetch: function (data) {
             if (this.state !== "PENDING") {
@@ -115,6 +126,7 @@ Http = (function (httpObjs) {
             var req, i;
             req = new ActiveXObject(httpObj);
             req.open(this.method, this.url, false);
+            req.timeout = this.timeout;
 
             // loop over each stored header and set them for the request object
             for (i = 0; i < this.headers.length; i += 1) {

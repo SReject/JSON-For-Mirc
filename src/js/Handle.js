@@ -96,6 +96,14 @@ Handle = (function () {
             return true;
         },
 
+        httpSetTimeout: function (value) {
+            if (!this.http) {
+                throw new Error("HTTP_NOT_IN_USE");
+            }
+            this.http.setTimeout(value);
+            return true;
+        }
+
         // Performs a pending HTTP Request and attempts to parse the response
         httpFetch: function (data) {
             if (!this.http) {

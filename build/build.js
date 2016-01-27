@@ -122,8 +122,8 @@ function shrinkMSL(data) {
     }
     js.push("}())");
     js = shrinkJS(js.join("\r\n"));
-    for (i = 0; i < js.length; i += 3500) {
-        out.push("  bset -t $1 $calc($bvar($1,0)+1) " + js.substr(i, 3500));
+    for (i = 0; i < js.length; i += 3000) {
+        out.push("  bset -t $1 $calc($bvar($1,0)+1) " + js.substr(i, 3000));
     }
     js = "alias -l _JSON.JScript {\r\n  bunset $1\r\n" + out.join("\r\n") + "\r\n  return $1\r\n}\r\n";
     for (i = 0; i < files.msl.length; i += 1) {

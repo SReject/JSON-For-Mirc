@@ -21,7 +21,7 @@ alias -l _JSON.Log {
     elseif ($1 == Ok) {
       %color = 12
     }
-    
+
     if (%color) {
       tokenize 32 $2-
     }
@@ -41,7 +41,7 @@ alias -l _JSON.Log {
       %prefix = $gettok($1-, 1, 126)
       %msg = $gettok($1-, 2-, 126)
     }
-    
+
     aline @JSONForMircDebug $+($chr(3), %color, [, %prefix ,]) %msg
   }
 }
@@ -77,7 +77,7 @@ alias JSONDebug {
     }
     return $false
   }
-  
+
   ;; As command: if $1 is "on" or "enable" then enable debugging
   elseif ($1 == on || $1 == enable) {
     if (!$window(@JSONForMircDebug)) {
@@ -85,12 +85,12 @@ alias JSONDebug {
     }
     .enable #JSONForMirc:Debug
   }
-  
+
   ;; As command: if $1 is "off" or "disable" then disable debugging
   elseif ($1 == off || $1 == disable) {
     .disable #JSONForMirc:Debug
   }
-  
+
   ;; As command: if no parameter was specified toggle the debugging state
   elseif (!$0) {
     if ($group(#JSONForMirc:Debug) != on || !$window(@JSONForMircDebg)) {

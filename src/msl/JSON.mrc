@@ -4,8 +4,8 @@ alias JSON {
   }
 
   ;; variable setup
-  var %Param, %Error, %Result, %RefCom, %RefCom2, %ToBVar, %ToFile, %RemFile, %ApdCrlf, %FileSize, %Prop, %BVar, %Result, %Index
-  
+  var %Param, %Error, %Result, %RefCom, %RefClose, %RefCom2, %ToBVar, %ToFile, %RemFile, %ApdCrlf, %FileSize, %Prop, %Type, %BVar, %Result, %Index
+
   ;; Create a list of parameters and output debug message
   scid $cid var % $+ param = % $+ param $!+ , $!+ $*
   %Param = $mid(%Param, 2-)
@@ -20,7 +20,7 @@ alias JSON {
     if ($0 != 1 || $len($prop)) {
       %Error = Invalid parameters: Invalid index(0) used to request members or properties
     }
-    elseif (!$_JSON.Call(Manager, get, 1, integer, 0)) {
+    elseif (!$_JSON.Call(Manager, count, 1)) {
       %Error = $JSONError
     }
     elseif ($com($_JSON.Com(manager)).result isnum 0-) {
@@ -65,6 +65,9 @@ alias JSON {
       }
       elseif (!$com(%RefCom)) {
         %Error = Unable to retrieve reference to ` $+ $1`
+      }
+      else {
+        %RefClose = $true
       }
     }
 
@@ -166,18 +169,18 @@ alias JSON {
 
           ;; Handle HttpHeader requests
           if ($prop == HttpHeader) {
-              if (!$_JSON.Call(%RefCom2, httpHeader, 1, bstr, $2)) {
-                %Error = $JSONError
-              }
-              else {
-                %Result = $com(%RefCom2).result
-              }
+            if (!$_JSON.Call(%RefCom2, httpHeader, 1, bstr, $2)) {
+              %Error = $JSONError
+            }
+            else {
+              %Result = $com(%RefCom2).result
+            }
           }
 
           ;; Retrieve all other handle-related properties by calling their js function
           else {
-            %Prop = $matchTok(status httpResponse httpHead httpStatus httpStatusText httpHeaders httpBody, $lower($prop), 1, 32)
             %BVar = $_JSON.TmpBVar
+            %Prop = $matchtok(status httpResponse httpHead httpStatus httpStatusText httpHeaders httpBody, $lower($prop), 1, 32)
             if (!$_JSON.Call(%RefCom2, %Prop, 1)) {
               %Error = $JSONError
             }
@@ -191,6 +194,8 @@ alias JSON {
       ;; Traversal handling
       elseif (!$prop || $istok(Type Length IsParent Value ValueTo, $prop, 32)) {
 
+        %RefCom2 = $_JSON.Com
+
         ;; Build parameter list
         %index = 2
         if ($prop == ValueTo) {
@@ -199,6 +204,9 @@ alias JSON {
         %param = $null
         unset %_JSONForMirc:InputCount
         scid $cid % $+ param = $!addtok(% $+ param , $!_JSON.ParseInputs( %index , $* ) , 44)
+        if (%param) {
+          %param = $chr(44) $+ %param
+        }
 
         ;; traverse the reference to the required index
         if (!$_JSON.Call(manager, traverse, 1, dispatch, %RefCom, [ %param ] , dispatch* %RefCom2)) {
@@ -213,19 +221,21 @@ alias JSON {
         ;; If no prop, use the reference created as the result
         elseif (!$prop) {
           %Result = %RefCom2
+          %RefCom2 = $null
         }
 
         ;; $JSON().Type $JSON().Length and $JSON().IsParent delegation
         elseif ($prop == Type || $prop == Length || $prop == IsParent) {
 
           ;; get prop name
-          %Prop = $matchTok(type length isParent, $Prop, 32)
+          %Prop = $matchtok(type length isParent, $Prop, 1, 32)
 
           ;; attempt to get the property value
           if (!$_JSON.Call(%RefCom2, %Prop, 2)) {
             %Error = $JSONError
           }
           else {
+            %BVar = $_JSON.TmpBvar
             noop $com(%RefCom2, %BVar).result
           }
           .comclose %RefCom2
@@ -237,7 +247,7 @@ alias JSON {
             %Error = Unable to determine reference type
           }
           else {
-            %type = $com(%RefCom2).result
+            %Type = $com(%RefCom2).result
             if (%type == object || %type == array) {
               %Error = Cannot return a value for containers
             }
@@ -245,6 +255,7 @@ alias JSON {
               %Error = Unable to get the value property
             }
             else {
+              %BVar = $_JSON.TmpBvar
               noop $com(%RefCom2, %BVar).result
             }
           }
@@ -291,9 +302,27 @@ alias JSON {
 
   :error
   %Error = $iif($error, $v1, %Error)
+
+  ;; Handle closing the reference com
+  if ($com(%RefCom)) {
+
+    ;; if needed, close immediately
+    if (%RefClose) {
+      .comclose %RefCom
+    }
+
+    ;; otherwise close at the end of the script execution block
+    elseif (!$timer(%RefCom)) {
+      $+(.timer,%RefCom) 1 0 if ($com( %RefCom )) .comclose $!v1
+    }
+  }
+
+  ;; close the result reference com
   if ($com(%RefCom2)) {
     .comclose %RefCom2
   }
+
+  ;; handle errors
   if (%Error) {
     set -u0 %_JSONForMirc:Error $v1
     reseterror

@@ -143,8 +143,14 @@ alias rebuild {
     if (JSONForMirc:* iswm %com) .comclose %com
     inc %x
   }
-  if ($script(%out)) .unload -rs $qt(%out)
-  if ($isfile(%out)) .remove %out
-  build
+
+  if ($script(%out)) {
+    .unload -rs $qt(%out)
+  }
+  if ($isfile(%out)) {
+    .remove $qt(%out)
+  }
+  build 
   load -rs $qt(%out)
+  JSONDebug
 }

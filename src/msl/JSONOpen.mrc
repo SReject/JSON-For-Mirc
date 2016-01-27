@@ -16,7 +16,7 @@
 **/
 alias JSONOpen {
   if ($isid) return
-  
+
   ;; Variable declaration
   var %Error, %Switches, %Name, %Type, %Source, %Wait, %Unset, %ErrorCom
 

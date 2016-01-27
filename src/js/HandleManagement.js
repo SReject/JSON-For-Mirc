@@ -47,6 +47,9 @@ Handle.create = function (name, source, type, wait) {
         throw new Error(e.message);
     }
 };
+Handle.count = function () {
+    return ROOT.handlesByIndex.length;
+};
 
 // Returns the Handle matching the specified index
 Handle.get = function (index) {
@@ -117,7 +120,7 @@ Handle.traverse = function () {
 
         // if Handle instance, get the ref's json property
         if (ref instanceof Handle) {
-            if (ref.status !== "PARSED") {
+            if (ref.state !== "PARSED") {
                 throw new Error("JSON_NOT_PARSED");
             }
             parent = ref;
@@ -325,7 +328,7 @@ Handle.toString = function (index) {
 
         // return the stringified data
         return JSON.stringify(Handle.get(index).json);
-        
+
     } catch (e) {
         throw new Error(e.message);
     }
@@ -333,9 +336,9 @@ Handle.toString = function (index) {
 
 // lists all matching handles formatted as string delimited by space
 Handle.list = function (matchtext, asArray) {
-    
+
     try {
-    
+
         var i, handleList = ROOT.handlesByIndex, output = [];
 
         // If matchtext isn't specified, return all handle names
@@ -372,7 +375,7 @@ Handle.list = function (matchtext, asArray) {
 
         // join the array so the output becomes a space delimited string and return it
         return output.join(" ");
-    
+
     } catch (e) {
         throw new Error(e.message);
     }
@@ -380,7 +383,7 @@ Handle.list = function (matchtext, asArray) {
 
 // Closes all matching handles and returns the number of handles closed
 Handle.close = function (matchtext) {
-    
+
     try {
 
         // Require matchtext to be specified so a bad script won't close all handles
@@ -409,7 +412,7 @@ Handle.close = function (matchtext) {
 
         // return the number of handles deleted
         return count;
-    
+
     } catch (e) {
         throw new Error(e.message);
     }

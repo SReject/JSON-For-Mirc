@@ -19,7 +19,7 @@ alias -l _JSON.Com {
     %Result = JSONForMirc:Tmp: $+ %n
   }
   _JSON.Log $!_JSON.Com~Returning %Result as com name
-  
+
   return %Result
 }
 
@@ -127,8 +127,8 @@ alias -l _JSON.Call {
   _JSON.Log Calling~$!_JSON.Call( $+ %Param $+ )
 
 
-  _JSON.Log $~_JSON.Call~Attempting to get Com Name
-  
+  _JSON.Log $!_JSON.Call~Attempting to get Com Name
+
   ;; Figure out which com to use
   if ($istok(Wrapper Enginer Manager, $1, 32)) {
     %Com = $_JSON.Com($1)
@@ -138,17 +138,17 @@ alias -l _JSON.Call {
   }
   else {
     set -u %_JSONForMirc:Error INVALID_COM_NAME
-    _JSON.Log Error $!_JSON.CallFunct~ $+ INVALID_COM_NAME
+    _JSON.Log Error $!_JSON.Call~ $+ INVALID_COM_NAME
     return $false
   }
-  
+
   ;; Output to log
   _JSON.Log ok $!_JSON.Call~Using %com as com name
   _JSON.Log $!_JSON.Call~Making Com Call
-  
+
   ;; Perform the com call
   if (!$com(%Com, [ $gettok(%param, 2-, 44) ] ) || $comerr) {
-  
+
     _JSON.Log $!_JSON.Call~Call ended with an error, attempting to get error
 
     %ErrorCom = $_JSON.Com
@@ -240,6 +240,7 @@ alias -l _JSON.CallHandle {
   }
   if (%Error) {
     set -u %_JSONForMirc:Error $v1
+    _JSON.Log error $!_JSON.CallHandle~ $+ %Error
     return $false
   }
   return $true
