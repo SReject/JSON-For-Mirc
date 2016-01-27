@@ -47,6 +47,4 @@ Temporary Items
 .apdisk
 
 # Repo Specifics
-ignore/*
-data/*
 gh-pages/*

@@ -96,6 +96,7 @@ Handle = (function () {
             return true;
         },
 
+        // Stores the specified timeout for a pending HTTP request
         httpSetTimeout: function (value) {
             if (!this.http) {
                 throw new Error("HTTP_NOT_IN_USE");
