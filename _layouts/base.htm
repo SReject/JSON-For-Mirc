@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>JSON For mIRC{% if page.title%} - {{page.title}}{% endif %}</title>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans|Lora:700' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="./styles/main.css">
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="flex">
+                <div class="wrapmenu">
+                    <div class="menu">
+                        <a href="./index.htm"><img class="logo" src="./imgs/logo.png" /></a>
+                        <ul>
+                            <li><a class="title" href="./install.htm">&#9654; Installing</a></li>
+                            <li><a class="title" href="./docs.htm">&#9654; Documentation</a></li>
+                            <li><a class="title" href="./contribute.htm">&#9654; Contribute</a></li>
+                            <li><a class="title" href="./links.htm">&#9654; Links</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="wrapcontent">
+                    <div class="content">
+                        {{content}}
+                    </div>
+                </div>
+            </div>
+            <div class="wrapfoot">
+                <div class="foot">Footer</div>
+            </div>
+        </div>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="./scripts/main.js"></script>
+    </body>
+</html>
