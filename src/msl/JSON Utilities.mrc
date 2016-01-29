@@ -124,7 +124,7 @@ alias -l _JSON.Call {
   ;; Output debug message
   scid $cid var % $+ param = % $+ param $!+ $!chr(44) $!+ $*
   %Param = $mid(%Param, 2-)
-  _JSON.Log Calling~$!_JSON.Call( $+ %Param $+ )
+  _JSON.Log Calling~$_JSON.Call( $+ %Param $+ )
 
 
   _JSON.Log $!_JSON.Call~Attempting to get Com Name
@@ -200,7 +200,7 @@ alias -l _JSON.CallHandle {
   ;; Debug message
   scid $cid var % $+ param = % $+ param $*
   %Param = $mid(%Param, 2-)
-  _JSON.Log Calling~$!_JSON.CallHandle( $+ %Param $+ )
+  _JSON.Log Calling~$_JSON.CallHandle( $+ %Param $+ )
 
 
   ;; Validate passed Reference Com handling

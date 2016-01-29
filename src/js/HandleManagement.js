@@ -12,7 +12,7 @@ function Result(name, parent, index, value) {
     this.index     = index;
     this.type      = getType(value);
     this.value     = value;
-    this.isParent  = /^(?:array|object)$/.test(this.type);
+    this.isParent  = /^(?:array|object)$/.test(this.type) || false;
 
     if (this.type === "string" || this.type === "array") {
         this.length = value.length;
@@ -111,7 +111,8 @@ Handle.traverse = function () {
             index,
             type,
             child,
-            keys;
+            keys,
+            i;
 
         // if the reference is a string or number attempt to get a handle matching the name(if string) or index(if number)
         if (typeof ref === "string" || typeof ref === "number") {
@@ -170,11 +171,10 @@ Handle.traverse = function () {
 
                     // get the nth item name from the reference to use as the child argument
                     child = keys[child];
-                }
-                else if (!hasProp(ref, child)) {
+                } else if (!hasProp(ref, child)) {
                     keys = Object.keys(ref);
                     for (i = 0; i < keys.length; i += 1) {
-                        if (child.toLowerCase() == keys[i].toLowerCase()) {
+                        if (child.toLowerCase() === keys[i].toLowerCase()) {
                             child = keys[i];
                             break;
                         }
@@ -350,9 +350,6 @@ Handle.list = function (matchtext, asArray) {
         if (typeof matchtext !== "string") {
             throw new Error("INVALID_MATCHTEXT");
         }
-        if (switches !== undefined && switches !== null && typeof switches !== "string") {
-            throw new Error("INVALID_SWITCHES");
-        }
 
         // compile regex to be used for matching
         try {
@@ -392,7 +389,7 @@ Handle.close = function (matchtext) {
         }
 
         // get a list of matching handles
-        var list = this.list(matchtext, switches, true),
+        var list = this.list(matchtext, true),
             handles = ROOT.handles,
             count = 0,
             index;

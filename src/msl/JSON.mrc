@@ -9,7 +9,7 @@ alias JSON {
   ;; Create a list of parameters and output debug message
   scid $cid var % $+ param = % $+ param $!+ , $!+ $*
   %Param = $mid(%Param, 2-)
-  _JSON.Log Calling~$JSON( $+ %Param $+ )
+  _JSON.Log Calling~$JSON( $+ %Param $+ ) $+ $iif($prop, . $+ $v1)
 
   if (!$0) {
     %Error = Missing Parameters
@@ -236,7 +236,7 @@ alias JSON {
           }
           else {
             %BVar = $_JSON.TmpBvar
-            noop $com(%RefCom2, %BVar).result
+            bset -t %BVar 1 $com(%RefCom2).result
           }
           .comclose %RefCom2
         }
@@ -256,7 +256,12 @@ alias JSON {
             }
             else {
               %BVar = $_JSON.TmpBvar
-              noop $com(%RefCom2, %BVar).result
+              if (%Type == string) {
+                noop $com(%RefCom2, %BVar).result
+              }
+              else {
+                bset -t %BVar 1 $com(%RefCom2).result
+              }
             }
           }
           .comclose %RefCom2

@@ -114,7 +114,7 @@ Http = (function (httpObjs) {
                 throw new Error("TIMEOUT_INVALID");
             }
             this.timeout = value * 1000;
-        }
+        },
 
         // function to perform the HTTP request
         fetch: function (data) {

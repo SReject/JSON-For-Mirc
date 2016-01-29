@@ -19,7 +19,7 @@ function getType(obj) {
     return (Object.prototype.toString.call(obj)).replace(/\[\S+ (.*)\]$/i, function (text, typeText) {
         typeText = typeText.toLowerCase();
         if (typeText === "undefined") {
-            return null;
+            return 'null';
         }
         return typeText;
     });

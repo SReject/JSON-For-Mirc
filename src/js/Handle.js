@@ -103,7 +103,7 @@ Handle = (function () {
             }
             this.http.setTimeout(value);
             return true;
-        }
+        },
 
         // Performs a pending HTTP Request and attempts to parse the response
         httpFetch: function (data) {
