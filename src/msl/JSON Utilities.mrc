@@ -27,13 +27,14 @@ alias -l _JSON.Com {
 /** $_JSON.TmpBVar
 ***     Returns the name of a new bvar
 **/
-alias -l _JSON.TmpBVar {
-  var %n = $ticks * 1000
-  while ($bvar(JSONForMirc:Tmp: $+ %n, 0)) {
-    inc %n
+alias _JSON.TmpBVar {
+  :new
+  var %b = JSONForMirc:Tmp: $+ $ctime $+ $ticks $+ $rand(1,100000000)
+  if ($bvar(%b, 0)) { 
+    goto new 
   }
-  _JSON.Log $!_JSON.TmpBVar~Returning &JSONForMirc:Tmp: $+ %n as temporary binary variable
-  return &JSONForMirc:Tmp: $+ %n
+  _JSON.Log $!_JSON.TmpBVar~Returning & $+ %b as temporary binary variable
+  return & $+ %b
 }
 
 
@@ -41,25 +42,16 @@ alias -l _JSON.TmpBVar {
 ***     Returns a new temp file path
 **/
 alias -l _JSON.TmpFile {
-  var %dir = $nofile($mircini) $+ data\, %n = $ticks * 1000
-
-  ;; create the directory ..\data\JSONForMirc\
-  if (!$isdir(%dir)) {
-    mkdir %dir
+  :new
+  var %f = $envvar(temp) $+ \ $+ JSONForMirc_ $+ $ctime $+ $ticks $+ $rand(1,100000000) $+ .tmp
+  if ($isfile(%f)) { 
+    goto new
   }
-  %dir = %dir $+ JSONForMirc\
-  if (!$isdir(%dir)) {
-    mkdir %dir $+ JSONForMirc\
+  _JSON.Log $!_JSON.TmpFile~Returning %f as temporary file
+  if ($prop == quote) { 
+    return $qt(%f)
   }
-
-  while ($isfile(%dir $+ JSONForMirc $+ %n $+ .tmp)) {
-    inc %n
-  }
-  _JSON.Log $!_JSON.TmpFile~Returning %dur $+ JSONForMirc $+ %n $+ .tmp as temporary file
-  if ($prop == quote) {
-    return $qt(%dur $+ JSONForMirc $+ %n $+ .tmp)
-  }
-  return %dur $+ JSONForMirc $+ %n $+ .tmp
+  return %f
 }
 
 
