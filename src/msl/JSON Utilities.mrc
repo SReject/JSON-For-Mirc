@@ -55,11 +55,11 @@ alias -l _JSON.TmpFile {
   while ($isfile(%dir $+ JSONForMirc $+ %n $+ .tmp)) {
     inc %n
   }
-  _JSON.Log $!_JSON.TmpFile~Returning %dur $+ JSONForMirc $+ %n $+ .tmp as temporary file
+  _JSON.Log $!_JSON.TmpFile~Returning %dir $+ JSONForMirc $+ %n $+ .tmp as temporary file
   if ($prop == quote) {
-    return $qt(%dur $+ JSONForMirc $+ %n $+ .tmp)
+    return $qt(%dir $+ JSONForMirc $+ %n $+ .tmp)
   }
-  return %dur $+ JSONForMirc $+ %n $+ .tmp
+  return %dir $+ JSONForMirc $+ %n $+ .tmp
 }
 
 
