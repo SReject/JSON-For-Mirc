@@ -174,6 +174,7 @@ alias JSON {
             }
             else {
               %Result = $com(%RefCom2).result
+              %Result = $iif($len(%Result), %Result, $null)
             }
           }
 
@@ -209,7 +210,7 @@ alias JSON {
         }
 
         ;; traverse the reference to the required index
-        if (!$_JSON.Call(manager, traverse, 1, dispatch, %RefCom, [ %param ] , dispatch* %RefCom2)) {
+        if (!$_JSON.Call(manager, traverse, 1, dispatch, %RefCom [ %param ] , dispatch* %RefCom2)) {
           %Error = $JSONError
         }
 

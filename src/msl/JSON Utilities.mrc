@@ -29,7 +29,7 @@ alias -l _JSON.Com {
 **/
 alias -l _JSON.TmpBVar {
   var %n = $ticks * 1000
-  while ($bvar(JSONForMirc:Tmp: $+ %n, 0)) {
+  while ($bvar(&JSONForMirc:Tmp: $+ %n, 0)) {
     inc %n
   }
   _JSON.Log $!_JSON.TmpBVar~Returning &JSONForMirc:Tmp: $+ %n as temporary binary variable
@@ -94,10 +94,10 @@ alias -l _JSON.UnEscape {
 /** $_JSON.WildcardToRegex(@input)
 ***     Converts the input wildcard matchtext to a regex pattern
 **/
-alias -l $_JSON.WildcardToRegex {
+alias -l _JSON.WildcardToRegex {
   return $+(^, $regsubex($1-,/([\Q$^|[]{}()\/.+\E])|(&(?= |$))|([?*]+)/g, $_JSON.WildcardToRegexRep(\t)), $chr(36))
 }
-alias -l $_JSON.WildcardToRegexRep {
+alias -l _JSON.WildcardToRegexRep {
   if ($1 == &) {
     return \S+\b
   }

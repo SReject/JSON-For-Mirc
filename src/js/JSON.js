@@ -13,13 +13,13 @@
         }) + '"';
     }
     Date.prototype.toJSON = function () {
-        return isFinite(this.valueOf()) ? [this.getUTCFullYear(), '-', f(this.getUTCMonth() + 1), '-', f(this.getUTCDate()), 'T', f(this.getUTCHours()), ':', f(this.getUTCMinutes()), ':', f(this.getUTCSeconds()), 'Z'].join("") : null;
+        return isFinite(this.valueOf()) ? [this.getUTCFullYear(), '-', f(this.getUTCMonth() + 1), '-', f(this.getUTCDate()), 'T', f(this.getUTCHours()), ':', f(this.getUTCMinutes()), ':', f(this.getUTCSeconds()), 'Z'].join("") : 'null';
     };
     Boolean.prototype.toJSON = function () {
         return String(this.valueOf());
     };
     Number.prototype.toJSON = function () {
-        return isFinite(this.valueOf()) ? String(this.valueOf()) : null;
+        return isFinite(this.valueOf()) ? String(this.valueOf()) : 'null';
     };
     String.prototype.toJSON = function () {
         return q(this.valueOf());
@@ -28,10 +28,10 @@
         var r = [], i, v;
         for (i = 0; i < this.length; i += 1) {
             v = this[v];
-            if (hasProp(v, "toJSON") && typeof v.toJSON === "function") {
-                r.push(v.toJSON());
-            } else {
+            if (v === null || v === undefined) {
                 r.push('null');
+            } else if (typeof v.toJSON === "function") {
+                r.push(v.toJSON());
             }
         }
         return '[' + r.join(',') + ']';
@@ -41,10 +41,10 @@
         for (k in s) {
             if (hasProp(s, k)) {
                 v = s[k];
-                if (hasProp(v, "toJSON") && typeof v.toJSON === "function") {
-                    r.push(q(k) + ":" + v.toJSON());
-                } else {
+                if (v === null) {
                     r.push(q(k) + ":null");
+                } else if (typeof v.toJSON === "function") {
+                    r.push(q(k) + ":" + v.toJSON());
                 }
             }
         }

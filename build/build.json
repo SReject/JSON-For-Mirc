@@ -12,6 +12,7 @@
         "JSON.mrc",
         "JSONOpen.mrc",
         "JSONHttp.mrc",
+        "JSONList.mrc",
         "JSONClose.mrc",
         "JSONDebug.mrc",
         "on Unload.mrc"

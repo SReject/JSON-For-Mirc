@@ -335,15 +335,15 @@ Handle.toString = function (index) {
 };
 
 // lists all matching handles formatted as string delimited by space
-Handle.list = function (matchtext, asArray) {
+Handle.list = function (matchtext) {
 
     try {
 
         var i, handleList = ROOT.handlesByIndex, output = [];
 
         // If matchtext isn't specified, return all handle names
-        if (matchtext === undefined || matchtext === null) {
-            return handleList.join(" ");
+        if (matchtext === undefined || matchtext === null || matchtext === "") {
+            return handleList.join(" ").split(/ /g);
         }
 
         // validate matchtext and switches
@@ -365,13 +365,7 @@ Handle.list = function (matchtext, asArray) {
             }
         }
 
-        // if an array is desired, return the output array
-        if (asArray) {
-            return output;
-        }
-
-        // join the array so the output becomes a space delimited string and return it
-        return output.join(" ");
+        return output;
 
     } catch (e) {
         throw new Error(e.message);
@@ -389,7 +383,7 @@ Handle.close = function (matchtext) {
         }
 
         // get a list of matching handles
-        var list = this.list(matchtext, true),
+        var list = this.list(matchtext),
             handles = ROOT.handles,
             count = 0,
             index;

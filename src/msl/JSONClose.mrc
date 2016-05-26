@@ -31,13 +31,19 @@ alias JSONClose {
     elseif ($regex(%Switches, ([sw]).*\1)) {
       %Error = Duplicate Switch: $regml(1)
     }
-    elseif ($regex(%Switchs, /([sw])/g) > 1) {
+    elseif ($regex(%Switches, /([sw])/g) > 1) {
       %Error = Conflicting Switch: s & w
     }
+    
+    ;; temporary check until /JSONSave is added
+    elseif (%Switches == s) {
+        %Error = Saving is not supported yet.
+    }
+    
     else {
 
       ;; attempt to save if requested
-      if (s isincs %switches) {
+      if (s isincs %Switches) {
         JSONSave $1-
         if ($JSONError) {
           %Error = $v1
@@ -60,7 +66,7 @@ alias JSONClose {
         %Error = $JSONError
       }
       else {
-        Result = $com($_JSON.Com(Manager)).result
+        %Result = $com($_JSON.Com(Manager)).result
       }
     }
   }
