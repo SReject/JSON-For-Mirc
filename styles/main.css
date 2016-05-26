@@ -2,7 +2,6 @@ html, body, h1, h2, h3, h4, h5, p {
     margin: 0px;
     padding: 0px;
 }
-
 html, body {
     font-family: 'Open Sans', sans-serif;
     text-shadow: 1px 1px 1px #000;
@@ -18,9 +17,6 @@ a, a:hover, a:visited {
     text-decoration: none;
     font-weight: bold;
 }
-
-
-
 .wrapper {
     position: relative;
 }
@@ -52,11 +48,6 @@ a, a:hover, a:visited {
     border-top: 1px solid rgba(0, 0, 0, .3);
     background-color: rgba(0, 0, 0, .25);
 }
-
-
-
-
-
 .menu {
     padding: 20px;
     padding-top: 100px;
@@ -150,7 +141,6 @@ span.comment {
     font-weight: bold;
     font-size: 1.1em;
 }
-
 .foot {
     margin-left: 251px;
     padding: 20px;
