@@ -36,11 +36,11 @@ Usage:
 #### /JSONOpen -dbfuw {name} {text|bvar|file|url}
 > Creates a json handler
 >
-> `-d`: Closes the JSON handler at the end of the script's execution
-> `-b`: Parses JSON stored in the specified bvar
-> `-f`: Parses JSON stored in the specified file
-> `-u`: Parses JSON stored at the specified URL
-> `-w`: Used with `-u`, to make the URL request wait until `/JSONUrlGet` is called. This is to allow the usage of `/JSONUrlMethod` and `/JSONUrlHeader` prior to retrieving data from a url.
+> `-d`: Closes the JSON handler at the end of the script's execution  
+> `-b`: Parses JSON stored in the specified bvar  
+> `-f`: Parses JSON stored in the specified file  
+> `-u`: Parses JSON stored at the specified URL  
+> `-w`: Used with `-u`, to make the URL request wait until `/JSONUrlGet` is called. This is to allow the usage of `/JSONUrlMethod` and `/JSONUrlHeader` prior to retrieving data from a url.  
 >
 > `{name}`: Unique name of the json handler to use to reference the handler. Must start with a letter(a-z) and contain only letters, numbers, _ or -
 >
