@@ -23,9 +23,9 @@ Requirements:
 
 Installation:
 =============
-> Create a new remotes file  
-> Copy the code into it  
-> Then save  
+> Download the [JSONForMirc.v.0.2.4.mrc](https://github.com/SReject/JSON-For-Mirc/releases/download/v0.2.4-beta/JSONForMirc.v0.2.4.mrc) file
+> Move the file to a directory of your choice
+> In mirc enter the following: `//load -rs $qt($$sfile($mircdir, Load JSONFormIRC, Load))`
 
 Notes:
 ======
