@@ -6,11 +6,11 @@ Back Releases
 
 
 
-# Attention
+Attention
 ===========
 > This is a WIP repo. If you are looking for a previously released version please see `Back Releases` above.  
 
-# JSON For mIRC
+JSON For mIRC
 ======
 > A script to parse and then access JSON from within mIRC.  
 >
