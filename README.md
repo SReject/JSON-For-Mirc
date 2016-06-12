@@ -2,6 +2,8 @@ Back Releases
 =============
 ####JSONForMirc v0.2.4  
 
+[![Join the chat at https://gitter.im/SReject/JSON-For-Mirc](https://badges.gitter.im/SReject/JSON-For-Mirc.svg)](https://gitter.im/SReject/JSON-For-Mirc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 > [docs](https://github.com/SReject/JSON-For-Mirc/tree/v0.2.4) - [download](https://github.com/SReject/JSON-For-Mirc/releases/download/v0.2.4-beta/JSONForMirc.v0.2.4.mrc)  
 
 
