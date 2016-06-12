@@ -1,6 +1,6 @@
-[![Join the chat at https://gitter.im/SReject/JSON-For-Mirc](https://badges.gitter.im/SReject/JSON-For-Mirc.svg)](https://gitter.im/SReject/JSON-For-Mirc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Join us on irc](https://img.shields.io/badge/IRC-on%20Swift-brightgreen.svg)](irc://swiftirc:6667/jsonformirc)
+[![Join the chat at https://gitter.im/SReject/JSON-For-Mirc](https://badges.gitter.im/SReject/JSON-For-Mirc.svg)](https://gitter.im/SReject/JSON-For-Mirc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-)
+[![Join us on irc://swiftirc:6667/jsonformirc](https://img.shields.io/badge/IRC-on%20Swift-brightgreen.svg)](irc://swiftirc:6667/jsonformirc)
 
 Back Releases
 =============
