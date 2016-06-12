@@ -1,4 +1,4 @@
-[![Join the chat at https://gitter.im/SReject/JSON-For-Mirc](https://badges.gitter.im/SReject/JSON-For-Mirc.svg)](https://gitter.im/SReject/JSON-For-Mirc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/SReject/JSON-For-Mirc](https://badges.gitter.im/SReject/JSON-For-Mirc.svg)](https://gitter.im/SReject/JSON-For-Mirc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Join us on IRC](https://img.shields.io/badge/IRC-SwiftIRC-brightgreen.svg "Join us on IRC")](https://qwebirc.swiftirc.net/?channels=%23jsonformirc)
 
 Back Releases
 =============
