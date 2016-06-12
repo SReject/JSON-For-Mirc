@@ -1,3 +1,5 @@
+[![Join the chat at https://gitter.im/SReject/JSON-For-Mirc](https://badges.gitter.im/SReject/JSON-For-Mirc.svg)](https://gitter.im/SReject/JSON-For-Mirc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Back Releases
 =============
 ####JSONForMirc v0.2.4  
