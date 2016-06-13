@@ -18,7 +18,7 @@ alias JSONOpen {
   if ($isid) return
 
   ;; Variable declaration
-  var %Error, %Switches, %Name, %Type, %Source, %Wait, %Unset, %ErrorCom
+  var %Error, %Switches, %Name, %Type, %Source, %Wait, %Unset
 
   ;; Log the call
   _JSON.Log Calling~/JSONOpen $1-
