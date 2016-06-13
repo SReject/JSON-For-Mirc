@@ -31,3 +31,7 @@ Requirements:
 > Windows 2000 or later (This will not work under wine due to lack of COM support)  
 >
 > If you are using AdiIRC 64bit, you will need to install the [tsc.dll](http://www.eonet.ne.jp/~gakana/tablacus/scriptcontrol_en.html) for this script to work  
+  
+Contribution Licensing:
+=========
+> By submitting a pull request to this repository, you acknowledge that you own or have rights to distribute and sublicense the source code contained therein, and that your content does not infringe upon the intellectual property rights of a third party. By opening a pull request you understand that, while maintaining copyright, you grant SReject a non-exclusive, transferable, sub-licensable, royalty-free, worldwide license to use the contents of your pull request as SReject deems fit.
