@@ -1,6 +1,6 @@
 Donate:  
 ======  
-> If you appreciate the work done, consider donating via paypal: froggiedafrog@aim.com  
+> If you appreciate the work done, consider donating via paypal @ [StreamJar](https://streamjar.tv/tip/SReject)
   
   
 About:  
