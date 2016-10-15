@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JSON For mIRC</title>
+        <link rel="stylesheet" href="./res/main.css" />
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="wraphelper">
+                <div class="menu">
+                    <div class="logo">
+                        <a href="#!/home"><img src="./res/logo.png" /></a>
+                    </div>
+                    <ul>
+                        <li data-pagename="home" class="active">
+                            <a href="#!/home">Home</a>
+                        </li>
+                        <li data-pagename="downloads">
+                            <a href="#!/downloads">Downloads</a>
+                        </li>
+                        <li data-pagename="whatisjson">
+                            <a href="#!/whatisjson">What is JSON</a>
+                        </li>
+                        <li data-pagename="usage">
+                            <a href="#!/usage">Usage</a>
+                            <ul>
+                                <li data-anchorname="creation">
+                                    <a href="#!/usage#creation">Creation</a>
+                                </li>
+                                <li data-anchorname="referencing">
+                                    <a href="#!/usage#referencing">Referencing</a>
+                                </li>
+                                <li data-anchorname="closing">
+                                    <a href="#!/usage#closing">Closing</a>
+                                </li>
+                                <li data-anchorname="errorhandling">
+                                    <a href="#!/usage#errorhandling">Error handling</a>
+                                </li>
+                                <li data-anchorname="misc">
+                                    <a href="#!/usage#misc">Misc</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li data-pagename="reference">
+                            <a href="#!/reference">Referance</a>
+                            <ul>
+                                <li>
+                                    <a href="#!/reference#cmd/jsonopen">/JSONOpen</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#cmd/jsonhttpmethod">/JSONHttpMethod</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#cmd/jsonhttpheader">/JSONHttpHeader</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#cmd/jsonhttpfetch">/JSONHttpFetch</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#cmd/jsonclose">/JSONClose</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#cmd/jsonshutdown">/JSONShutDown</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#cmd/jsondebug">/JSONDebug</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json">$JSON</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/jsonerror">$JSONError</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/jsondebug">$JSONDebug</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/jsonversion">$JSONVersion</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="content">
+                    <div name="home" class="active">
+                        <div class="section">
+                            <h1>About</h1>
+                            <p>JSON For mIRC is a mIRC script that makes use of mIRC's COM interface to parse and access <a href="#!/whatisjson">JSON data</a>. Boasting a rich feature set, JSON For mIRC aims to be comprehensive, light-weight and blazingly fast.</p>
+                        </div>
+                        <div class="section">
+                            <h2>History</h2>
+                            <p>After scouring the web for a well coded JSON parser, a script by Timi was discovered that made use of mIRC's COM interferace. Timi's JSON parser was functional and fast (compared to other pure mSL implementations) it was found to have many inefficiencies. Due to such, I began to write his own version and JSON For mIRC was born.</p>
+                            <p>The first version brought parsing and accessing but due to poor planning and being built from a piecemeal of personal specialized scripts, the original release had many flaws. As bugs were patched the codebase became harder to manage resulting in an ever increasing difficulty to patch newly discovered bugs or add desired features.</p>
+                            <p>While the project struggled to maintain itself new features were added to mIRC and many coding discoveries were made; this gave rise to a complete rewrite. The rewrite was better planned, held to a higher set of coding guidelines, is open source and version controlled via <a href="https://github.com/SReject/JSON-For-Mirc" target="_blank">git/github</a>.</p>
+                        </div>
+                        <div class="section">
+                            <h2>Contribute</h2>
+                            <p>If you would like to contribute to the project feel free to fork the <a href="">repo</a>, edit the files then make a pull request. If the alterations are accepted your pull request will be merged with the master source-code.</p>
+                            <p>You can contribute by doing more than just coding: help is needed with proof reading and phrasing in the documention, helping others learn to use the script, testing alpha/beta releases, and even reporting bugs<p>
+                        </div>
+                        <div class="section">
+                            <h2>Suggestions &amp; Bugs</h2>
+                            <p>You can make feature requests or report bugs to the <a href="">github issue tracker</a></p>
+                        </div>
+                        <div class="section">
+                            <h2>Contact</h2>
+                            <p>The offical chat is on <a href="irc://irc.swiftirc.net:6667/jsonformirc">SwiftIRC's #JSONForMirc</a> though SReject can also be found on EsperNet, Freenode, Quakenet, snoonet and Twitch.tv</p>
+                        </div>
+                    </div>
+                    
+                    <!--  -->
+                    <div name="downloads">
+                        <div class="section">
+                            <h1>Stable - v0.2.41</h1>
+                            <div class="section sub indent nospace">
+                                <h2>Requirements</h2>
+                                <p>mIRC v7.32+ or AdiIRC v2.2+</p>
+                                <p>Windows 2000 or later - This will not work under WINE due to wine not having a replacement for Microsoft's wscript interface</p>
+                                <p>If you are using AdiIRC 64bit, you will need to install the <a href="http://www.eonet.ne.jp/~gakana/tablacus/scriptcontrol_en.html">tsc.dll</a> for this script to work</p>
+                            </div>
+                            <div class="section sub indent nospace">
+                                <h2>Installation</h2>
+                                <p>Download JSONForMirc v0.2.41.mrc</p>
+                                <p>Move the file to a directory of your choice</p>
+                                <p>In mIRC/AdiIRC enter the following into an input box and hit enter:<br>
+                                <span class="code">//load -rs $qt($$sfile($mircdir, Load JSONFormIRC, Load))</span></p>
+                                <p>In the box that appears, navigate to where you saved the JSONForMirc v0.2.41.mrc file</p>
+                                <p>Select it then click "Load"</p>
+                            </div>
+                            <div class="section sub indent nospace">
+                                <h2>Download</h2>
+                                <p><a href="https://github.com/SReject/JSON-For-Mirc/releases/download/v0.2.41-beta/JSONForMirc.v0.2.41.mrc">JSONForMirc v0.2.41.mrc</a></p>
+                            </div>
+                            <div class="section sub indent nospace">
+                                <h2>Changes</h2>
+                                <p>Fixed: Mislabeling of http DELETE method as DEL</p>
+                                <p>Added: http methods PATCH, HEAD, and OPTIONS</p>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h1>Unstable - v1.0.0</h1>
+                            <div class="section sub indent nospace">
+                                <h2>Requirements</h2>
+                                <p>mIRC v7.44+ or AdiIRC v2.4+</p>
+                                <p>Windows 2000 or later - This will not work under WINE due to wine not having a replacement for Microsoft's wscript interface</p>
+                                <p>If you are using AdiIRC 64bit, you will need to install the <a href="http://www.eonet.ne.jp/~gakana/tablacus/scriptcontrol_en.html">tsc.dll</a> for this script to work</p>
+                            </div>
+                            <div class="section sub indent nospace">
+                                <h2>Installation</h2>
+                                <p>Download JSONForMirc v1.0.0.mrc</p>
+                                <p>Move the file to a directory of your choice</p>
+                                <p>In mIRC/AdiIRC enter the following into an input box and hit enter:<br>
+                                <span class="code">//load -rs $qt($$sfile($mircdir, Load JSONFormIRC, Load))</span></p>
+                                <p>In the box that appears, navigate to where you saved the JSONForMirc v0.2.41.mrc file</p>
+                                <p>Select it then click "Load"</p>
+                            </div>
+                            <div class="section sub indent nospace">
+                                <h2>Download</h2>
+                                <p>Coming Soon</p>
+                            </div>
+                            <div class="section sub indent nospace">
+                                <h2>Changes</h2>
+                                <p>Complete Rewrite</p>
+                                <p>Added: /JSONHttpMethod</p>
+                                <p>Added: /JSONHttpHeader</p>
+                                <p>Added: /JSONHttpFetch</p>
+                                <p>Added: /JSONShutDown</p>
+                                <p>Added: $JSON().State</p>
+                                <p>Added: $JSON().InputType</p>
+                                <p>Added: $JSON().Input</p>
+                                <p>Added: $JSON().Path</p>
+                                <p>Added: $JSON().HttpResponse</p>
+                                <p>Added: $JSON().HttpHead</p>
+                                <p>Added: $JSON().HttpStatus</p>
+                                <p>Added: $JSON().HttpStatusText</p>
+                                <p>Added: $JSON().HttpHeaders</p>
+                                <p>Added: $JSON().Httpheader</p>
+                                <p>Added: $JSON().HttpBody</p>
+                                <p>Added: $JSON().String</p>
+                                <p>Added: $JSON().DebugString</p>
+                                <p>Added: $JSON() property 'toFile' suffix</p>
+                                <br>
+                                <p>Change: 'fuzzy' is now a property prefix</p>
+                                <p>Change: 'toBvar' is now a property suffix</p>
+                                <br>
+                                <p>Depreciated: $JSON() to get values</p>
+                                <p>Depreciated: /JSONUrl* commands</p>
+                                <p>Depreciated: $JSON().Url* properties</p>
+                                <p>Depreciated: $JSON().isRef</p>
+                                <p>Depreciated: $JSON().status</p>
+                                <br>
+                                <p>Removed: /JSONUrlOption</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div name="whatisjson">
+                        <div class="section">
+                            <h1>What is JSON?</h1>
+                            <p>JSON is short for "JavaScript Object Notation"; originally meant for web applications, it has become the go-to data format for many enviornments and platforms. Its structuring makes for small, text-based, outputs that are easily parsable programmatically while still being human legiable.</p>
+                            <p>JSON is <em>NOT</em> a functional data notation. JSON data does not have a means to specify directives(commands) a program must do when attempting to understand the JSON data; the JSON standard strictly prohibits such as a means of ensuring security.</p>
+                        </div>
+                        
+                        <div class="section">
+                            <h1>White Space</h1>
+                            <p>Previously it was mentioned that JSON is human readable yet most web api's return it as a jumbled mess. This is because JSON intrepreters are required to ignore whitespace so it can be removed without costing data integrity; this is what those APIs do with the intent of reducing network traffic. There are <a href="http://jsonviewer.stack.hu/" target="_blank">online tools</a> that will re-add whitespace to make the output human readable.</p>
+                        </div>
+                        
+                        <div class="section">
+                            <h1>Data Types</h1>
+                            <p>Data types are a way to indicate to the intrepreting program what each piece of the data is. JSON has 6 data types: 4 of which are used to represent simple values and 2 for containing data collections.</p>
+                            
+                            <div class="section sub indent">
+                                <h2>Primitives</h2>
+                                <p>JSON has four primitive data types to represent a single simple value. These data types do not have the complexity or structuring to cantain multiple values the way Container Types do.</p>
+                                <div class="sub">
+                                    <span class="code em">Null</span> - Donated by the keyword <span class="code">null</span>
+                                    <p>Null is used when there is absolutely no value to reference. That is, the value isn't empty text or 0 or false; there is absolutely nothing to reference.</p>
+                                </div>
+                                <div class="sub">
+                                    <span class="code em">Boolean</span> - Denoted by the keywords <span class="code">true</span> and <span class="code">false</span>
+                                    <p>Boolean is used when a value is meant to only have two states. Its used to say "yes", "true", "on", "no", "false", "off"</p>
+                                </div>
+                                <div class="sub">
+                                    <span class="code em">Numbers</span> - Denoted by a valid numerical sequence.
+                                    <p>Number is used when a value should be intrepreted as a number; Positive numbers, negitive numbers and decimals are all Number data types.</p>
+                                </div>
+                                <div class="sub">
+                                    <span class="code em">String</span> - Denoted by text wrapped in double quotes: <span class="code">""</span>
+                                    <p>String is used when a value, regardless of its contents should be intrepreted as text. Due to strings being able to contain any text, including double quotes, there are special character sequences that have alternative meanings within the context of a string:</p>
+                                    <div class="sub indent">
+                                        <span class="code em">\"</span> - Represents a double quote( <span class="code em">"</span> )<br>
+                                        <span class="code em">\/</span> - Represents a forward slash( <span class="code em">/</span> )<br>
+                                        <span class="code em">\\</span> - Represents a back slash( <span class="code em">\</span> )<br>
+                                        <span class="code em">\f</span> - Represents a form feed character<br>
+                                        <span class="code em">\r</span> - Represents a carriage-return character<br>
+                                        <span class="code em">\f</span> - Represents a line-feed character<br>
+                                        <span class="code em">\t</span> - Represents a tab character<br>
+                                        <span class="code em">\uNNNN</span> - Represents a unicode character where NNNN is the hexidecimal encoding of the character
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="section sub indent">
+                                <h2>Containers</h2>
+                                <p>Containers, as their name implies, are used to contain multiple values and can consist of both primitive and other container values.</p>
+                                <div class="sub">
+                                    <span class="code em">Array</span> - Denoted by a comma seperated list of values wrapped in brackets: <span class="code">[]</span>
+                                    <p>Arrays are ordered lists of values where each value is automatically given an index for referencing. Indexes start at zero and increase by one for each value: the first value uses an index of 0, the second an index of 1, the third an index of 2 and so on for each value in the array.</p>
+                                    <p>Example: <span class="code">["a", 1, true, null, ["b", "c"]]</span></p>
+                                </div>
+                                <div class="sub">
+                                    <span class="code em">Objects</span> - Donated by a comma seperated list of key-value pairs wrapped in braces: <span class="code">{}</span><br>
+                                    <p>Objects are unordered lists where each value contained is referenced by a given key. All keys are represented as a string and are seperated from their value via the use of a colon(<span class="code">:</span>). Keys are case sensitive so attempting to reference "KEY" will not point to the data contained under "key"</p>
+                                    <p>Example: <span class="code">{"key": "value", "key2": true, "key3": [null, "c"]}</span></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="section">
+                            <h1>Referencing</h1>
+                            <p>Referencing specific parts of JSON data is quite simple once you understand the above syntax for JSON data</p>
+                            <div class="section sub indent">
+                                <p>In the following examples, lines prefixed with <span class="code"><span class="comment">;;</span></span> are comments, and <span class="code">-&gt;</span> represents referencing an item of a container</p>
+                                <div class="code indent">
+                                    <span class="comment">;; references 'item' of 'container'</span><br>
+                                    container -&gt; item</pre>
+                                </div>
+                            </div>
+
+
+                            <div class="section sub indent">
+                                <h2>Referencing Primitives</h2>
+                                <p>If the JSON data is a primitive, it is simply returned by the intrepreter.</p>
+                                <div class="code indent">
+                                    json_data = "value";<br>
+                                    parsedjson = interpret_JSON(json_data)<br>
+                                    <br>
+                                    <span class="comment">;; This would output the text: value</span><br>
+                                    output(parsedjson)
+                                </div>
+                            </div>
+
+                            <div class="section sub indent">
+                                <h2>Referencing Container Values</h2>
+                                <p>If the JSON data is a container, there's a bit more work involved to access values. A key or index must be specified when accessing the container and successive keys and indexes will need to be specified for nested containers.</p>
+                                <div class="code indent">
+                                    json_data = {<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;"key1": "value",<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;"key2": [<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"index0",<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"index1"<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;],<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;"key3": {<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"key3.1": "value2"<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;},<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;"key4": {<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"key4.1": [<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value3"<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                                    }<br>
+                                    <br>
+                                    parsedjson = interpret_JSON(json_data)<br>
+                                    <br>
+                                    <span class="comment">;; Results in myVar being set to the text: value</span><br>
+                                    myVar = parsedjson -&gt; "key1"<br>
+                                    <br>
+                                    <span class="comment">;; Results in myVar being set to the text: index0</span><br>
+                                    <span class="comment">;; key2's value is referenced(which is a container)<br>
+                                    ;; then the 0th indexed item is referenced</span><br>
+                                    myVar = parsedjson -&gt; "key2" -&gt; 0<br>
+                                    <br>
+                                    <span class="comment">;; Results in myVar being set to the text: index1</span><br>
+                                    myVar = parsedjson -&gt; "key2" -&gt; 1<br>
+                                    <br>
+                                    <span class="comment">;; Results in myVar being set to the text: value2</span><br>
+                                    <span class="comment">;; key3's value is referenced(which is a container)<br>
+                                    ;; then the item with key "key3.1" is referenced</span><br>
+                                    myVar = parsedjson -&gt; "key3" -&gt; "key3.1"<br>
+                                    <br>
+                                    <span class="comment">;; Results in myVar being set to the text: value3</span><br>
+                                    <span class="comment">;; key4's value is referenced(which is a container)<br>
+                                    ;; then the value of key4.1 is referenced(another container)<br>
+                                    ;; then the 0th indexed item is referenced.</span><br>
+                                    myVar = parsedjson -&gt; "key4" -&gt; "key4.1" -&gt; 0<br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div name="usage">Usage: To Do</div>
+                    <div name="reference">Reference: To Do</div>
+                </div>
+            </div>
+            <div class="foot">Footer</div>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="./res/main.js"></script>
+    </body>
+</html>
