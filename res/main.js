@@ -1,8 +1,7 @@
 (function ($) {
-    
-    function navToHash() {
-        var hash = String(location.hash || "#!/home"),
-            match = hash.match(/^#!\/([a-z]+)(?:#((?:[a-z]+(?:\/|$))*))?$/),
+    function navToHash(e) {
+        var hash = String(location.hash || "#!/home").toLowerCase(),
+            match = hash.match(/^#!\/([a-z]+)(?:\/((?:[a-z]+(?:\/|$))*))?$/),
             page = "home",
             anchor = "",
             menuitem,
@@ -10,10 +9,10 @@
             newHash;
         if (match && match.length > 1) {
             menuitem = $('.menu > ul > li[data-pagename=' + match[1] + ']');
-            page = match[1];
             if (menuitem.length) {
+                page = match[1];
                 if (match[2]) {
-                    anchoritem = $('.content > div[name="' + page + '"] *[name="' + match[2] + '"]');
+                    anchoritem = $('.content div[id="!/' + page + '/' + match[2] + '"]');
                     if (anchoritem.length) {
                         anchor = match[2];
                     }
@@ -29,10 +28,10 @@
         }
         $('.content > div').removeClass("active");
         $('.content > div[name="' + page + '"]').addClass("active");
-        newHash = '#!/' + page + (anchor ? '#' + anchor : '');
-        if (location.hash !== newHash) {
-            location.hash = newHash;
+        if (anchor) {
+            $(document).scrollTop( $('.content div[id="!/' + page + '/' + anchor +'"]').offset().top - 25 );
         }
+        location.hash = '#!/' + page + (anchor ? '/' + anchor : '');
     }
     $(window).on('hashchange', navToHash);
     navToHash();

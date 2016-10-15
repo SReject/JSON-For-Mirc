@@ -49,8 +49,7 @@ a, a:hover, a:visited {
     background-color: rgb(209, 156, 63);
     box-shadow: inset 0px 0px 3em rgba(0,0,0, .75), 0px 0px 20px 1px rgba(0,0,0, .75);
 
-
-    text-shadow: 1px 1px rgba(0,0,0, .75);
+    color: rgb(55, 57, 71);
 }
 
 .logo {
@@ -82,7 +81,7 @@ a, a:hover, a:visited {
     margin-bottom: 10px;
 }
 .menu ul ul {
-    font-size: 16px;
+    font-size: 14px;
     margin-left: 20px;
 }
 
@@ -167,6 +166,11 @@ div.code {
     color: rgb(128,255,128);
 }
 
+.content .doc h1.command {
+    font-family: monospace;
+    font-size: 1.25em;
+    background-color: rgba(255,255,255,.1);
+}
 
 
 

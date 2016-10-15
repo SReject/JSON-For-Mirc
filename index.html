@@ -44,8 +44,8 @@
                         <li data-pagename="reference">
                             <a href="#!/reference">Referance</a>
                             <ul>
-                                <li>
-                                    <a href="#!/reference#cmd/jsonopen">/JSONOpen</a>
+                                <li data-anchorname="cmd/jsonopen">
+                                    <a href="#!/reference/cmd/jsonopen">/JSONOpen</a>
                                 </li>
                                 <li>
                                     <a href="#!/reference#cmd/jsonhttpmethod">/JSONHttpMethod</a>
@@ -63,10 +63,79 @@
                                     <a href="#!/reference#cmd/jsonshutdown">/JSONShutDown</a>
                                 </li>
                                 <li>
+                                    <a href="#!/reference#cmd/jsonlist">/JSONList</a>
+                                </li>
+                                <li>
                                     <a href="#!/reference#cmd/jsondebug">/JSONDebug</a>
                                 </li>
                                 <li>
-                                    <a href="#!/reference#id/json">$JSON</a>
+                                    <a href="#!/reference#id/json">$JSON()</a>
+                                </li>
+                                <li>
+                                    <a href="#!reference#id/jsonfuzzy">$JSON() 'Fuzzy' prefix</a>
+                                </li>
+                                <li>
+                                    <a href="#!reference#id/json/tobvar">$JSON() 'ToBvar' suffix</a>
+                                </li>
+                                <li>
+                                    <a href="#!reference#id/json/tofile">$JSON() 'ToFile' suffix</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json/state">$JSON().State</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json/inputtype">$JSON().InputType</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json/input">$JSON().Input</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json/ischild">$JSON().isChild</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json/httpresponse">$JSON().HttpResponse</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json/httphead">$JSON().HttpHead</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json/httpstatus">$JSON().HttpStatus</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json/httpstatustext">$JSON().HttpStatusText</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json/httpheaders">$JSON().HttpHeaders</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json/httpheader">$JSON().HttpHeader</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json/httpbody">$JSON().HttpBody</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json/type">$JSON().Type</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json/length">$JSON().Length</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference/id/json/path">$JSON().Path</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json/isparent">$JSON().IsParent</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json/value">$JSON().Value</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json/string">$JSON().String</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json/debugstring">$JSON().DebugString</a>
+                                </li>
+                                <li>
+                                    <a href="#!/reference#id/json/error">$JSON().Error</a>
                                 </li>
                                 <li>
                                     <a href="#!/reference#id/jsonerror">$JSONError</a>
@@ -95,8 +164,8 @@
                         </div>
                         <div class="section">
                             <h2>Contribute</h2>
-                            <p>If you would like to contribute to the project feel free to fork the <a href="">repo</a>, edit the files then make a pull request. If the alterations are accepted your pull request will be merged with the master source-code.</p>
-                            <p>You can contribute by doing more than just coding: help is needed with proof reading and phrasing in the documention, helping others learn to use the script, testing alpha/beta releases, and even reporting bugs<p>
+                            <p>If you would like to contribute to the project feel free to fork the <a href="https://github.com/SReject/JSON-For-Mirc">repo</a>, edit the files then make a pull request. If the alterations are accepted your pull request will be merged with the master source-code.</p>
+                            <p>You can contribute by doing more than just coding: help is needed with proof reading and phrasing in the documention, helping others learn to use the script, testing alpha/beta releases, and even reporting bugs</p>
                         </div>
                         <div class="section">
                             <h2>Suggestions &amp; Bugs</h2>
@@ -107,8 +176,6 @@
                             <p>The offical chat is on <a href="irc://irc.swiftirc.net:6667/jsonformirc">SwiftIRC's #JSONForMirc</a> though SReject can also be found on EsperNet, Freenode, Quakenet, snoonet and Twitch.tv</p>
                         </div>
                     </div>
-                    
-                    <!--  -->
                     <div name="downloads">
                         <div class="section">
                             <h1>Stable - v0.2.41</h1>
@@ -262,7 +329,7 @@
                                 <p>In the following examples, lines prefixed with <span class="code"><span class="comment">;;</span></span> are comments, and <span class="code">-&gt;</span> represents referencing an item of a container</p>
                                 <div class="code indent">
                                     <span class="comment">;; references 'item' of 'container'</span><br>
-                                    container -&gt; item</pre>
+                                    container -&gt; item
                                 </div>
                             </div>
 
@@ -327,7 +394,117 @@
                         </div>
                     </div>
                     <div name="usage">Usage: To Do</div>
-                    <div name="reference">Reference: To Do</div>
+                    <div name="reference">
+                        <div class="section">
+                            <h1>Introduction</h1>
+                            <p>The following is a reference to all commands and identifiers provided by JSON For mIRC. To understand this documentation you must first understand the following:</p>
+                            <div class="section sub indent">
+                                <h3>Parameters</h3>
+                                <p>Most of the commands and identifiers require some form of input, that input is refered to as a parameter. All parameters in these documents begin with <span class="code">@</span> and are explained in the command's or identifier's section that lists it.</p>
+                                <p>Different commands or identifers may use the same name for a parameter but each parameter's meaning and requirements are unique to the command or identifier that specified it</p>
+                            </div>
+                            <div class="section sub indent">
+                                <h3>Command Switches</h3>
+                                <p>If the first parameter of a command begins with <span class="code">-</span> it is a switch. Switches alter how the command processes the input or behaves after the input has been processed.</p>
+                                <p>Unless otherwise stated all switches are optional and should only be used to enact the alternative processing.</p>
+                            </div>
+                            <div class="section sub indent">
+                                <h3>Identifier Properties</h3>
+                                <p>Similar to command switches, identifier properties alter how the inputs are processed or how the identifier behaves. Properties are prefixed to the identifer via a <span class="code">.</span> and are completely optional.</p>
+                            </div>
+                        </div>
+                        <div id="!/reference/cmd/jsonopen" class="section doc">
+                            <h1 class="command">/JSONOpen -dbfuw @Name @Input</h1>
+                            <p>Creates a JSON handler and attempts to initialize it</p>
+                            <div class="section sub indent">
+                                <h3>Switches</h3>
+                            </div>
+                            <div class="section sub indent">
+                                <h3>Parameters</h3>
+                            </div>
+                        </div>
+                        <div id="!/reference/cmd/jsonopen" class="section doc">
+                            <h1 class="command">/JSONOpen -dbfuw @Name @Input</h1>
+                            <p>Creates a JSON handler and attempts to initialize it</p>
+                            <div class="section sub indent">
+                                <h3>Switches</h3>
+                            </div>
+                            <div class="section sub indent">
+                                <h3>Parameters</h3>
+                            </div>
+                        </div>
+                        <div id="!/reference/cmd/jsonhttpmethod" class="section doc">
+                            <h1 class="command">/JSONHttpMethod @Name @Method</h1>
+                            <p>Sets the HTTP method for a pending JSON HTTP request</p>
+                            <div class="section sub indent">
+                                <h3>Switches</h3>
+                            </div>
+                            <div class="section sub indent">
+                                <h3>Parameters</h3>
+                            </div>
+                        </div>
+                        <div id="!/reference/cmd/jsonhttpheader" class="section doc">
+                            <h1 class="command">/JSONHeader @Name @Header @Value</h1>
+                            <p>Stores the header for a pending JSON HTTP request</p>
+                            <div class="section sub indent">
+                                <h3>Switches</h3>
+                            </div>
+                            <div class="section sub indent">
+                                <h3>Parameters</h3>
+                            </div>
+                        </div>
+                        <div id="!/reference/cmd/jsonhttpfetch" class="section doc">
+                            <h1 class="command">/JSONHTTPFetch -bf @Name @Input</h1>
+                            <p>Performs a pending JSON HTTP request and parses the response</p>
+                            <div class="section sub indent">
+                                <h3>Switches</h3>
+                            </div>
+                            <div class="section sub indent">
+                                <h3>Parameters</h3>
+                            </div>
+                        </div>
+                        <div id="!/reference/cmd/jsonclose" class="section doc">
+                            <h1 class="command">/JSONClose -w @Name</h1>
+                            <p>Closes a specified JSON handler</p>
+                            <div class="section sub indent">
+                                <h3>Switches</h3>
+                            </div>
+                            <div class="section sub indent">
+                                <h3>Parameters</h3>
+                            </div>
+                        </div>
+                        <div id="!/reference/cmd/jsonshutdown" class="section doc">
+                            <h1 class="command">/JSONShutDown</h1>
+                            <p>Frees all JSON For mIRC resources</p>
+                            <div class="section sub indent">
+                                <h3>Switches</h3>
+                            </div>
+                            <div class="section sub indent">
+                                <h3>Parameters</h3>
+                            </div>
+                        </div>
+                        <div id="!/reference/cmd/jsonlist" class="section doc">
+                            <h1 class="command">/JSONList</h1>
+                            <p>Lists all open JSON handlers</p>
+                            <div class="section sub indent">
+                                <h3>Switches</h3>
+                            </div>
+                            <div class="section sub indent">
+                                <h3>Parameters</h3>
+                            </div>
+                        </div>
+                        <div id="!/reference/cmd/jsondebug" class="section doc">
+                            <h1 class="command">/JSONDebug @Input</h1>
+                            <p>Toggles debugging on or off</p>
+                            <div class="section sub indent">
+                                <h3>Switches</h3>
+                            </div>
+                            <div class="section sub indent">
+                                <h3>Parameters</h3>
+                            </div>
+                        </div>
+                    
+                    </div>
                 </div>
             </div>
             <div class="foot">SReject 2015-2016 &copy; All rights reserved</div>
