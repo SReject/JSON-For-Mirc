@@ -16,7 +16,7 @@
                             <a href="./index.html#about"><img src="./res/logo.png" /></a>
                         </li>
 
-                        <li class="active">
+                        <li>
                             <a href="./index.html#about" name="about">Home</a>
                             <ul>
                                 <li name="history">
@@ -34,8 +34,8 @@
                             </ul>
                         </li>
 
-                        <li>
-                            <a href="./downloads.html" name="#downloads">Downloads</a>
+                        <li class="active">
+                            <a href="./downloads.html#about" name="#downloads">Downloads</a>
                             <ul>
                                 <li name="stable">
                                     <a href="./downloads.html#stable">Stable</a>
@@ -199,43 +199,81 @@
                 
                 <div class="contentwrapper">
                     <div id="about">
-                        <div class="head">About</div>
-                        <div class="content">
-                            <p>JSON For mIRC is a mIRC script that makes use of mIRC's COM interface to parse and access <a href="#!/whatisjson">JSON data</a>. Boasting a rich feature set, JSON For mIRC aims to be comprehensive, light-weight and blazingly fast.</p>
-                        </div>
+                        <div class="head">Downloads</div>
+                        <div class="content">The software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.</div>
                     </div>
-                    
-                    <div id="history">
-                        <div class="head">History</div>
+
+                    <div id="stable">
+                        <div class="head">Stable</div>
+                        <div class="subhead">v0.2.41 - 12th June 2016</div>
                         <div class="content">
-                            <p>After scouring the web for a well coded JSON parser, a script by Timi was discovered that made use of mIRC's COM interferace. Timi's JSON parser was functional and fast (compared to other pure mSL implementations) it was found to have many inefficiencies. Due to such, I began to write his own version and JSON For mIRC was born.</p>
-                            <p>The first version brought parsing and accessing but due to poor planning and being built from a piecemeal of personal specialized scripts, the original release had many flaws. As bugs were patched the codebase became harder to manage resulting in an ever increasing difficulty to patch newly discovered bugs or add desired features.</p>
-                            <p>While the project struggled to maintain itself new features were added to mIRC and many coding discoveries were made; this gave rise to a complete rewrite. The rewrite was better planned, held to a higher set of coding guidelines, is open source and version controlled via <a href="https://github.com/SReject/JSON-For-Mirc" target="_blank">git/github</a>.</p>
-                        </div>
-                    </div>
-                    
-                    <div id="contribute">
-                        <div class="head">Contribute</div>
-                        <div class="content">
-                            <p>If you would like to contribute to the project feel free to fork the <a href="https://github.com/SReject/JSON-For-Mirc">repo</a>, edit the files then make a pull request. If the alterations are accepted your pull request will be merged with the master source-code.</p>
-                            <p>You can contribute by doing more than just coding: help is needed with proof reading and phrasing in the documention, helping others learn to use the script, testing alpha/beta releases, and even reporting bugs</p>
-                        </div>
-                    </div>
-                    
-                    <div id="suggestions">
-                        <div class="head">Suggestions &amp; Bugs</div>
-                        <div class="content">
-                            <p>You can make feature requests or report bugs to the <a href="https://github.com/SReject/JSON-For-Mirc/issues">github issue tracker</a>. Please include mIRC/AdiIRC version and script version.</p>
+                            <div class="section">
+                                <div class="sectionhead">Requirements</div>
+                                <div class="sectioncontent list">
+                                    <p>Mirc: 7.32+ or AdiIRC 2.2+</p>
+                                    <p>MS Windows 2000 or later</p>
+                                    <p>If you are using AdiIRC 64bit, you will need to install the <a href="http://www.eonet.ne.jp/~gakana/tablacus/scriptcontrol_en.html">tsc.dll</a> for this script to work</p>
+                                </div>
+                            </div>
+                            <div class="section">
+                                <div class="sectionhead">Installation</div>
+                                <div class="sectioncontent list">
+                                    <p>Download JSONForMirc v0.2.41.mrc</p>
+                                    <p>Move the file to a directory of your choice</p>
+                                    <p>In mIRC/AdiIRC enter the following into an input box and hit enter:<br>
+                                    <span class="code indent">//load -rs $qt($$sfile($mircdir, Load JSONFormIRC, Load))</span></p>
+                                    <p>In the box that appears, navigate to where you saved the JSONForMirc v0.2.41.mrc file</p>
+                                    <p>Select it then click "Load"</p>
+                                </div>
+                            </div>
+                            <div class="section">
+                                <div class="sectionhead">Download</div>
+                                <div class="sectioncontent list">
+                                    <p><a href="https://github.com/SReject/JSON-For-Mirc/releases/download/v0.2.41-beta/JSONForMirc.v0.2.41.mrc">JSON For mIRC v0.2.41.mrc</a></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div id="contact">
-                        <div class="head">Contact</div>
+                    <div id="unstable">
+                        <div class="head">Unstable</div>
+                        <div class="subhead">v1.0.0 - -th - 20--</div>
                         <div class="content">
-                            <p>The offical chat is on <a href="irc://irc.swiftirc.net:6667/jsonformirc">SwiftIRC's #JSONForMirc</a> though SReject can also be found on EsperNet, Freenode, Quakenet, snoonet and Twitch.tv</p>
+                            <div class="section">
+                                <div class="sectionhead">Requirements</div>
+                                <div class="sectioncontent list">
+                                    <p>Mirc: 7.43+ or AdiIRC 2.4+</p>
+                                    <p>MS Windows 2000 or later</p>
+                                    <p>If you are using AdiIRC 64bit, you will need to install the <a href="http://www.eonet.ne.jp/~gakana/tablacus/scriptcontrol_en.html">tsc.dll</a> for this script to work</p>
+                                </div>
+                            </div>
+                            <div class="section">
+                                <div class="sectionhead">Installation</div>
+                                <div class="sectioncontent list">
+                                    <p>Download JSONForMirc v1.0.0.mrc</p>
+                                    <p>Move the file to a directory of your choice</p>
+                                    <p>In mIRC/AdiIRC enter the following into an input box and hit enter:<br>
+                                    <span class="code indent">//load -rs $qt($$sfile($mircdir, Load JSONFormIRC, Load))</span></p>
+                                    <p>In the box that appears, navigate to where you saved the JSONForMirc v1.0.0.mrc file</p>
+                                    <p>Select it then click "Load"</p>
+                                </div>
+                            </div>
+                            <div class="section">
+                                <div class="sectionhead">Download</div>
+                                <div class="sectioncontent list">
+                                    <p>JSON For mIRC v1.0.0 <span class="italic">- Not Ready</span></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
+
+                    <div id="previousreleases">
+                        <div class="head">Previous Versions</div>
+                        <div class="content">
+                            <p class="italic">None</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="foot"><span>SReject 2015-2016 &copy; All rights reserved</span></div>

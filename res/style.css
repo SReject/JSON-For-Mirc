@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Lora:700');
+
+html, body {
+    margin: 0px;
+    padding: 0px;
+    font-size: 20px;
+    font-family: 'Open Sans', sans-serif;
+    color: white;
+    min-width: 850px;
+    min-height: 850px;
+    height: 100%;
+}
+
+a, a:hover, a:visited {
+    color: inherit;
+    text-decoration: none;
+    text-shadow: inherit;
+}
+
+
+
+.layoutwrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    position: relative;
+}
+.layoutwrapper > div:not(.footer) {
+    flex-grow: 1;
+    display: flex;
+}
+
+
+/**********
+Menu Layout
+**********/
+.menu {
+    z-index: 1;
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 200px;
+    padding: 2em;
+    background-color: rgb(209, 156, 63);
+    box-shadow: inset 0px 0px 3em rgba(0,0,0, .75), 0px 0px 20px 1px rgba(0,0,0, .75);
+    font-weight: bold;
+    color: black;
+}
+.menu ul {
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
+}
+.menu ul ul {
+    font-size: .8em;
+    margin-left: 1em;
+    display: none;
+    margin-bottom: 1em;
+}
+.menu li.active ul {
+    display: block;
+}
+.menu li.active > a {
+    color: red;
+    cursor: default;
+    text-shadow: none;   
+}
+.menu li:not(.active) > a:hover {
+    color: orangered;
+}
+.menu li.logo {
+    margin-bottom: 1em;
+}
+.menu li.logo img {
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: none;
+    border-radius: 5px;
+    vertical-align: middle;
+    padding: 7px;
+    background-color: white;
+    border: 1px solid rgba(0,0,0, .5);
+}
+.menu li.logo img:hover {
+    box-shadow: inset 0px 0px 10px rgba(0,0,0, .9);
+}
+.menu .mono {
+    font-family: monospace;
+    font-size: .75em;
+    font-weight: normal;
+}
+
+
+
+.contentwrapper {
+    flex-grow: 1;
+    flex-shrink: 0;
+    background-color: rgb(55, 57, 71);
+    padding: 50px;
+    text-shadow: 1px 1px black;
+}
+.contentwrapper a {
+    color: #80AEBD;
+    font-weight: bold;
+    white-space: nowrap;
+}
+.contentwrapper a:hover {
+    color: #bdae80;
+}
+.contentwrapper > div {
+    max-width: 800px;
+    margin: 0 auto;
+    border-radius: 20px;
+    background-color: rgba(0,0,0, .25);
+    box-shadow: inset 0px 0px 20px black;
+    margin-bottom: 3em;
+}
+.contentwrapper > div > div {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.contentwrapper > div > div:last-child {
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+.contentwrapper div.head {
+    padding-top: 10px;
+    padding-bottom: 3px;
+    font-family: serif;
+    font-size: 1.75em;
+    font-weight: bold;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    background-color: rgba(0,0,0, .25);
+    box-shadow: 0px 5px 5px -5px black;
+}
+.contentwrapper div.head.mono {
+    font-size: 1.25em;
+    font-family: "Courier New", Courier, monospace;
+}
+
+.contentwrapper div.subhead {
+    background-color: rgba(0,0,0, .125);
+    font-style: italic;
+    font-size: .8em;
+    box-shadow: 0px 5px 5px -5px black;
+    color: rgba(255,255,255, .9);
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+.content {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    font-size: .8em;
+}
+.content .section {
+    margin-bottom: 2em;
+}
+.content .section .sectionhead {
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.content .section .sectioncontent {
+    margin-left: 1em;
+    font-size: .95em;
+}
+
+.content .section .list p {
+    margin: 0px;
+    padding: 0px;
+}
+.content .section .list p:not(:last-child) {
+    margin-bottom: .25em;
+}
+.content .italic {
+    font-style: italic;
+}
+.content .indent {
+    margin-left: 1em;
+}
+.content .code {
+    font-family: monospace;
+    color: rgba(255,255,255, .9);
+    padding: 3px;
+    background-color: rgba(0,0,0, .5);
+    display: inline-block;
+    border-radius: 3px;
+}
+.content .codeblock {
+    font-family: monospace;
+    color: rgba(255,255,255, .9);
+    padding: 5px;
+    background-color: rgba(0,0,0, .5);
+    display: block;
+    border-radius: 5px;
+}
+.content .code .comment,
+.content .codeblock .comment {
+    color: rgb(128,255,128);
+}
+.content .sub {
+    margin-bottom: 1em;
+    margin-left: 2em;
+    margin-right: 2em;
+}
+
+
+
+
+div.foot {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: rgba(0,0,0, .5);
+    padding: .5em 1em;
+    border-top: 1px solid rgba(0,0,0, .25);
+    z-index: 2;
+    text-align: center;
+    font-size: 12px;
+}

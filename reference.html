@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>JSON For mIRC</title>
+        <link rel="stylesheet" href="./res/style.css">
+    </head>
+    <body>
+        <div class="layoutwrapper">
+            <div>
+            
+                <!-- MENU -->
+                <div class="menu">
+                    <ul>
+                        <li class="logo"><a href="./index.html#about"><img src="./res/logo.png" /></a></li>
+                        <li><a href="./index.html#about" name="about">Home</a></li>
+                        <li><a href="./downloads.html#about" name="#downloads">Downloads</a></li>
+                        <li><a href="./whatisjson.html">What is JSON</a></li>
+                        <li><a href="./usage.html">Usage</a></li>
+                        <li class="active">
+                            <a href="./reference.html#about" name="intro">Referance</a>
+                            <ul class="mono">
+                                <li name="cmd/jsonopen">
+                                    <a href="./reference.html#cmd/jsonopen">/JSONOpen</a>
+                                </li>
+                                <li name="cmd/jsonhttpmethod">
+                                    <a href="./reference.html#cmd/jsonhttpmethod">/JSONHttpMethod</a>
+                                </li>
+                                <li name="cmd/jsonhttpheader">
+                                    <a href="./reference.html#cmd/jsonhttpheader">/JSONHttpHeader</a>
+                                </li>
+                                <li name="cmd/jsonhttpfetch">
+                                    <a href="./reference.html#cmd/jsonhttpfetch">/JSONHttpFetch</a>
+                                </li>
+                                <li name="cmd/jsonclose">
+                                    <a href="./reference.html#cmd/jsonclose">/JSONClose</a>
+                                </li>
+                                <li name="cmd/jsonshutdown">
+                                    <a href="./reference.html#cmd/jsonshutdown">/JSONShutDown</a>
+                                </li>
+                                <li name="cmd/jsonlist">
+                                    <a href="./reference.html#cmd/jsonlist">/JSONList</a>
+                                </li>
+                                <li name="cmd/jsondebug">
+                                    <a href="./reference.html#cmd/jsondebug">/JSONDebug</a>
+                                </li>
+                                <li name="id/json">
+                                    <a href="./reference.html#id/json">$JSON()</a>
+                                </li>
+                                <li name="id/json/state">
+                                    <a href="./reference.html#id/json/state">$JSON().State</a>
+                                </li>
+                                <li name="id/json/inputtype">
+                                    <a href="./reference.html#id/json/inputtype">$JSON().InputType</a>
+                                </li>
+                                <li name="id/json/input">
+                                    <a href="./reference.html#id/json/input">$JSON().Input</a>
+                                </li>
+                                <li name="id/json/ischild">
+                                    <a href="./reference.html#id/json/ischild">$JSON().isChild</a>
+                                </li>
+                                <li name="id/json/error">
+                                    <a href="./reference.html#id/json/error">$JSON().Error</a>
+                                </li>
+                                <li name="id/json/httpresponse">
+                                    <a href="./reference.html#id/json/httpresponse">$JSON().HttpResponse</a>
+                                </li>
+                                <li name="id/json/httphead">
+                                    <a href="./reference.html#id/json/httphead">$JSON().HttpHead</a>
+                                </li>
+                                <li name="id/json/httpstatus">
+                                    <a href="./reference.html#id/json/httpstatus">$JSON().HttpStatus</a>
+                                </li>
+                                <li name="id/json/httpstatustext">
+                                    <a href="./reference.html#id/json/httpstatustext">$JSON().HttpStatusText</a>
+                                </li>
+                                <li name="id/json/httpheaders">
+                                    <a href="./reference.html#id/json/httpheaders">$JSON().HttpHeaders</a>
+                                </li>
+                                <li name="id/json/httpheader">
+                                    <a href="./reference.html#id/json/httpheader">$JSON().HttpHeader</a>
+                                </li>
+                                <li name="id/json/httpbody">
+                                    <a href="./reference.html#id/json/httpbody">$JSON().HttpBody</a>
+                                </li>
+                                <li name="id/json/type">
+                                    <a href="./reference.html#id/json/type">$JSON().Type</a>
+                                </li>
+                                <li name="id/json/length">
+                                    <a href="./reference.html#id/json/length">$JSON().Length</a>
+                                </li>
+                                <li name="id/json/path">
+                                    <a href="./reference.html#id/json/path">$JSON().Path</a>
+                                </li>
+                                <li name="id/json/isparent">
+                                    <a href="./reference.html#id/json/isparent">$JSON().IsParent</a>
+                                </li>
+                                <li name="id/json/value">
+                                    <a href="./reference.html#id/json/value">$JSON().Value</a>
+                                </li>
+                                <li name="id/json/string">
+                                    <a href="./reference.html#id/json/string">$JSON().String</a>
+                                </li>
+                                <li name="id/json/debugstring">
+                                    <a href="./reference.html#id/json/debugstring">$JSON().DebugString</a>
+                                </li>
+                                <li name="id/json/prefixes">
+                                    <a href="./reference.html#id/json/prefixes">Property Prefixes</a>
+                                </li>
+                                <li name="id/json/suffixes">
+                                    <a href="./reference.html#id/json/suffixes">Property Suffixes</a>
+                                </li>
+                                <li name="id/jsonerror">
+                                    <a href="./reference.html#id/jsonerror">$JSONError</a>
+                                </li>
+                                <li name="id/jsondebug">
+                                    <a href="./reference.html#id/jsondebug">$JSONDebug</a>
+                                </li>
+                                <li name="id/jsonversion">
+                                    <a href="./reference.html#id/jsonversion">$JSONVersion</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <!-- MENU END -->
+                
+                <div class="contentwrapper">
+                    <!-- Intro -->
+                    <div id="about">
+                        <div class="head">Intro</div>
+                        <div class="content">                        
+                            <p>The following is a reference to all commands and identifiers provided by JSON For mIRC. To understand this documentation you must first understand the following:</p>
+                            <div class="section">
+                                <div class="sectionhead">Parameters</div>
+                                <div class="sectioncontent">
+                                    <p>Most of the commands and identifiers require some form of input, that input is refered to as a parameter. All parameters in these documents begin with <span class="code">@</span> and are explained in the command's or identifier's section that lists it.</p>
+                                    <p>Different commands or identifers may use the same name for a parameter but each parameter's meaning and requirements are unique to the command or identifier that specified it</p>
+                                </div>
+                            </div>
+                            <div class="section">
+                                <div class="sectionhead">Comamnd Switches</div>
+                                <div class="sectioncontent">
+                                    <p>If the first parameter of a command begins with <span class="code">-</span> it is a switch. Switches alter how the command processes the input or behaves after the input has been processed.</p>
+                                    <p>Unless otherwise stated all switches are optional and should only be used to enact the alternative processing.</p>
+                                </div>
+                            </div>
+                            <div class="section">
+                                <div class="sectionhead">Properties</div>
+                                <div class="sectioncontent">
+                                    <p>Similar to command switches, identifier properties alter how the inputs are processed or how the identifier behaves. Properties are prefixed to the identifer via a <span class="code">.</span> and are completely optional.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Intro end-->
+                    
+                    <div id="cmd/jsonopen">
+                        <div class="head mono">/JSONOpen -dbfuw @Name @Input</div>
+                        <div class="subhead">Creates a JSON handler</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="cmd/jsonhttpmethod">
+                        <div class="head mono">/JSONHttpMethod @Name @Method</div>
+                        <div class="subhead">Sets the method for a JSON handler's pending HTTP request</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="cmd/jsonhttpheader">
+                        <div class="head mono">/JSONHttpHeader @Name @Header @Value</div>
+                        <div class="subhead">Stores the specified header for a JSON handler's pending HTTP request</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="cmd/jsonhttpfetch">
+                        <div class="head mono">/JSONHttpFetch -bf @Name @Data</div>
+                        <div class="subhead">Performs a pending HTTP request</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="cmd/jsonclose">
+                        <div class="head mono">/JSONClose -w @Name</div>
+                        <div class="subhead">Closes a JSON handler</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="cmd/jsonshutdown">
+                        <div class="head mono">/JSONShutDown</div>
+                        <div class="subhead">Closes all JSON handlers and frees all resources used by the script</div>
+                    </div>
+                    <div id="cmd/jsonlist">
+                        <div class="head mono">/JSONList</div>
+                        <div class="subhead">Lists all open JSON handlers</div>
+                    </div>
+                    <div id="cmd/jsondebug">
+                        <div class="head mono">/JSONDebug @State</div>
+                        <div class="subhead">Changes the debug state</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json">
+                        <div class="head mono">$JSON(@Name|ref|n)</div>
+                        <div class="subhead">Returns the name of the JSON handler if it exists</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/lookup">
+                        <div class="head mono">$JSON(@Name|ref|n, @Member, ...)</div>
+                        <div class="subhead">Returns a reference for the referenced member</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/state">
+                        <div class="head mono">$JSON(@Name|ref|n).State</div>
+                        <div class="subhead">Returns the state of the handler</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/inputtype">
+                        <div class="head mono">$JSON(@Name|ref|n).InputType</div>
+                        <div class="subhead">Returns the input type of the handler; "text" or "http"</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/input">
+                        <div class="head mono">$JSON(@Name|ref|n).Input</div>
+                        <div class="subhead">Returns the json input string</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/ischild">
+                        <div class="head mono">$JSON(@Name|ref|n).isChild</div>
+                        <div class="subhead">Returns $true if the input is a child of another handler</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/error">
+                        <div class="head mono">$JSON(@Name|Ref|N).Error</div>
+                        <div class="subhead"></div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/httpresponse">
+                        <div class="head mono">$JSON(@Name|Ref|n).HttpResponse</div>
+                        <div class="subhead">Returns the full server response of a performed HTTP request</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/httphead">
+                        <div class="head mono">$JSON(@Name|Ref|n).HttpHead</div>
+                        <div class="subhead">Returns the server response head including statuscode status text and all headers</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/httpstatus">
+                        <div class="head mono">$JSON(@Name|Ref|n).HttpStatus</div>
+                        <div class="subhead">Returns the server response's status code</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/httpstatustext">
+                        <div class="head mono">$JSON(@Name|Ref|n).HttpStatusText</div>
+                        <div class="subhead">Returns the server response's status text</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/httpheaders">
+                        <div class="head mono">$JSON(@Name|Ref|n).HttpHeaders</div>
+                        <div class="subhead">Returns the full list of headers returned by the server</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/httpheader">
+                        <div class="head mono">$JSON(@name|Ref|n, @Header, @N).HttpHeader</div>
+                        <div class="subhead">Returns the server response's value for the specified header</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/httpbody">
+                        <div class="head mono">$JSON(@Name|Ref|N).HttpBody</div>
+                        <div class="subhead">Returns the server response's body</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/type">
+                        <div class="head mono">$JSON(@Name|Ref|N, @Member, ...).Type</div>
+                        <div class="subhead">Returns the referenced member's data type</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/">
+                        <div class="head mono">$JSON(@Name|Ref|N, @Member, ...).Length</div>
+                        <div class="subhead">Returns the referenced value's length or total number items if the value is a container</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/">
+                        <div class="head mono">$JSON(@Name|Ref|N, @Member, ...).Path</div>
+                        <div class="subhead">Returns the path to the referenced value</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/">
+                        <div class="head mono">$JSON(@Name|Ref|N, @Member, ...).IsParent</div>
+                        <div class="subhead">Returns $true if the referenced value is a container</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/">
+                        <div class="head mono">$JSON(@Name|Ref|N, @Member, ...).Value</div>
+                        <div class="subhead">Returns the referenced member's value</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/">
+                        <div class="head mono">$JSON(@Name|Ref|N, @Member, ...).String</div>
+                        <div class="subhead">Returns the referenced member's value as a string</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/">
+                        <div class="head mono">$JSON(@Name|Ref|N, @Member, ...).DebugString</div>
+                        <div class="subhead">Returns a debug string containing all internal variables aswell as the reference's value</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/prefixes">
+                        <div class="head mono">$JSON() Property Prefixes</div>
+                        <div class="subhead">Prefixes that alter the way $JSON() behaves</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/json/suffixes">
+                        <div class="head mono">$JSON() Property Suffixes</div>
+                        <div class="subhead">Property Suffixes that alter how $JSON() returns a result</div>
+                        <div class="content">to do</div>
+                    </div>
+                    <div id="id/jsonerror">
+                        <div class="head mono">$JSONError</div>
+                        <div class="subhead">Returns any errors that occured from the last JSON call</div>
+                    </div>
+                    <div id="id/jsondebug">
+                        <div class="head mono">$JSONDebug</div>
+                        <div class="subhead">Returns the current state of debugging; $true if on, $false if not</div>
+                    </div>
+                    <div id="id/jsonversion">
+                        <div class="head mono">$JSONVersion(@Short)</div>
+                        <div class="subhead">Returns the current JSON For mIRC version</div>
+                        <div class="content">to do</div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="foot"><span>SReject 2015-2016 &copy; All rights reserved</span></div>
+        </div>
+    </body>
+</html>
+            
