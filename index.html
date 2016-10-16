@@ -417,50 +417,68 @@
                             <h1 class="command">/JSONOpen -dbfuw @Name @Input</h1>
                             <p>Creates a JSON handler and attempts to initialize it</p>
                             <div class="section sub indent">
-                                <h3>Switches</h3>
+                                <p class="switch"><span><span class="code">-d</span>: </span><span>Closes the handler after the script finishes processing</p>
+                                <p class="switch"><span><span class="code">-b</span>: </span><span>Indicates <span class="parameter">@Input</span> is a bvar containing the JSON data</span></p>
+                                <p class="switch"><span><span class="code">-f</span>: </span><span>Indicates <span class="parameter">@Input</span> is a file containing the JSON data</span></p>
+                                <p class="switch"><span><span class="code">-u</span>: </span><span>Indicates <span class="parameter">@Input</span> is a url from which to retrieve the data</span></p>
+                                <p class="switch"><span><span class="code">-w</span>: </span><span>Indicates the HTTP request should wait until /JSONHttpFetch is called to perform the HTTP request; Only viable if the -u switch is specified</span></p>
                             </div>
-                            <div class="section sub indent">
-                                <h3>Parameters</h3>
+                            <div class="section sub indent nospace">
+                                <span class="parameter head">@Name</span> - Optional
+                                <p>The name to use for referencing the handler</p>
+                                <p>Cannot contain the characters ? * :</p>
+                                <p>Cannot be a numerical value</p>
+                                <p>Must not be in use</p>
                             </div>
-                        </div>
-                        <div id="!/reference/cmd/jsonopen" class="section doc">
-                            <h1 class="command">/JSONOpen -dbfuw @Name @Input</h1>
-                            <p>Creates a JSON handler and attempts to initialize it</p>
-                            <div class="section sub indent">
-                                <h3>Switches</h3>
-                            </div>
-                            <div class="section sub indent">
-                                <h3>Parameters</h3>
+                            <div class="section sub indent nospace">
+                                <span class="parameter head">@Input</span> - Optional
+                                <p>The input JSON to parse</p>
+                                <p>Assumed to be plain-text unless otherwise indicated not to be via switches</p>
                             </div>
                         </div>
                         <div id="!/reference/cmd/jsonhttpmethod" class="section doc">
                             <h1 class="command">/JSONHttpMethod @Name @Method</h1>
                             <p>Sets the HTTP method for a pending JSON HTTP request</p>
                             <div class="section sub indent">
-                                <h3>Switches</h3>
+                                <span class="parameter head">@Name</span> - Optional
+                                <p>The name of an open JSON handler with a pending HTTP request of which to set the request method</p>
                             </div>
-                            <div class="section sub indent">
-                                <h3>Parameters</h3>
+                            <div class="section sub indent nospace">
+                                <span class="parameter head">@Method</span> - Optional
+                                <p>The HTTP request method to use when the request is performed</p>
                             </div>
                         </div>
                         <div id="!/reference/cmd/jsonhttpheader" class="section doc">
-                            <h1 class="command">/JSONHeader @Name @Header @Value</h1>
+                            <h1 class="command">/JSONHttpHeader @Name @Header @Value</h1>
                             <p>Stores the header for a pending JSON HTTP request</p>
                             <div class="section sub indent">
-                                <h3>Switches</h3>
+                                <span class="parameter head">@Name</span> - Optional
+                                <p>The name of an open JSON handler with a pending HTTP request inwhich to store the header for</p>
                             </div>
-                            <div class="section sub indent">
-                                <h3>Parameters</h3>
+                            <div class="section sub indent nospace">
+                                <span class="parameter head">@Header</span> - Optional
+                                <p>The header's name to store a value for</p>
+                            </div>
+                            <div class="section sub indent nospace">
+                                <span class="parameter head">@Value</span> - Optional
+                                <p>The header's value to store</p>
                             </div>
                         </div>
                         <div id="!/reference/cmd/jsonhttpfetch" class="section doc">
-                            <h1 class="command">/JSONHTTPFetch -bf @Name @Input</h1>
+                            <h1 class="command">/JSONHttpFetch -bf @Name @Input</h1>
                             <p>Performs a pending JSON HTTP request and parses the response</p>
                             <div class="section sub indent">
-                                <h3>Switches</h3>
+                                <p class="switch"><span><span class="code">-b</span>: </span><span>Indicates <span class="parameter">@Input</span> is a bvar containing data to send with the request</span></p>
+                                <p class="switch"><span><span class="code">-f</span>: </span><span>Indicates <span class="parameter">@Input</span> is file to send with the request</span></p>
                             </div>
                             <div class="section sub indent">
-                                <h3>Parameters</h3>
+                                <span class="parameter head">@Name</span> - Optional
+                                <p>The name of an open JSON handler with a pending HTTP request inwhich to perform the HTTP request</p>
+                            </div>
+                            <div class="section sub indent nospace">
+                                <span class="parameter head">@Input</span> - Optional
+                                <p>The data to send with the HTTP request</p>
+                                <p>Assumed to be plain text unless indicated otherwise via a switch</p>
                             </div>
                         </div>
                         <div id="!/reference/cmd/jsonclose" class="section doc">
@@ -476,29 +494,14 @@
                         <div id="!/reference/cmd/jsonshutdown" class="section doc">
                             <h1 class="command">/JSONShutDown</h1>
                             <p>Frees all JSON For mIRC resources</p>
-                            <div class="section sub indent">
-                                <h3>Switches</h3>
-                            </div>
-                            <div class="section sub indent">
-                                <h3>Parameters</h3>
-                            </div>
                         </div>
                         <div id="!/reference/cmd/jsonlist" class="section doc">
                             <h1 class="command">/JSONList</h1>
                             <p>Lists all open JSON handlers</p>
-                            <div class="section sub indent">
-                                <h3>Switches</h3>
-                            </div>
-                            <div class="section sub indent">
-                                <h3>Parameters</h3>
-                            </div>
                         </div>
                         <div id="!/reference/cmd/jsondebug" class="section doc">
                             <h1 class="command">/JSONDebug @Input</h1>
                             <p>Toggles debugging on or off</p>
-                            <div class="section sub indent">
-                                <h3>Switches</h3>
-                            </div>
                             <div class="section sub indent">
                                 <h3>Parameters</h3>
                             </div>
