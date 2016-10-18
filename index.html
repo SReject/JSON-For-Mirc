@@ -1,211 +1,59 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8"/>
         <title>JSON For mIRC</title>
-        <link rel="stylesheet" href="./res/style.css">
+        <link rel="stylesheet" href="./res/layout.css">
     </head>
     <body>
-        <div class="layoutwrapper">
-            <div>
-            
-                <!-- MENU -->
+        <div class="wrapper">
+            <div class="helper">
+
                 <div class="menu">
-                    <ul>
-                        <li class="logo">
-                            <a href="./index.html#about"><img src="./res/logo.png" /></a>
-                        </li>
-
-                        <li class="active">
-                            <a href="./index.html#about" name="about">Home</a>
-                            <ul>
-                                <li name="history">
-                                    <a href="./index.html#history">History</a>
-                                </li>
-                                <li name="contribute">
-                                    <a href="./index.html#contribute">Contribute</a>
-                                </li>
-                                <li name="suggestions">
-                                    <a href="./index.html#suggestions">Suggestions &amp; Issues</a>
-                                </li>
-                                <li name="contact">
-                                    <a href="./index.html#contact">Contact</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li>
-                            <a href="./downloads.html" name="#downloads">Downloads</a>
-                            <ul>
-                                <li name="stable">
-                                    <a href="./downloads.html#stable">Stable</a>
-                                </li>
-                                <li name="unstable">
-                                    <a href="./downloads.html#unstable">Unstable</a>
-                                </li>
-                                <li name="previousreleases">
-                                    <a href="./downloads.html#previousreleases">Previous Releases</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li>
-                            <a href="./whatisjson.html">What is JSON</a>
-                            <ul>
-                                <li name="about">
-                                    <a href="./whatisjson.html#about">About</a>
-                                </li>
-                                <li name="whitespace">
-                                    <a href="./whatisjson.html#whitespace">Whitespace</a>
-                                </li>
-                                <li name="datatypes">
-                                    <a href="./whatisjson.html#datatypes">Data Types</a>
-                                </li>
-                                <li name="referencing">
-                                    <a href="./whatisjson.html#referencing">Referencing</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="./usage.html">Usage</a>
-                            <ul>
-                                <li name="creation">
-                                    <a href="./usage.html#creation">Creation</a>
-                                </li>
-                                <li name="referencing">
-                                    <a href="./usage.html#referencing">Referencing</a>
-                                </li>
-                                <li name="closing">
-                                    <a href="./usage.html#closing">Closing</a>
-                                </li>
-                                <li name="errorhandling">
-                                    <a href="./usage.html#errorhandling">Error handling</a>
-                                </li>
-                                <li name="misc">
-                                    <a href="./usage.html#misc">Misc</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="./reference.html" name="intro">Referance</a>
-                            <ul class="mono">
-                                <li name="cmd/jsonopen">
-                                    <a href="./reference.html#cmd/jsonopen">/JSONOpen</a>
-                                </li>
-                                <li name="cmd/jsonhttpmethod">
-                                    <a href="./reference.html#cmd/jsonhttpmethod">/JSONHttpMethod</a>
-                                </li>
-                                <li name="cmd/jsonhttpheader">
-                                    <a href="./reference.html#cmd/jsonhttpheader">/JSONHttpHeader</a>
-                                </li>
-                                <li name="cmd/jsonhttpfetch">
-                                    <a href="./reference.html#cmd/jsonhttpfetch">/JSONHttpFetch</a>
-                                </li>
-                                <li name="cmd/jsonclose">
-                                    <a href="./reference.html#cmd/jsonclose">/JSONClose</a>
-                                </li>
-                                <li name="cmd/jsonshutdown">
-                                    <a href="./reference.html#cmd/jsonshutdown">/JSONShutDown</a>
-                                </li>
-                                <li name="cmd/jsonlist">
-                                    <a href="./reference.html#cmd/jsonlist">/JSONList</a>
-                                </li>
-                                <li name="cmd/jsondebug">
-                                    <a href="./reference.html#cmd/jsondebug">/JSONDebug</a>
-                                </li>
-                                <li name="id/json">
-                                    <a href="./reference.html#id/json">$JSON()</a>
-                                </li>
-                                <li name="id/json/fuzzy">
-                                    <a href="./reference.html#id/json/fuzzy">$JSON() 'Fuzzy'</a>
-                                </li>
-                                <li name="id/json/tobvar">
-                                    <a href="./reference.html#id/json/tobvar">$JSON() 'ToBvar'</a>
-                                </li>
-                                <li name="id/json/tofile">
-                                    <a href="./reference.html#id/json/tofile">$JSON() 'ToFile'</a>
-                                </li>
-                                <li name="id/json/state">
-                                    <a href="./reference.html#id/json/state">$JSON().State</a>
-                                </li>
-                                <li name="id/json/inputtype">
-                                    <a href="./reference.html#id/json/inputtype">$JSON().InputType</a>
-                                </li>
-                                <li name="id/json/input">
-                                    <a href="./reference.html#id/json/input">$JSON().Input</a>
-                                </li>
-                                <li name="id/json/ischild">
-                                    <a href="./reference.html#id/json/ischild">$JSON().isChild</a>
-                                </li>
-                                <li name="id/json/httpresponse">
-                                    <a href="./reference.html#id/json/httpresponse">$JSON().HttpResponse</a>
-                                </li>
-                                <li name="id/json/httphead">
-                                    <a href="./reference.html#id/json/httphead">$JSON().HttpHead</a>
-                                </li>
-                                <li name="id/json/httpstatus">
-                                    <a href="./reference.html#id/json/httpstatus">$JSON().HttpStatus</a>
-                                </li>
-                                <li name="id/json/httpstatustext">
-                                    <a href="./reference.html#id/json/httpstatustext">$JSON().HttpStatusText</a>
-                                </li>
-                                <li name="id/json/httpheaders">
-                                    <a href="./reference.html#id/json/httpheaders">$JSON().HttpHeaders</a>
-                                </li>
-                                <li name="id/json/httpheader">
-                                    <a href="./reference.html#id/json/httpheader">$JSON().HttpHeader</a>
-                                </li>
-                                <li name="id/json/httpbody">
-                                    <a href="./reference.html#id/json/httpbody">$JSON().HttpBody</a>
-                                </li>
-                                <li name="id/json/type">
-                                    <a href="./reference.html#id/json/type">$JSON().Type</a>
-                                </li>
-                                <li name="id/json/length">
-                                    <a href="./reference.html#id/json/length">$JSON().Length</a>
-                                </li>
-                                <li name="id/json/path">
-                                    <a href="./reference.html#id/json/path">$JSON().Path</a>
-                                </li>
-                                <li name="id/json/isparent">
-                                    <a href="./reference.html#id/json/isparent">$JSON().IsParent</a>
-                                </li>
-                                <li name="id/json/value">
-                                    <a href="./reference.html#id/json/value">$JSON().Value</a>
-                                </li>
-                                <li name="id/json/string">
-                                    <a href="./reference.html#id/json/string">$JSON().String</a>
-                                </li>
-                                <li name="id/json/debugstring">
-                                    <a href="./reference.html#id/json/debugstring">$JSON().DebugString</a>
-                                </li>
-                                <li name="id/json/error">
-                                    <a href="./reference.html#id/json/error">$JSON().Error</a>
-                                </li>
-                                <li name="id/jsonerror">
-                                    <a href="./reference.html#id/jsonerror">$JSONError</a>
-                                </li>
-                                <li name="id/jsondebug">
-                                    <a href="./reference.html#id/jsondebug">$JSONDebug</a>
-                                </li>
-                                <li name="id/jsonversion">
-                                    <a href="./reference.html#id/jsonversion">$JSONVersion</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                    <div class="logo">
+                        <a href="./index.html#about"><img src="./res/logo.png" /></a>
+                    </div>
+                    <div class="active">
+                        <a href="./index.html#about" name="about">Home</a>
+                        <div>
+                            <a href="./index.html#about">About</a>
+                        </div>
+                        <div>
+                            <a href="./index.html#history">History</a>
+                        </div>
+                        <div>
+                            <a href="./index.html#contribute">Contribute</a>
+                        </div>
+                        <div>
+                            <a href="./index.html#suggestions">Suggestions &amp; Bugs</a>
+                        </div>
+                        <div>
+                            <a href="./index.html#contact">Contact</a>
+                        </div>
+                    </div>
+                    <div>
+                        <a href="./downloads.html#about" name="#downloads">Downloads</a>
+                    </div>
+                    <div>
+                        <a href="./whatisjson.html">What is JSON</a>
+                    </div>
+                    <div>
+                        <a href="./usage.html">Usage</a>
+                    </div>
+                    <div class="active">
+                        <a href="./reference.html#about" name="intro">Referance</a>
+                    </div>
                 </div>
-                <!-- MENU END -->
+                <!-- End of Menu -->
                 
-                <div class="contentwrapper">
-                    <div id="about">
+                <div class="body">
+                    <div class="section" id="about">
                         <div class="head">About</div>
                         <div class="content">
-                            <p>JSON For mIRC is a mIRC script that makes use of mIRC's COM interface to parse and access <a href="#!/whatisjson">JSON data</a>. Boasting a rich feature set, JSON For mIRC aims to be comprehensive, light-weight and blazingly fast.</p>
+                            <p>JSON For mIRC is a mIRC script that makes use of mIRC's COM interface to parse and access <a href="./whatisjson.html">JSON data</a>. Boasting a rich feature set, JSON For mIRC aims to be comprehensive, light-weight and blazingly fast.</p>
                         </div>
                     </div>
                     
-                    <div id="history">
+                    <div class="section" id="history">
                         <div class="head">History</div>
                         <div class="content">
                             <p>After scouring the web for a well coded JSON parser, a script by Timi was discovered that made use of mIRC's COM interferace. Timi's JSON parser was functional and fast (compared to other pure mSL implementations) it was found to have many inefficiencies. Due to such, I began to write his own version and JSON For mIRC was born.</p>
@@ -214,32 +62,33 @@
                         </div>
                     </div>
                     
-                    <div id="contribute">
+                    <div class="section" id="contribute">
                         <div class="head">Contribute</div>
                         <div class="content">
                             <p>If you would like to contribute to the project feel free to fork the <a href="https://github.com/SReject/JSON-For-Mirc">repo</a>, edit the files then make a pull request. If the alterations are accepted your pull request will be merged with the master source-code.</p>
                             <p>You can contribute by doing more than just coding: help is needed with proof reading and phrasing in the documention, helping others learn to use the script, testing alpha/beta releases, and even reporting bugs</p>
                         </div>
                     </div>
-                    
-                    <div id="suggestions">
-                        <div class="head">Suggestions &amp; Bugs</div>
+                
+                    <div class="section" id="suggestions">
+                        <div class="head">Suggestions and Bugs</div>
                         <div class="content">
                             <p>You can make feature requests or report bugs to the <a href="https://github.com/SReject/JSON-For-Mirc/issues">github issue tracker</a>. Please include mIRC/AdiIRC version and script version.</p>
                         </div>
                     </div>
-
-                    <div id="contact">
+                    
+                    <div class="section" id="contact">
                         <div class="head">Contact</div>
                         <div class="content">
                             <p>The offical chat is on <a href="irc://irc.swiftirc.net:6667/jsonformirc">SwiftIRC's #JSONForMirc</a> though SReject can also be found on EsperNet, Freenode, Quakenet, snoonet and Twitch.tv</p>
                         </div>
                     </div>
-                    
+                
                 </div>
             </div>
-            <div class="foot"><span>SReject 2015-2016 &copy; All rights reserved</span></div>
+            <div class="footer">
+                SReject &copy; 2015-2016 - All Rights Reserved
+            </div>
         </div>
     </body>
 </html>
-            
