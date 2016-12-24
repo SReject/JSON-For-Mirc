@@ -155,11 +155,12 @@
                             <div class="subsection">
                                 <div class="head">Properties</div>
                                 <div class="content">
-                                    <p>Similar to command switches, identifier properties alter how the inputs are processed or how the identifier behaves. Properties are prefixed to the identifer via a <span class="code">.</span> and are completely optional.</p>
+                                    <p>Similar to command switches, identifier properties alter how the inputs are processed or how the identifier behaves. Properties are suffixed to the identifer via a <span class="code">.</span> and are completely optional.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <div class="section codedoc" id="cmd/jsonlist">
                         <div class="head">/JSONList</div>
                         <div class="subhead">Lists all open JSON handlers</div>
@@ -178,17 +179,75 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="section codedoc" id="cmd/jsonopen">
                         <div class="head">/JSONOpen -dbfuw @Name @Input</div>
                         <div class="subhead">Attempts to create a JSON handler</div>
                         <div class="content">
                             <div class="subsection">
                                 <div class="head">Switches</div>
-                                <div class="content">To Do</div>
+                                <div class="content switches">
+                                    <div>
+                                        <div class="switch">d</div>
+                                        <div class="desc">Closes the JSON handler and all children when the script block exits</div>
+                                    </div>
+                                    <div>
+                                        <div class="switch">b</div>
+                                        <div class="desc">
+                                            <p><span class="parameter">@Input</span> is the name of a bvar containing the JSON to parse.</p>
+                                            <p>This switch cannot be used with the <span class="switch">f</span> or <span class="switch">u</span> switches</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="switch">f</div>
+                                        <div class="desc">
+                                            <p><span class="parameter">@Input</span> is a path to a file containing the JSON to parse.</p>
+                                            <p>This switch cannot be used with the <span class="switch">b</span> or <span class="switch">u</span> switches</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="switch">u</div>
+                                        <div class="desc">
+                                            <p><span class="parameter">@Input</span> is a URL from which the JSON to parse should be retrieved.</p>
+                                            <p>This switch cannot be used with the <span class="switch">f</span> or <span class="switch">b</span> switches</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="switch">w</div>
+                                        <div class="desc">
+                                            <p>The URL request should wait until <span class="command">/JSONHttpFetch</span> is called. This is to allow the request method and headers to be set.</p>
+                                            <p>This switch can only be used if the <span class="switch">u</span> switch is specified</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="subsection">
                                 <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
+                                <div class="content parameters">
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Name</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The name in which the handler will be refered to</p>
+                                            <p>Cannot contain the characters: ? * : or space</p>
+                                            <p>Cannot be a numerical value</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Input</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The input JSON data to be parsed</p>
+                                            <p>if the <span class="switch">b</span> switch is specified the input will be considered a bvar</p>
+                                            <p>if the <span class="switch">f</span> switch is specified the input will be considered a file</p>
+                                            <p>if the <span class="switch">u</span> switch is specified the input will be considered a URL</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="subsection">
                                 <div class="head">Example</div>
@@ -217,18 +276,38 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="section codedoc" id="cmd/jsonhttpmethod">
                         <div class="head">/JSONHttpMethod @Name @Method</div>
                         <div class="subhead">Sets the method for a JSON handler's pending HTTP request</div>
                         <div class="content">
-                            <p class="smaller">To use this command, the handler must have been created with the <span class="code">-w</span> switch and the HTTP request must be pending.</p>
+                            <p class="smaller">To use this command, the handler must have been created with the <span class="switch code">uw</span> switches and the HTTP request must be pending.</p>
                             <div class="subsection">
                                 <div class="head">Switches</div>
                                 <div class="content italic">None</div>
                             </div>
                             <div class="subsection">
                                 <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
+                                <div class="content parameters">
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Name</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The name of an open JSON handler with a pending HTTP request</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Method</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The HTTP request method to use</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="subsection">
                                 <div class="head">Example</div>
@@ -242,18 +321,47 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="section codedoc" id="cmd/jsonhttpheader">
                         <div class="head">/JSONHttpHeader @Name @Header @Value</div>
                         <div class="subhead">Stores the header for a JSON handler's pending HTTP request</div>
                         <div class="content">
-                            <p class="smaller">To use this command, the handler must have been created with the <span class="code">-w</span> switch and the HTTP request must be pending.</p>
+                            <p class="smaller">To use this command, the handler must have been created with the <span class="switch code">uw</span> switches and the HTTP request must be pending.</p>
                             <div class="subsection">
                                 <div class="head">Switches</div>
                                 <div class="content italic">None</div>
                             </div>
                             <div class="subsection">
                                 <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
+                                <div class="content parameters">
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Name</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The name of an open JSON handler with a pending HTTP request</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Header</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The name of the header to store a value for.</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Value</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The value of the header to store</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="subsection">
                                 <div class="head">Example</div>
@@ -267,18 +375,55 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="section codedoc" id="cmd/jsonhttpfetch">
                         <div class="head">/JSONHttpFetch -bf @Name @Data</div>
                         <div class="subhead">Performs a JSON handler's pending HTTP request</div>
                         <div class="content">
-                            <p class="smaller">To use this command, the handler must have been created with the <span class="code">-w</span> switch and the HTTP request must be pending.</p>
+                            <p class="smaller">To use this command, the handler must have been created with the <span class="switch code">uw</span> switches and the HTTP request must be pending.</p>
                             <div class="subsection">
                                 <div class="head">Switches</div>
-                                <div class="content">To Do</div>
+                                <div class="content switches">
+                                    <div>
+                                        <div class="switch">b</div>
+                                        <div class="desc">
+                                            <p><span class="parameter">@Data</span> is the name of a bvar containing the data to send</p>
+                                            <p>This switch cannot be used with the <span class="switch">f</span> switch</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="switch">f</div>
+                                        <div class="desc">
+                                            <p><span class="parameter">@Data</span> is a path to a file of which to spend</p>
+                                            <p>This switch cannot be used with the <span class="switch">b</span> switch</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="subsection">
                                 <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
+                                <div class="content parameters">
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Name</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The name of an open JSON handler with a pending HTTP request</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Data</div>
+                                            <div class="italic">Optional</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The data to send with the HTTP request</p>
+                                            <p>If the <span class="switch">b</span> switch is specified, the data will be consider a bvar</p>
+                                            <p>If the <span class="switch">f</span> switch is specified, the data will be consider a file path</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="subsection">
                                 <div class="head">Example</div>
@@ -302,6 +447,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="section codedoc" id="id/json">
                         <div class="head">$JSON(@Name|Ref|N)</div>
                         <div class="subhead">Returns the name of the JSON handler if it exists</div>
@@ -322,6 +468,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="section codedoc" id="id/json/fuzzy">
                         <div class="head">$JSON(@Name|Ref|N, @Members) 'Fuzzy' Property-Prefix</div>
                         <div class="subhead">Uses Fuzzy lookup to reference members</div>
@@ -344,6 +491,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="section codedoc" id="id/json/tobvar">
                         <div class="head">$JSON(@Name|Ref|N, @BVar, @Members) 'ToBvar' Property-Suffix</div>
                         <div class="subhead">Stores the call output in a specified bvar</div>
@@ -365,6 +513,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="section codedoc" id="id/json/tofile">
                         <div class="head">$JSON(@Name|Ref|N, @File, @Members) 'ToFile' Property-Suffix</div>
                         <div class="subhead">Writes the call output to a specified file</div>
@@ -386,6 +535,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="section codedoc" id="id/json/state">
                         <div class="head">
                             $JSON(@Name|Ref|N).State
@@ -405,6 +555,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="section codedoc" id="id/json/inputtype">
                         <div class="head">
                             $JSON(@Name|Ref|N).InputType
@@ -431,6 +582,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="section codedoc" id="id/json/input">
                         <div class="head">
                             $JSON(@Name|Ref|N).Input
@@ -454,6 +606,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="section codedoc" id="id/json/ischild">
                         <div class="head">
                             $JSON(@Name|Ref|N).IsChild
@@ -479,6 +632,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="section codedoc" id="id/json/error">
                         <div class="head">
                             $JSON(@Name|Ref|N).Error
@@ -501,6 +655,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="section codedoc" id="id/json/httpresponse">
                         <div class="head">
                             $JSON(@Name|Ref|N).HttpResponse
@@ -518,6 +673,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="section codedoc" id="id/json/httphead">
                         <div class="head">
                             $JSON(@Name|Ref|N).HttpHead
@@ -535,6 +691,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="section codedoc" id="id/json/httpstatus">
                         <div class="head">
                             $JSON(@Name|Ref|N).HttpStatus
@@ -555,6 +712,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="section codedoc" id="id/json/httpstatustext">
                         <div class="head">
                             $JSON(@Name|Ref|N).HttpStatusText
@@ -575,6 +733,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="section codedoc" id="id/json/httpheaders">
                         <div class="head">
                             $JSON(@Name|Ref|N).HttpHeaders
@@ -592,6 +751,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="section codedoc" id="id/json/httpheader">
                         <div class="head">
                             $JSON(@Name|Ref|N, @Header, @N).HttpHeader
@@ -618,6 +778,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="section codedoc" id="id/json/httpbody">
                         <div class="head">
                             $JSON(@Name|Ref|N).HttpBody
@@ -638,6 +799,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="section codedoc" id="id/json/type">
                         <div class="head">
                             $JSON(@Name|Ref|N, @Members).Type
@@ -662,6 +824,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="section codedoc" id="id/json/length">
                         <div class="head">
                             $JSON(@Name|Ref|N, @Members).Length
@@ -682,6 +845,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="section codedoc" id="id/json/path">
                         <div class="head">
                             $JSON(@Name|Ref|N, @Members).Path
@@ -703,6 +867,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="section codedoc" id="id/json/value">
                         <div class="head">
                             $JSON(@Name|Ref|N, @Members).Value
@@ -724,6 +889,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="section codedoc" id="id/json/string">
                         <div class="head">
                             $JSON(@Name|Ref|N, @Members).String
@@ -744,6 +910,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="section codedoc" id="id/json/debugstring">
                         <div class="head">
                             $JSON(@Name|Ref|N, @Members).DebugString
@@ -760,6 +927,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="section codedoc" id="id/jsonerror">
                         <div class="head">
                             $JSONError
@@ -776,7 +944,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="section codedoc" id="id/jsonpath">
+                    
+                    <div style="display:none" class="section codedoc" id="id/jsonpath">
                         <div class="head">
                             $JSONPath(@Path, @index)
                         </div>
@@ -796,6 +965,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="section codedoc" id="cmd/jsondebug">
                         <div class="head">
                             /JSONDebug @State
@@ -804,7 +974,19 @@
                         <div class="content">
                             <div class="subsection">
                                 <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
+                                <div class="content parameters">
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@State</div>
+                                            <div class="italic">Optional</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The state of which to toggle debugging.</p>
+                                            <p>Acceptable inputs include <span class="code">on</span>, <span class="code">enable</span>, <span class="code">off</span>, and <span class="code">disable</span></p>
+                                            <p>If not specified, the current state will be toggled to the oppisite.</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="subsection">
                                 <div class="head">Example</div>
@@ -818,6 +1000,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="section codedoc" id="id/jsondebug">
                         <div class="head">
                             $JSONDebug
@@ -834,17 +1017,36 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="section codedoc" id="cmd/jsonclose">
                         <div class="head">/JSONClose -w @Name</div>
                         <div class="subhead">Lists a JSON handler</div>
                         <div class="content">
                             <div class="subsection">
                                 <div class="head">Switches</div>
-                                <div class="content">To Do</div>
+                                 <div class="content switches">
+                                    <div>
+                                        <div class="switch">w</div>
+                                        <div class="desc">
+                                            <p><span class="parameter">@Name</span> is a wildcard and all matching JSON handlers should be closed</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="subsection">
                                 <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
+                                <div class="content parameters">
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Name</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The name of the JSON handler to close</p>
+                                            <p>If the <span class="switch">w</span> switch is specified, the name will be considered a wildcard pattern
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="subsection">
                                 <div class="head">Example</div>
@@ -858,6 +1060,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="section codedoc" id="cmd/jsonshutdown">
                         <div class="head">/JSONShutDown</div>
                         <div class="subhead">Closes all open JSON handlers and frees all resources</div>
@@ -876,6 +1079,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="section codedoc" id="id/jsonversion">
                         <div class="head">$JSONVersion(@Short)</div>
                         <div class="subhead">Returns the JSON For mIRC script version</div>

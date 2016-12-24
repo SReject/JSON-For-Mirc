@@ -205,7 +205,41 @@ div.body > div.section.codedoc > div.head {
 .code .comment {
     color: rgb(128,255,128);
 }
+.switch,
+.parameter,
+.command {
+    color: rgb(255, 200, 64);
+}
+.switches > div {
+    display: flex;
+    margin-bottom: .5em;
+}
+.switches div.switch {
+    font-weight: bold;
+    min-width: 2em;
+}
+.switches > div.desc {
+    flex-grow: 1;
+}
 
+.parameters .indent,
+.switches .indent {
+    margin-left: 2em;
+}
+.parameters p,
+.switches p {
+    margin-bottom: .1em;
+}
+.parameters > div {
+    margin-bottom: 1em;
+}
+.parameters > div > div:first-child {
+    display: flex;
+}
+.parameters .parameter {
+    padding-right: 1em;
+    font-weight: bold;
+}
 
 div.wrapper > div.footer {
     box-sizing: border-box;
