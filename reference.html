@@ -264,11 +264,11 @@
                                     JSONOpen -df example file.txt<br>
                                     <br>
 
-                                    <div class="comment">;; Creates the JSON handler 'example' where the input is to be retrieved from http://example.com/data.json</div>
+                                    <div class="comment">Creates the JSON handler 'example' where the input is to be retrieved from http://example.com/data.json</div>
                                     JSONOpen -du example http://example.com/data.json<br>
                                     <br>
 
-                                    <div class="comment">;; Creates the JSON handler 'example' where the input is to be retrieved from http://example.com/data.json. The connection is to wait for /JSONHttpFetch is called</div>
+                                    <div class="comment">Creates the JSON handler 'example' where the input is to be retrieved from http://example.com/data.json. The connection is to wait for /JSONHttpFetch is called</div>
                                     JSONOpen -duw example http://example.com/data.json<br>
                                     <br>
 
@@ -394,7 +394,7 @@
                                     <div>
                                         <div class="switch">f</div>
                                         <div class="desc">
-                                            <p><span class="parameter">@Data</span> is a path to a file of which to spend</p>
+                                            <p><span class="parameter">@Data</span> is a path to a file of which to send</p>
                                             <p>This switch cannot be used with the <span class="switch">b</span> switch</p>
                                         </div>
                                     </div>
@@ -450,57 +450,161 @@
 
                     <div class="section codedoc" id="id/json">
                         <div class="head">$JSON(@Name|Ref|N)</div>
-                        <div class="subhead">Returns the name of the JSON handler if it exists</div>
+                        <div class="subhead">Returns the name or reference name of the JSON handler if it exists</div>
                         <div class="content">
                             <div class="subsection">
                                 <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="section codedoc">
-                        <div class="head">$JSON(@Name|Ref, @Members)</div>
-                        <div class="subhead">Returns a reference to the indicated member in the JSON</div>
-                        <div class="content">
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="section codedoc" id="id/json/fuzzy">
-                        <div class="head">$JSON(@Name|Ref|N, @Members) 'Fuzzy' Property-Prefix</div>
-                        <div class="subhead">Uses Fuzzy lookup to reference members</div>
-                        <div class="content">
-                            <p class="smaller">All properties can be prefixed with <span class="code">fuzzy</span> to indicate fuzzy lookup should be used.</p>
-                            <p class="smaller">Fuzzy lookups take place on <a href="./whatisjson.html#datatypes" target="_blank">JSON Objects</a> where referencing integers are considered indexes instead of keys, and case-sensitivity within keys is ignored</p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    JSONOpen -d example {"key":"some data"}<br>
-                                    <br>
-                                    <div class="comment">Echos: some data</div>
-                                    echo -a > $JSON(example, ~0).FuzzyValue<br>
-                                    echo -a > $JSON(example, ~KEY).FuzzyValue
+                                <div class="content parameters">
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Name|Ref|N</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The handler name, referenace name or numerical value in question</p>
+                                            <p>If <span class="code">0</span> is specified, the total number of open JSON handlers is returned</p>
+                                            <p>If a numerical value is specified the Nth JSON handler is returned</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
+                    <div class="section codedoc" id="id/json:withmembers">
+                        <div class="head">$JSON(@Name|Ref, @Members...)</div>
+                        <div class="subhead">Returns a reference to the indicated member in the JSON</div>
+                        <div class="content">
+                            <div class="subsection">
+                                <div class="head">Parameters</div>
+                                <div class="content parameters">
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Name|Ref</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The handler name or handler-reference of which to access memebers</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Members...</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The members to access</p>
+                                            <p>Nested members are specified by passing subsequent arguments to the <span class="code">$JSON()</span> alias</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="subsection">
+                                <div class="head">Example</div>
+                                <div class="code">
+                                    JSONOpen example {"keyA":["index0", {"keyB": "some value"}]}<br>
+                                    <br>
+
+                                    <div class="comment">Returns a reference to the members of 'keyA'; in this case a reference to the array</div>
+                                    echo -a $JSON(example, keyA)<br>
+                                    <br>
+
+                                    <div class="comment">Returns a reference to 'some value'</div>
+                                    echo -a $JSON(example, keyA, 1, keyB)<br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section codedoc" id="id/json/fuzzy">
+                        <div class="head">$JSON(@Name|Ref, @Members...) 'Fuzzy' Property-Prefix</div>
+                        <div class="subhead">Uses Fuzzy lookup to reference members</div>
+                        <div class="content">
+                            <p class="smaller">All properties can be prefixed with <span class="code">fuzzy</span> to indicate fuzzy lookup should be used.</p>
+                            <p class="smaller">Fuzzy lookups take place on <a href="./whatisjson.html#datatypes" target="_blank">JSON Objects</a> where unsigned-integers within <span class="parameter">@Members...</span> are considered indexes instead of keys and case-sensitivity is ignored</p>
+                            <div class="subsection">
+                                <div class="head">Parameters</div>
+                                <div class="content parameters">
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Name|Ref</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The handler name or handler-reference of which to access memebers</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Members...</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The members to access</p>
+                                            <p>Nested members are specified by passing subsequent arguments to the <span class="code">$JSON()</span> alias</p>
+                                            <p>To indicate a specific member should use fuzzy-lookup prefix it with <span class="code">~</span></p>
+                                            <p>Non-fuzzy member lookups can be forced by prefixing the member with <span class="code">=</span>. This only effects inputted members that would trigger fuzzy-lookups</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="subsection">
+                                <div class="head">Example</div>
+                                <div class="code">
+                                    JSONOpen -d example {"member0":{"member1": "value1", "~1": "value2"}}<br>
+                                    <br>
+
+                                    <div class="comment">Echos: value1</div>
+                                    echo -a > $JSON(example, ~0, member1).FuzzyValue<br>
+                                    echo -a > $JSON(example, ~MEMBER0, ~0).FuzzyValue<br>
+                                    <br>
+
+                                    <div class="comment">Echos: value2</div>
+                                    echo -a > $JSON(Example, member0, =~1).FuzzyValue
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="section codedoc" id="id/json/tobvar">
-                        <div class="head">$JSON(@Name|Ref|N, @BVar, @Members) 'ToBvar' Property-Suffix</div>
+                        <div class="head">$JSON(@Name|Ref, @BVar, ...) 'ToBvar' Property-Suffix</div>
                         <div class="subhead">Stores the call output in a specified bvar</div>
                         <div class="content">
                             <p class="smaller">All $JSON() properties can be suffixed with <span class="code">ToBvar</span> to indicate the output should be stored in a specified bvar</p>
                             <p class="smaller">This suffix is not compatible with the <span class="code">ToFile</span> suffix.</p>
                             <div class="subsection">
                                 <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
+                                <div class="content parameters">
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Name|Ref</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The handler name or handler-reference of which to access memebers</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Bvar</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The bvar to fill with the result</p>
+                                            <p>If the bvar exists, all data within the bvar is overwrote</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <div class="parameter">...</div>
+                                            <div class="italic">Circumstantial</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>Property-specific parameters.</p>
+                                            <p>When outputting to a bvar, the bvar name will always be the second parameter passed to the <span class="parameters">$JSON()</span> identifier</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="subsection">
                                 <div class="head">Example</div>
@@ -508,21 +612,51 @@
                                     JSONOpen -d example "some data"<br>
                                     <br>
                                     <div class="comment">Fills &amp;bvar with: some data</div>
-                                    noop $JSON(example, &amp;bvar, key).ValueToBvar
+                                    noop $JSON(example, &amp;bvar).ValueToBvar
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="section codedoc" id="id/json/tofile">
-                        <div class="head">$JSON(@Name|Ref|N, @File, @Members) 'ToFile' Property-Suffix</div>
+                        <div class="head">$JSON(@Name|Ref, @File, ...) 'ToFile' Property-Suffix</div>
                         <div class="subhead">Writes the call output to a specified file</div>
                         <div class="content">
                             <p class="smaller">All $JSON() properties can be suffix with <span class="code">ToFile</span> to indicate the output should be wrote to the specified file.</p>
                             <p class="smaller">This suffix is not compatible with the <span class="code">ToBVar</span> suffix.</p>
                             <div class="subsection">
                                 <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
+                                <div class="content parameters">
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Name|Ref</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The handler name or handler-reference of which to access memebers</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@File</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The file to output the result to</p>
+                                            <p>If the file exists its contents are overwrote</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <div class="parameter">...</div>
+                                            <div class="italic">Circumstantial</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>Property-specific parameters.</p>
+                                            <p>When outputting to a file, the filepath will always be the second parameter passed to the <span class="parameters">$JSON()</span> identifier</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="subsection">
                                 <div class="head">Example</div>
@@ -530,22 +664,32 @@
                                     JSONOpen -d example "some data"<br>
                                     <br>
                                     <div class="comment">Writes to file.txt: some data</div>
-                                    noop $JSON(example, file.txt, key).ValueToFile
+                                    noop $JSON(example, file.txt).ValueToFile
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="section codedoc" id="id/json/state">
                         <div class="head">
-                            $JSON(@Name|Ref|N).State
+                            $JSON(@Name|Ref).State
                         </div>
                         <div class="subhead">Returns the current state of the JSON handler</div>
                         <div class="content">
                             <p class="smaller">Valid states are: <span class="code">init</span> <span class="code">http_pending</span> <span class="code">parse_pending</span> and <span class="code">done</span></p>
                             <div class="subsection">
                                 <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
+                                <div class="content parameters">
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Name|Ref</div>
+                                            <div class="italic">Required</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>The handler name or handler-reference of which to reference</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="subsection">
                                 <div class="head">Example</div>
@@ -555,7 +699,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="section codedoc" id="id/json/inputtype">
                         <div class="head">
                             $JSON(@Name|Ref|N).InputType
@@ -582,7 +726,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="section codedoc" id="id/json/input">
                         <div class="head">
                             $JSON(@Name|Ref|N).Input
@@ -606,7 +750,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="section codedoc" id="id/json/ischild">
                         <div class="head">
                             $JSON(@Name|Ref|N).IsChild
@@ -632,7 +776,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="section codedoc" id="id/json/error">
                         <div class="head">
                             $JSON(@Name|Ref|N).Error
@@ -655,7 +799,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="section codedoc" id="id/json/httpresponse">
                         <div class="head">
                             $JSON(@Name|Ref|N).HttpResponse
@@ -673,7 +817,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="section codedoc" id="id/json/httphead">
                         <div class="head">
                             $JSON(@Name|Ref|N).HttpHead
@@ -927,7 +1071,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="section codedoc" id="id/jsonerror">
                         <div class="head">
                             $JSONError
@@ -944,7 +1088,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div style="display:none" class="section codedoc" id="id/jsonpath">
                         <div class="head">
                             $JSONPath(@Path, @index)
@@ -965,7 +1109,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="section codedoc" id="cmd/jsondebug">
                         <div class="head">
                             /JSONDebug @State
@@ -1000,7 +1144,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="section codedoc" id="id/jsondebug">
                         <div class="head">
                             $JSONDebug
@@ -1017,7 +1161,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="section codedoc" id="cmd/jsonclose">
                         <div class="head">/JSONClose -w @Name</div>
                         <div class="subhead">Lists a JSON handler</div>
@@ -1060,7 +1204,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="section codedoc" id="cmd/jsonshutdown">
                         <div class="head">/JSONShutDown</div>
                         <div class="subhead">Closes all open JSON handlers and frees all resources</div>
@@ -1079,14 +1223,24 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="section codedoc" id="id/jsonversion">
                         <div class="head">$JSONVersion(@Short)</div>
                         <div class="subhead">Returns the JSON For mIRC script version</div>
                         <div class="content">
                             <div class="subsection">
                                 <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
+                                <div class="content parameters">
+                                    <div>
+                                        <div>
+                                            <div class="parameter">@Short</div>
+                                            <div class="italic">Optional</div>
+                                        </div>
+                                        <div class="indent">
+                                            <p>If not null then a shorten version-string will be returned</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="subsection">
                                 <div class="head">Example</div>
