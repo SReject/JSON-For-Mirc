@@ -242,7 +242,7 @@ alias JSONHttpHeader {
   unset %SReject/JSONForMirc/Error
   jfm_log -S /JSONHttpHeader $1-
   var %Error, %Com, %Header
-  if (!$jfm_ComInit) {
+  if ($jfm_ComInit) {
     %Error = $v1
   }
   elseif ($0 < 3) {
@@ -304,13 +304,13 @@ alias JSONHttpFetch {
     return
   }
   unset %SReject/JSONForMirc/Error
-  jfm_log -S /JSONHttpGet $1-
+  jfm_log -S /JSONHttpFetch $1-
   var %Switches = -, %Error, %Com, %BVar, %BUnset
   if (-* iswm $1) {
     %Switches = $1
     tokenize 32 $2-
   }
-  if (!$jfm_ComInit) {
+  if ($jfm_ComInit) {
     %Error = $v1
   }
   if ($0 == 0 || (%Switches != - && $0 < 2)) {
