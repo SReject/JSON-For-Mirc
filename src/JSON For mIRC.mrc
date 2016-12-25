@@ -496,7 +496,7 @@ alias JSON {
     return
   }
   unset %SReject/JSONForMirc/Error
-  var %Args, %x = 1, %Error, %Com, %i = 0, %Prefix, %Prop, %Suffix, %Offset = $iif(*toFile iswm $prop || *toBVar iswm $prop,3,2), %Type, %Output, %Result, %ChildCom, %Params
+  var %Args, %x = 1, %Error, %Com, %i = 0, %Prefix, %Prop, %Suffix, %Offset = $iif(*toFile iswm $prop,3,2), %Type, %Output, %Result, %ChildCom, %Params
 
   while (%x <= $0) {
     %Args = %Args $+ $iif($len(%Args), $chr(44)) $+ $($ $+ %x, 2)
@@ -800,7 +800,7 @@ alias -l jfm_ComInit {
   if ($com(SReject/JSONForMirc/JSONShell)) {
     .comclose $v1
   }
-  
+
   if ($len($~adiircexe) && $appbits == 64) {
     .comopen SReject/JSONForMirc/JSONShell ScriptControl
   }
