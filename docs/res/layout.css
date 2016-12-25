@@ -1,0 +1,256 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Lora:700');
+html, body {
+    margin: 0px;
+    padding: 0px;
+    min-width: 1000px;
+    min-height: 850px;
+    height: 100%;
+    background: url('./parchment2.jpg');
+    background-attachment: fixed;
+    font-size: 20px;
+    color: rgb(128, 174, 189);
+    font-family: 'Open Sans', sans-serif;
+}
+a,
+a:hover,
+a:visited {
+    text-decoration: none;
+    font-weight: bold;
+}
+p {
+    margin: 0px;
+    padding: 0px;
+}
+p:not(:last-child) {
+    margin-bottom: 1em;
+}
+
+.em {
+    font-weight: bold;
+    font-size: 1.05em;
+}
+.mono {
+    font-family: monospace;
+    font-size: .9em;
+}
+.marginbottom {
+    margin-bottom: 1em;
+}
+.indent {
+    margin-left: 1em;
+}
+.italic {
+    font-style: italic;
+}
+.smaller {
+    font-size: .9em;
+}
+
+
+div.wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+div.wrapper > div.helper {
+    flex-grow: 1;
+    display: flex;
+}
+div.wrapper > div.helper > div {
+    padding: 2em;
+}
+
+
+div.menu {
+    z-index: 2;
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 200px;
+    box-shadow: inset 0px 0px 3em black;
+    background-color: rgba(209, 156, 63, .75);
+    text-shadow: -1px -1px rgba(255,255,255, .25),
+        1px 1px rgba(0,0,0, .25);
+}
+div.menu a {
+    color: rgb(48, 64, 72);
+}
+div.menu a:hover {
+    color: red;
+}
+div.menu > div {
+    margin-bottom: .25em;
+}
+div.menu div.logo {
+    box-sizing: border-box;
+    padding: 10px 10px 5px 10px;
+    background-color: white;
+    border-radius: 10px;
+    margin-bottom: .5em;
+    border: 1px solid rgba(0,0,0, .5);
+}
+div.menu div.logo img {
+    width: 100%;
+}
+div.menu div div {
+    padding-left: 1.25em;
+    font-size: .9em;
+}
+
+
+
+div.body {
+    flex-grow: 1;
+    background-color: rgba(55, 57, 71, .9);
+    box-shadow: inset 0px 0px 3em black;
+    text-shadow: -2px 2px black;
+}
+div.body a {
+    color: rgb(128, 174, 189);
+}
+
+
+div.body > div.section {
+    margin: 0 auto;
+    max-width: 900px;
+    position: relative;
+    background-color: rgba(0,0,0, .25);
+}
+div.body > div.section:not(:last-child) {
+    margin-bottom: 30px;
+}
+div.body > div.section > div {
+    padding-left: 20px;
+    padding-right: 20px;
+    position: relative;
+}
+
+
+div.body > div.section > div.head {
+    padding-top: 10px;
+    padding-bottom: 3px;
+    font-family: serif;
+    font-size: 1.75em;
+    font-weight: bold;
+    box-shadow: 0px 5px 5px -5px rgb(0, 0, 0);
+    border-radius: 5px;
+    color: white;
+    
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    
+}
+div.body > div.section > div.subhead {
+    font-style: italic;
+    background-color: rgba(0,0,0, .25);
+    padding-top: 7px;
+    padding-bottom: 5px;
+    font-size: .9em;
+    color: rgba(255,255,255, .9);
+    font-weight: normal;
+    
+    font: sans-serif;
+}
+
+div.body > div.section > div.content {
+    padding: 20px;
+    color: rgba(192, 192, 192, .75);
+    font-size: 20px;
+    text-shadow: none;
+}
+
+div.section div.subsection:not(:last-child) {
+    margin-bottom: 2em;
+}
+div.subsection > div.head {
+    color: white;
+    font-weight: bold;
+    font-family: serif;
+    border-bottom: 1px solid rgba(0,0,0,.25);
+    padding: 2px;
+}
+div.subsection > div.content {
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+    font-size: .85em;
+}
+div.subsection ul {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+}
+div.section .code {
+    font-family: monospace;
+    display: inline-block;
+    padding: 3px;
+    background-color: rgba(0,0,0,.5);
+    border-radius: 3px;
+    font-size: .9em;
+}
+div.section div.code {
+    display: block !important;
+    padding: .5em;
+    border-radius: .5em;
+}
+div.body > div.section.codedoc:not(:last-child) {
+    margin-bottom: 5em;
+}
+div.body > div.section.codedoc > div.head {
+    font-family: monospace;
+    font-size: 20px;
+    color: rgb(255, 200, 64);
+    text-shadow: none;
+}
+.code.comment,
+.code .comment {
+    color: rgb(128,255,128);
+}
+.switch,
+.parameter,
+.command {
+    color: rgb(255, 200, 64);
+}
+.switches > div {
+    display: flex;
+    margin-bottom: .5em;
+}
+.switches div.switch {
+    font-weight: bold;
+    min-width: 2em;
+}
+.switches > div.desc {
+    flex-grow: 1;
+}
+
+.parameters .indent,
+.switches .indent {
+    margin-left: 2em;
+}
+.parameters p,
+.switches p {
+    margin-bottom: .1em;
+}
+.parameters > div {
+    margin-bottom: 1em;
+}
+.parameters > div > div:first-child {
+    display: flex;
+}
+.parameters .parameter {
+    padding-right: 1em;
+    font-weight: bold;
+}
+
+div.wrapper > div.footer {
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 0px;
+    z-index: 5;
+    text-align: center;
+    background-color: rgba(0,0,0, .5);
+    width: 100%;
+    font-size: 16px;
+    font-weight: normal;
+    color: rgb(64,64,64);
+    padding: 3px;
+}
