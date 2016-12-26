@@ -974,7 +974,7 @@ alias -l jfm_Create {
 }
 
 
-#SReject/JSONForMirc/Log on
+#SReject/JSONForMirc/Log off
 ;; Logs debug messages
 alias -l jfm_log {
   if (!$window(@SReject/JSONForMirc/Log)) {
