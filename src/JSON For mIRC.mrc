@@ -1,6 +1,6 @@
 ;; Cleanup debugging when the debug window closes
 on *:CLOSE:@SReject/JSONForMirc/Log:{
-  if ($jsondebug == on) {
+  if ($jsondebug == $false) {
     jsondebug off
   }
 }
@@ -9,7 +9,7 @@ on *:CLOSE:@SReject/JSONForMirc/Log:{
 
 ;; Free resources when mIRC exits
 on *:EXIT:{
-  if ($jsondebug == on) {
+  if ($jsondebug == $false) {
     jsondebug off
   }
   JSONShutDown
@@ -42,7 +42,7 @@ menu @SReject/JSONForMirc/Log {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %ver = 1.0.0007
+    var %ver = 1.0.0008
     if ($0) {
       return %ver
     }
