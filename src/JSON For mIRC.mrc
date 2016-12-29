@@ -274,7 +274,7 @@ alias JSONHttpMethod {
     %Com = JSON: $+ $1
 
     ;; trim excess whitespace from the method parameter
-    %Method = $regsubex($1, /(^\s+)|(\s*)$/g, )
+    %Method = $regsubex($2, /(^\s+)|(\s*)$/g, )
 
     ;; validate the method parameter
     if (!$len(%Method)) {
@@ -502,7 +502,7 @@ alias JSONHttpFetch {
       }
 
       ;; attempt to store the data with the handler instance
-      %Error = $jfm_Exec(%com, httpSetData, %bvar)
+      %Error = $jfm_Exec(%com, httpSetData, & %bvar).fromBvar
     }
 
     ;; Call the js-side parse function for the handler
@@ -1356,7 +1356,7 @@ alias -l jfm_GetError {
 alias -l jfm_Exec {
 
   ;; local variable declaration
-  var %Args, %Index = 1, %Result, %Params
+  var %Args, %Index = 1, %value, %Result, %Params
 
   ;; cleanup from previous call
   unset %SReject/JSONForMirc/Exec
@@ -1364,9 +1364,15 @@ alias -l jfm_Exec {
   ;; Loop over inputs, storing them in %args(for logging), and %params(for com calling)
   :args
   if (%Index <= $0) {
+    %value = $($ $+ %index, 2)
     %Args = %Args $+ $iif($len(%Args), $chr(44)) $+ $($ $+ %Index, 2)
     if (%Index >= 3) {
-      %Params = %Params $+ ,bstr,$ $+ %Index
+      if ($prop == fromBvar && $regex(%value, /^& (&\S+)$/)) {
+        %Params = %Params $+ ,&bstr, $+ $regml(1)
+      }
+      else {
+        %Params = %Params $+ ,bstr,$ $+ %Index
+      }
     }
     inc %Index
     goto args
