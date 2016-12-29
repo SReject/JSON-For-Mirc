@@ -38,7 +38,7 @@ menu @SReject/JSONForMirc/Log {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %ver = 1.0.0003
+    var %ver = 1.0.0004
     if ($0) {
       return %ver
     }
@@ -1219,7 +1219,7 @@ alias -l jfm_ComInit {
 
   ;; Retrieve the javascript to execute
   ;;> FILE:jscript:START file="json for mirc.min.js" prefix="jfm_badd %js"
-  jfm_jscript(%js)
+  jfm_jscript %js
   ;;> FILE:jscript:END
 
   ;; close the Engine and shell coms if either but not both are open
