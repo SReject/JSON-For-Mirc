@@ -1,13 +1,17 @@
 ;; Cleanup debugging when the debug window closes
 on *:CLOSE:@SReject/JSONForMirc/Log:{
-  .jsondebug off
+  if ($jsondebug == on) {
+    jsondebug off
+  }
 }
 
 
 
 ;; Free resources when mIRC exits
 on *:EXIT:{
-  .jsondebug off
+  if ($jsondebug == on) {
+    jsondebug off
+  }
   JSONShutDown
 }
 
@@ -38,7 +42,7 @@ menu @SReject/JSONForMirc/Log {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %ver = 1.0.0006
+    var %ver = 1.0.0007
     if ($0) {
       return %ver
     }
@@ -1113,7 +1117,7 @@ alias JSONDebug {
 
     ;; if logging is already enabled
     if (%State) {
-      echo $color(info).dd -atngq * /JSONDebug: debug already enabled
+      echo $color(info).dd -atng * /JSONDebug: debug already enabled
       return
     }
 
@@ -1127,7 +1131,7 @@ alias JSONDebug {
 
     ;; if logging is already disabled
     if (!%State) {
-      echo $color(info).dd -atngq * /JSONDebug: debug already disabled
+      echo $color(info).dd -atng * /JSONDebug: debug already disabled
       return
     }
 
@@ -1148,12 +1152,12 @@ alias JSONDebug {
     if (!$window(@SReject/JSONForMirc/Log)) {
       window -zk0e @SReject/JSONForMirc/Log
     }
-    echo $color(info2) -q @SReject/JSONForMirc/Log [JSONDebug] Debug now enabled
+    echo $color(info2) @SReject/JSONForMirc/Log [JSONDebug] Debug now enabled
   }
 
   ;; if debug state is disabled and the debug window is open, indicate that debug logging is disabled
   elseif ($Window(@SReject/JSONForMirc/Log)) {
-    echo $color(info2) -q @SReject/JSONForMirc/Log [JSONDebug] Debug now disabled
+    echo $color(info2) @SReject/JSONForMirc/Log [JSONDebug] Debug now disabled
   }
 }
 
