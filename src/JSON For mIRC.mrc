@@ -1,6 +1,6 @@
 ;; Cleanup debugging when the debug window closes
 on *:CLOSE:@SReject/JSONForMirc/Log:{
-  if ($jsondebug == $false) {
+  if ($jsondebug) {
     jsondebug off
   }
 }
@@ -9,7 +9,7 @@ on *:CLOSE:@SReject/JSONForMirc/Log:{
 
 ;; Free resources when mIRC exits
 on *:EXIT:{
-  if ($jsondebug == $false) {
+  if ($jsondebug) {
     jsondebug off
   }
   JSONShutDown
