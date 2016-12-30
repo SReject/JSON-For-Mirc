@@ -9,9 +9,6 @@ on *:CLOSE:@SReject/JSONForMirc/Log:{
 
 ;; Free resources when mIRC exits
 on *:EXIT:{
-  if ($jsondebug) {
-    jsondebug off
-  }
   JSONShutDown
 }
 
@@ -28,7 +25,7 @@ on *:UNLOAD:{
 menu @SReject/JSONForMirc/Log {
   .Clear: clear -@ @SReject/JSONForMirc/Log
   .-
-  .$style(2) Save: noop
+  .$iif(!$jfm_SaveDebug, $style(2)) Save: jfm_SaveDebug
   .-
   .Toggle Debug: jsondebug
 }
@@ -42,7 +39,7 @@ menu @SReject/JSONForMirc/Log {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %ver = 1.0.0009
+    var %ver = 1.0.0010
     if ($0) {
       return %ver
     }
@@ -695,6 +692,14 @@ alias JSONShutDown {
   ;; Close all json instances
   JSONClose -w *
 
+  if ($JSONDebug) {
+    JSONDebug off
+  }
+
+  if ($window(@SReject/JSONForMirc/Log)) {
+    close -@ $v1
+  }
+
   ;; Close the JSON engine and shell coms
   if ($com(SReject/JSONForMirc/JSONEngine)) {
     .comclose $v1
@@ -1117,7 +1122,7 @@ alias JSONDebug {
 
     ;; if logging is already enabled
     if (%State) {
-      echo $color(info).dd -atng * /JSONDebug: debug already enabled
+      echo $color(info).dd -atngq * /JSONDebug: debug already enabled
       return
     }
 
@@ -1131,7 +1136,7 @@ alias JSONDebug {
 
     ;; if logging is already disabled
     if (!%State) {
-      echo $color(info).dd -atng * /JSONDebug: debug already disabled
+      echo $color(info).dd -atngq * /JSONDebug: debug already disabled
       return
     }
 
@@ -1152,12 +1157,12 @@ alias JSONDebug {
     if (!$window(@SReject/JSONForMirc/Log)) {
       window -zk0e @SReject/JSONForMirc/Log
     }
-    echo $color(info2) @SReject/JSONForMirc/Log [JSONDebug] Debug now enabled
+    echo $color(info2) -q @SReject/JSONForMirc/Log [JSONDebug] Debug now enabled
   }
 
   ;; if debug state is disabled and the debug window is open, indicate that debug logging is disabled
   elseif ($Window(@SReject/JSONForMirc/Log)) {
-    echo $color(info2) @SReject/JSONForMirc/Log [JSONDebug] Debug now disabled
+    echo $color(info2) -q @SReject/JSONForMirc/Log [JSONDebug] Debug now disabled
   }
 }
 
@@ -1506,12 +1511,14 @@ alias -l jfm_Create {
 }
 
 
+
 ;; When debug is enabled
 ;;     the /jfm_log alias with this group gets called
 ;;
 ;; When debug is disabled
 ;;    the /jfm_log alias below this group is called
 #SReject/JSONForMirc/Log off
+
 
 
 ;; /jfm_log -dDeisS @message
@@ -1607,6 +1614,44 @@ alias -l jfm_log {
 
 ;; called when debugging is disabled
 alias -l jfm_log noop
+
+
+
+;; $jfm_SaveDebug
+;;     Returns $true if the debug window is open and there is content in the buffer to save
+;;
+;; /jfm_SaveDebug
+;;     Attempts to save the contents of the debug window to file
+alias -l jfm_SaveDebug {
+
+  ;; if called as an identifier
+  if ($isid) {
+
+    ;; if the debug window is open and has content to save return true
+    if ($window(@SReject/JSONForMirc/Log) && $line(@SReject/JSONForMirc/Log, 0)) {
+      return $true
+    }
+
+    ;; otherwise return false
+    return $false
+  }
+
+  var %file = $sfile($envvar(USERPROFILE) $+ \Documents\JFM.log, Save, Save)
+
+  ;; if no file was selected to store the log under
+  ;; halt processing
+  if (!%file) {
+    return
+  }
+
+  ;; if the file exists ask the user if they are sure they want to overwrite it
+  if ($isfile(%file) && !$input(Are you sure you want to overwrite $nopath(%file), ysa, @SReject/JSONForMirc/Log, Overwrite)) {
+    return
+  }
+
+  ;; save the debug buffer to file
+  savebuf @SReject/JSONForMirc/Log $qt(%file)
+}
 
 
 
