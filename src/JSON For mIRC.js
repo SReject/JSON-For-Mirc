@@ -228,7 +228,6 @@
                 member,
                 doFuzzy,
                 result;
-
             if (typeof args[0] === 'boolean') {
                 fuzzy = args.shift();
             }
@@ -238,7 +237,6 @@
             if (type !== 'array' && type !== 'object') {
                 throw new Error('ILLEGAL_REFERENCE');
             }
-            
             member = String(args.shift());
             if (fuzzy && /^[~=]./.test(member)) {
                 doFuzzy = '~' === member.charAt(0);
@@ -252,7 +250,6 @@
                             throw new Error('FUZZY_INDEX_NOT_FOUND');
                         }
                         member = keys[member];
-
                     } else if (!hasOwnProp(this.json.value, member)) {
                         member = member.toLowerCase();
                         member = keys.find(function (item) {
@@ -264,7 +261,6 @@
                     }
                 }
             }
-
             if (hasOwnProp(this.json.value, member)) {
                 this.json.path.forEach(function (item) {
                     path.push(item);
@@ -305,7 +301,6 @@
                 throw new Error("NOT_PARSED");
             }
             var type = getType(this.json.value);
-            
             if (type === 'string' || type === 'array') {
                 return this.json.value.length;
             }
@@ -318,6 +313,10 @@
         jsonValue: function () {
             if (this.state !== 'done' || this.error) {
                 throw new Error("NOT_PARSED");
+            }
+            // work around for decimal values as mIRC is adding trailing 0's
+            if (this.jsonType() === "number" && /./.test(String(this.json.value))) {
+                return String(this.json.value);
             }
             return this.json.value;
         },
