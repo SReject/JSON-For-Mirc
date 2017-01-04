@@ -325,7 +325,7 @@
             }
             var result = '';
             this.json.path.forEach(function (item) {
-                result += (result ? ' ' : '') + item.replace(/([\\ ])/g, function (chr) {
+                result += (result ? ' ' : '') + String(item).replace(/([\\ ])/g, function (chr) {
                     return ' ' === chr ? '\s' : '\\';
                 });
             });
