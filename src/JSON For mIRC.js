@@ -229,6 +229,7 @@
                 member,
                 doFuzzy,
                 result;
+
             if (typeof args[0] === 'boolean') {
                 fuzzy = args.shift();
             }
@@ -262,14 +263,15 @@
                 }
             }
             if (hasOwnProp(this.json.value, member)) {
-                this.json.path.forEach(function (item) {
-                    path.push(item);
-                });
+                path = this.json.path.slice();
                 path.push(member);
                 result = new JSONWrapper(this, {
                     path: path,
                     value: this.json.value[member]
                 });
+                if (args.length == 1) {
+                    return result;
+                }
                 args.unshift(fuzzy);
                 return result.walk.apply(result, args);
             }
@@ -280,29 +282,35 @@
             if (this.state !== 'done' || this.error) {
                 throw new Error('NOT_PARSED');
             }
-            var args = Array.prototype.slice.call(arguments),
-                self = this,
-                result = [];
-            function resultAdd(key) {
-                var prm = args.slice(0),
-                    ref = new JSONWrapper(self, {
-                        path: self.json.path.slice(0).push(key),
-                        json: self.json.value[key]
-                    });
-                if (prm.length > 1) {
-                    ref = ref.walk.apply(ref, args);
-                }
-                result.push(ref);
+            var self = this,
+                args = Array.prototype.slice.call(arguments),
+                res = [];
+            function resultAdd(member) {
+                var path = self.json.path.slice(),
+                    ref;
+                path.push(member);
+                ref = new JSONWrapper(self, {
+                    path: path,
+                    value: self.json.value[member]
+                });
+                try {
+                    if (args.length > 0) {
+                        ref = ref.walk.apply(ref, args.slice());
+                    }
+                    res.push(ref)
+                } catch (ignore) { }
             }
-            if (this.jsonType === 'object') {
+
+            if (this.jsonType() === 'object') {
                 Object.keys(this.json.value).forEach(resultAdd);
                 return result;
             }
-            if (this.jsonType === 'array') {
-                this.forEach(function (ignore, index) {
+
+            if (this.jsonType() === 'array') {
+                this.json.value.forEach(function (ignore, index) {
                     resultAdd(index);
                 });
-                return result;
+                return res;
             }
             throw new Error('ILLEGAL_REFERENCE');
         },
@@ -358,7 +366,7 @@
             return JSON.stringify(this.json.value);
         },
 
-        debugString: function () {
+        jsonDebugString: function () {
             var result = {
                 state: this.state,
                 input: this.input,

@@ -83,11 +83,11 @@ alias JSONOpen {
   ;; Insure the alias was called as a command
   if ($isid) return
 
-  ;; local variable declarations
-  var %Switches = -, %Error, %Com = $false, %Type = text, %Wait = $false, %BVar, %BUnset = $true
-
   ;; Unset the global error variable incase the last call ended in error
   unset %SReject/JSONForMirc/Error
+
+  ;; local variable declarations
+  var %Switches = -, %Error, %Com = $false, %Type = text, %Wait = $false, %BVar, %BUnset = $true
 
   ;; log the /JSONOpen command is being called
   jfm_log -S /JSONOpen $1-
@@ -240,11 +240,11 @@ alias JSONHttpMethod {
   ;; Insure the alias was called as a command
   if ($isid) return
 
-  ;; local variable declarations
-  var %Error, %Com, %Method
-
   ;; Unset the global error variable incase the last call ended in error
   unset %SReject/JSONForMirc/Error
+
+  ;; local variable declarations
+  var %Error, %Com, %Method
 
   ;; Log the alias call
   jfm_log -S /JSONHttpMethod $1-
@@ -331,15 +331,14 @@ alias JSONHttpHeader {
   ;; Insure the alias was called as a command
   if ($isid) return
 
-  ;; local variable declarations
-  var %Error, %Com, %Header
-
   ;; Unset the global error variable incase the last call ended in error
   unset %SReject/JSONForMirc/Error
 
+  ;; local variable declarations
+  var %Error, %Com, %Header
+
   ;; Log the alias call
   jfm_log -S /JSONHttpHeader $1-
-
 
   ;; Call the Com interfave initializer
   if ($jfm_ComInit) {
@@ -425,11 +424,11 @@ alias JSONHttpFetch {
   ;; Insure the alias is called as a command
   if ($isid) return
 
-  ;; Local variable declarations
-  var %Switches = -, %Error, %Com, %BVar, %BUnset
-
   ;; Unset the global error variable incase the last call ended in error
   unset %SReject/JSONForMirc/Error
+
+  ;; Local variable declarations
+  var %Switches = -, %Error, %Com, %BVar, %BUnset
 
   ;; Log the alias call
   jfm_log -S /JSONHttpFetch $1-
@@ -556,11 +555,11 @@ alias JSONClose {
   ;; Insure the alias is called as a command
   if ($isid) return
 
-  ;; Local variable declarations
-  var %Switches, %Error, %Match, %Com, %x = 1
-
   ;; Unset the global error variable incase the last call ended in error
   unset %SReject/JSONForMirc/Error
+
+  ;; Local variable declarations
+  var %Switches, %Error, %Match, %Com, %x = 1
 
   ;; Log the alias call
   jfm_log -S /JSONClose $1-
@@ -724,11 +723,11 @@ alias JSON {
     return
   }
 
-  ;; Local variable declartions
-  var %Args, %x = 1, %Error, %Com, %i = 0, %Prefix, %Prop, %Suffix, %Offset = $iif(*toFile iswm $prop,3,2), %Type, %Output, %Result, %ChildCom, %Params
-
   ;; Unset the global error variable incase the last call ended in error
   unset %SReject/JSONForMirc/Error
+
+  ;; Local variable declartions
+  var %Args, %x = 1, %Error, %Com, %i = 0, %Prefix, %Prop, %Suffix, %Offset = $iif(*toFile iswm $prop,3,2), %Type, %Output, %Result, %ChildCom, %Params
 
   ;; Loop over all parameters
   while (%x <= $0) {
@@ -882,7 +881,7 @@ alias JSON {
 
   ;; if the prop is httpHead httpStatus httpStatusText httpHeaders httpBody httpResponse or debugString
   ;; attempt to retrieve the value from the js engine
-  elseif ($wildtok(httpHead|httpStatus|httpStatusText|httpHeaders|httpBody|httpResponse|debugString, %Prop, 1, 124)) {
+  elseif ($wildtok(httpHead|httpStatus|httpStatusText|httpHeaders|httpBody|httpResponse, %Prop, 1, 124)) {
 
     ;; if an error occured, store the error
     if ($jfm_Exec(%Com, $v1)) {
@@ -915,7 +914,7 @@ alias JSON {
   }
 
   ;; if no prop is specified or the prop is type, path, value, length, isParent or String
-  elseif (!%Prop || $wildtok(Type|Path|Value|Length|isParent|String, %Prop, 1, 124)) {
+  elseif (%Prop == $null || $wildtok(Type|Path|Value|Length|isParent|String|DebugString, %Prop, 1, 124)) {
 
     ;; store the matched prop
     %Prop = $v1
@@ -950,9 +949,16 @@ alias JSON {
       jfm_log -d
     }
 
+    ;; No Prop? then the result is the child com's name
+    if (!%Prop) {
+      echo -s Returning Reference: %Com
+      %Result = $jfm_TmpBvar
+      bset -t %Result 1 %Com
+    }
+
     ;; if the prop is length, path or string
     ;; attempt to retrieve thier value from the JSON com instance
-    if (%Prop == Length || %Prop == Path || %Prop = String) {
+    elseif (%Prop == Length || %Prop == Path || %Prop == String || %Prop == debugString) {
 
       ;; if the call resulted in an error, store the error
       if ($jfm_Exec(%Com, json $+ %Prop)) {
@@ -1046,7 +1052,7 @@ alias JSON {
 
     ;; otherwise return the result text, chopped to 4000 bytes
     else {
-      jfm_log -Ds Result: $bvar(%Result, 1, 4000).text
+      jfm_log -Ds $bvar(%Result, 1, 4000).text
       return $bvar(%Result, 1, 4000).text
     }
   }
@@ -1062,6 +1068,145 @@ alias JSON {
   if (%Error) {
     set -u0 %SReject/JSONForMirc/Error %Error
     jfm_log -De $!JSON %Error
+  }
+}
+
+
+
+
+;; $JSONForEach(@Name|Ref|N, command, @Members).fuzzy
+;;
+alias JSONForEach {
+
+  ;; Insure the alias was called as an identifier
+  if (!$isid) return
+
+  ;; Unset the global error variable incase the last call ended in error
+  unset %SReject/JSONForMirc/Error
+
+  ;; Local variable declarations
+  var %Error, %Log, %Call, %x = 0, %JSON, %Com, %Result = 0, %Child, %Name
+
+  ;; build log message and call parameter portion:
+  ;;   log: $JSONForEach(@Name, @Command, members...)[@Prop]
+  ;;   call: ,forEach,1[,bool,$true|$false,bstr,$N,...]
+  %Log = $!JSONForEach(
+  %Call = ,forEach,1
+  if ($0 > 2) {
+    %Call = %Call $+ ,bool, $+ $iif($prop == fuzzy, $true, $false)
+  }
+  :next
+  if (%x < $0) {
+    inc %x
+    %log = %log $+ $($ $+ %x, 2) $+ ,
+    if (%x > 2) {
+      %Call = %Call $+ ,bstr, $+ $ $+ %x
+    }
+    goto next
+  }
+
+  ;; Log the alias call
+  jfm_log -S $left(%Log, -1) $+ $chr(41) $+ $iif($prop !== $null, . $+ $v1)
+
+  ;; Validate inputs
+  if ($0 < 2) {
+    %Error = INVAID_PARAMETERS
+  }
+  elseif ($1 == 0) {
+    %Error = INVALID_HANDLER
+  }
+  elseif ($prop && $prop !== fuzzy) {
+    %Error = INVALID_PROPERTY
+  }
+  elseif ($JSON($1)) {
+    %JSON = $v1
+
+    ;; Get an available com name based on the input com's name
+    %x = $ticks
+    :next2
+    if ($com(%JSON $+ : $+ %x)) {
+      inc %x
+      goto next2
+    }
+    %Com = %JSON $+ : $+ %x
+
+    ;; Build comcall: $com(com_name,forEach,1,[call_parameters],dispatch* new_com)
+    %Call = $!com( $+ %JSON $+ %Call $+ ,dispatch* %Com $+ )
+
+    ;; Make the com call and check for errors
+    if (!$(%Call, 2) || $comerr || !$com(%com)) {
+      echo -a ComCall Failed: %Call
+      %Error = $jfm_GetError
+    }
+
+    ;; Successfully called
+    else {
+
+      ;; start a timer to close the com
+      .timer -m 1 0 JSONClose $unsafe(%com)
+
+      ;; check length
+      if (!$com(%Com, length, 2) || $comerr) {
+        %Error = $jfm_GetError
+      }
+
+      elseif ($com(%com).result) {
+        %Result = $v1
+        %Child = $ticks
+        %x = 0
+
+        ;; Loop over each item in the returned list
+        while (%x < %Result) {
+
+          ;; get a name to use for the child com
+          :next3
+          if ($com(%Com $+ : $+ %Child)) {
+            inc %child
+            goto next3
+          }          
+          %Name = %Com $+ : $+ %Child
+
+          ;; Attempt to get a reference to the nTH item and then check for errors
+          if (!$com(%Com, %x, 2, dispatch* %Name) || $comerr || !$com(%Name)) {
+            %Error = $jfm_GetError
+            break
+          }
+
+          ;; if successful, start a timer to close the com and then call the specified command
+          else {
+            $+(.timer, %Name) -m 1 0 JSONClose $unsafe(%Name)
+            $2 %Name
+          }
+
+          inc %x
+        }
+      }
+    }
+  }
+  else {
+    %Error = INVALID_HANDLER
+  }
+
+  ;; Handle Errors
+  :error
+  if ($error) {
+    %Error = $error
+    reseterror
+  }
+
+  ;; if an error occured, close the items com if its open, then store and log the error
+  if (%Error) {
+    if ($com(%Com)) {
+      .comclose $v1
+    }
+    set -u0 %SReject/JSONForMirc/Error %Error
+    jfm_log -De Error: %Error
+  }
+
+  ;; Successful, return the number of results looped over
+  else {
+    jfm_log -Ds Result: %Result
+    return %Result
   }
 }
 
@@ -1315,7 +1460,7 @@ alias -l jfm_GetError {
   var %Error = UNKNOWN
 
   ;; log the alias call
-  jfm_log -i !$jfm_GetError
+  jfm_log -i $!jfm_GetError
 
   ;; retrieve the errortext property from the shell com
   if ($com(SReject/JSONForMirc/JSONShell).errortext) {
@@ -1518,7 +1663,7 @@ alias -l jfm_Create {
 ;;
 ;; When debug is disabled
 ;;    the /jfm_log alias below this group is called
-#SReject/JSONForMirc/Log off
+#SReject/JSONForMirc/Log on
 
 
 
