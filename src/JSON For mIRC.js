@@ -88,6 +88,7 @@
             } catch (ignore) {}
             throw new Error("INVALID_JSON");
         },
+
         stringify: function (value) {
             var type = getType(value), output = '[';
             if (value === undefined) {
@@ -121,7 +122,7 @@
                     output.push(JSON.stringify(key) + ':' + res);
                 }
             });
-            return '{' + output.join(",") + '}';
+            return '{' + output.join(',') + '}';
         }
     };
 
@@ -243,7 +244,6 @@
                 member = member.replace(/^[~=]\x20*/, '');
                 if (doFuzzy && type === 'object') {
                     keys = Object.keys(this.json.value);
-
                     if (/^\d+$/.test(member)) {
                         member = parseInt(member, 10);
                         if (member >= keys.length) {
@@ -276,16 +276,42 @@
             throw new Error('REFERENCE_NOT_FOUND');
         },
 
+        forEach: function () {
+            if (this.state !== 'done' || this.error) {
+                throw new Error('NOT_PARSED');
+            }
+            var self = this,
+                result = [];
+            function resultAdd(key) {
+                result.push(new JSONWrapper(self, {
+                    path: self.json.path.slice(0).push(key),
+                    json: self.json.value[key]
+                }));
+            }
+            if (this.jsonType === 'object') {
+                Object.keys(this.json.value).forEach(resultAdd);
+                return result;
+            }
+            if (this.jsonType === 'array') {
+                this.forEach(function (ignore, index) {
+                    resultAdd(index);
+                });
+                return result;
+            }
+
+            throw new Error('ILLEGAL_REFERENCE');
+        },
+
         jsonType: function () {
             if (this.state !== 'done' || this.error) {
-                throw new Error("NOT_PARSED");
+                throw new Error('NOT_PARSED');
             }
             return getType(this.json.value);
         },
 
         jsonPath: function () {
             if (this.state !== 'done' || this.error) {
-                throw new Error("NOT_PARSED");
+                throw new Error('NOT_PARSED');
             }
             var result = '';
             this.json.path.forEach(function (item) {
@@ -298,7 +324,7 @@
 
         jsonLength: function () {
             if (this.state !== 'done' || this.error) {
-                throw new Error("NOT_PARSED");
+                throw new Error('NOT_PARSED');
             }
             var type = getType(this.json.value);
             if (type === 'string' || type === 'array') {
@@ -312,10 +338,9 @@
 
         jsonValue: function () {
             if (this.state !== 'done' || this.error) {
-                throw new Error("NOT_PARSED");
+                throw new Error('NOT_PARSED');
             }
-            // work around for decimal values as mIRC is adding trailing 0's
-            if (this.jsonType() === "number" && /./.test(String(this.json.value))) {
+            if (this.jsonType() === 'number' && /./.test(String(this.json.value))) {
                 return String(this.json.value);
             }
             return this.json.value;
@@ -362,7 +387,7 @@
         } catch (ignore) {}
     });
 
-    JSONCreate = function(type, source, wait) {
+    JSONCreate = function(type, source) {
         var self = new JSONWrapper();
         self.type = (type || 'text').toLowerCase();
         self.state = 'done';
