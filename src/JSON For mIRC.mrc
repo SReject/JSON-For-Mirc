@@ -39,7 +39,7 @@ menu @SReject/JSONForMirc/Log {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %ver = 1.0.0010
+    var %ver = 1.0.0011
     if ($0) {
       return %ver
     }
@@ -210,7 +210,7 @@ alias JSONOpen {
   if (%Error) {
     set -eu0 %SReject/JSONForMirc/Error %Error
     if (%Com && $com(%Com)) {
-      $+(.timer, %com) 1 0 jsonclose $unsafe($1)
+      $+(.timer, %com) 1 0 JSONClose $unsafe($1)
     }
     jfm_log -De %Error
   }
@@ -1493,21 +1493,20 @@ alias -l jfm_Create {
   jfm_log -i $!jfm_create( $+ $1 $+ , $+ $2 $+ , $+ $3 $+ , $+ $4)
 
 
-  ;; Attempt to create the json handler
-  ;; if an error occurs:
+  ;; Attempt to create the json handler and if an error occurs retrieve the error, log it and return it
   if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, $2, &bstr, $3, bool, $4, dispatch* $1) || $comerr || !$com($1)) {
-
-    ;; close the com
-    if ($com($1)) {
-      .comclose $v1
-    }
-
-    ;; retrieve the error, log the error and return the error
     %Result = $jfm_GetError
     jfm_log -ied %Result
-    jfm_log -d
-    return %Result
   }
+
+  ;; Attempt to call the parse method if the handler should not wait for the http request
+  elseif ($2 != http || $4 != $true) && (!$com($1, parse, 1) || $comerr) {
+    %Result = $jfm_GetError
+    jfm_log -ied %Result
+  }
+
+  jfm_log -d
+  return %Result
 }
 
 

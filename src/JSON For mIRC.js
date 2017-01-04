@@ -373,14 +373,10 @@
             }
             self.state = 'http_pending';
             self.http.url = source;
-            if (wait) {
-                return self;
-            }
         } else {
             self.state = 'parse_pending';
             self.input = source;
         }
-        self.parse();
         return self;
     };
 }());
