@@ -39,7 +39,7 @@ menu @SReject/JSONForMirc/Log {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %ver = 1.0.0011
+    var %ver = 1.0.0012
     if ($0) {
       return %ver
     }
@@ -1500,12 +1500,14 @@ alias -l jfm_Create {
   }
 
   ;; Attempt to call the parse method if the handler should not wait for the http request
-  elseif ($2 != http || $4 != $true) && (!$com($1, parse, 1) || $comerr) {
+  elseif ($2 !== http || ($2 == http && !$4)) && (!$com($1, parse, 1)) {
     %Result = $jfm_GetError
     jfm_log -ied %Result
   }
 
-  jfm_log -d
+  if (%error) {
+    jfm_log -d
+  }
   return %Result
 }
 
