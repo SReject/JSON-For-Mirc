@@ -280,13 +280,19 @@
             if (this.state !== 'done' || this.error) {
                 throw new Error('NOT_PARSED');
             }
-            var self = this,
+            var args = Array.prototype.slice.call(arguments),
+                self = this,
                 result = [];
             function resultAdd(key) {
-                result.push(new JSONWrapper(self, {
-                    path: self.json.path.slice(0).push(key),
-                    json: self.json.value[key]
-                }));
+                var prm = args.slice(0),
+                    ref = new JSONWrapper(self, {
+                        path: self.json.path.slice(0).push(key),
+                        json: self.json.value[key]
+                    });
+                if (prm.length > 1) {
+                    ref = ref.walk.apply(ref, args);
+                }
+                result.push(ref);
             }
             if (this.jsonType === 'object') {
                 Object.keys(this.json.value).forEach(resultAdd);
@@ -298,7 +304,6 @@
                 });
                 return result;
             }
-
             throw new Error('ILLEGAL_REFERENCE');
         },
 
