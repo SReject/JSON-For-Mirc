@@ -269,9 +269,6 @@
                     path: path,
                     value: this.json.value[member]
                 });
-                if (args.length == 1) {
-                    return result;
-                }
                 args.unshift(fuzzy);
                 return result.walk.apply(result, args);
             }

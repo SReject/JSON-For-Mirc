@@ -951,7 +951,6 @@ alias JSON {
 
     ;; No Prop? then the result is the child com's name
     if (!%Prop) {
-      echo -s Returning Reference: %Com
       %Result = $jfm_TmpBvar
       bset -t %Result 1 %Com
     }
@@ -1163,7 +1162,7 @@ alias JSONForEach {
           if ($com(%Com $+ : $+ %Child)) {
             inc %child
             goto next3
-          }          
+          }
           %Name = %Com $+ : $+ %Child
 
           ;; Attempt to get a reference to the nTH item and then check for errors
@@ -1663,7 +1662,7 @@ alias -l jfm_Create {
 ;;
 ;; When debug is disabled
 ;;    the /jfm_log alias below this group is called
-#SReject/JSONForMirc/Log on
+#SReject/JSONForMirc/Log off
 
 
 
