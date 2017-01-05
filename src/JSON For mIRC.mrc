@@ -66,6 +66,7 @@ alias JSONError {
 ;;     -b: The input is a bvar
 ;;     -f: The input is a file
 ;;     -u: The input is from a url
+;;     -U: The input is from a url and its data should not be parsed
 ;;     -w: Used with -u; The handle should wait for /JSONHttpGet to be called to perform the url request
 ;;
 ;;     @Name - String - Required
@@ -87,7 +88,7 @@ alias JSONOpen {
   unset %SReject/JSONForMirc/Error
 
   ;; local variable declarations
-  var %Switches = -, %Error, %Com = $false, %Type = text, %Wait = $false, %BVar, %BUnset = $true
+  var %Switches, %Error, %Com = $false, %Type = text, %httpOptions = 0, %BVar, %BUnset = $true
 
   ;; log the /JSONOpen command is being called
   jfm_log -S /JSONOpen $1-
@@ -104,52 +105,49 @@ alias JSONOpen {
   }
 
   ;; Basic switch validate
-  elseif ($regex(%Switches, ([^dbfuw]))) {
-    %Error = Invalid switches specified: $regml(1)
+  elseif ($regex(%Switches, ([^dbfuUw]))) {
+    %Error = SWITCH_INVALID: $+ $regml(1)
   }
-  elseif ($regex(%Switches, ([dbfuw]).*?\1)) {
-    %Error = Duplicate switch specified: $regml(1)
+  elseif ($regex(%Switches, ([dbfuUw]).*?\1)) {
+    %Error = SWITCH_DUPLICATE: $+ $regml(1)
   }
-  elseif ($regex(%Switches, /([bfu])/g) > 1) {
-    %Error = Conflicting switches: $regml(1) $+ , $regml(2)
+  elseif ($regex(%Switches, /([bfuU])/g) > 1) {
+    %Error = SWITCH_CONFLICT: $+ $regml(1)
   }
-  elseif (u !isin %Switches && w isin %Switches) {
-    %Error = -w switch can only be used with -u
+  elseif (u !isin %Switches && w isincs %Switches) {
+    %Error = SWITCH_NOT_APPLICABLE:w
   }
 
   ;; validate handler name input
   elseif ($0 < 2) {
-    %Error = Missing Parameters
+    %Error = PARAMETER_MISSING
   }
   elseif ($regex($1, /(?:^\d+$)|[*:? ]/i)) {
-    %Error = Invalid name
+    %Error = NAME_INVALID
   }
   elseif ($com(JSON: $+ $1)) {
-    %Error = Name in use
+    %Error = NAME_INUSE
   }
 
   ;; Validate URL where appropriate
   elseif (u isin %Switches && $0 != 2) {
-    %Error = Invalid parameters: URLs cannot contain spaces
+    %Error = PARAMETER_INVALID:URL_SPACES
   }
 
   ;; Validate bvar where appropriate
-  elseif (b isin %Switches && $0 != 2) {
-    %Error = Invalid parameter: Binary variable names cannot contain spaces
+  elseif (b isincs %Switches && $0 != 2) {
+    %Error = PARAMETER_INVALID:BVAR
   }
-  elseif (b isin %Switches && &* !iswm $2) {
-    %Error = Invalid parameters: Binary variable names start with &
+  elseif (b isincs %Switches && &* !iswm $2) {
+    %Error = PARAMETER_INVALID:NOT_BVAR
   }
-  elseif (b isin %Switches && $bvar($2, 0) == $null) {
-    %Error = Invalid parameters: Binary variable is empty
+  elseif (b isincs %Switches && $bvar($2, 0) == $null) {
+    %Error = PARAMETER_INVALID:BVAR_INUSE
   }
 
   ;; Validate file where appropriate
-  elseif (f isin %Switches && $isfile($2-) == $false) {
-    %Error = Invalid parameters: File doesn't exist
-  }
-  elseif (f isin %Switches && !$file($2-).size) {
-    %Error = Invalid parameters: File is empty
+  elseif (f isincs %Switches && $isfile($2-)) {
+    %Error = PARAMETER_INVALID:FILE_INUSE
   }
 
   ;; all checks passed
@@ -166,9 +164,12 @@ alias JSONOpen {
 
     ;; If the input is a url store if the request should wait, and set the
     ;; bvar to the URL to request
-    elseif (u isincs %Switches) {
+    elseif (u isin %Switches) {
+      if (U isincs %Switches) {
+        inc %httpOptions 2
+      }
       if (w isincs %Switches) {
-        %Wait = $true
+        inc %httpOptions 1
       }
       %Type = http
       bset -t %BVar 1 $2
@@ -185,7 +186,7 @@ alias JSONOpen {
     }
 
     ;; attempt to create the handler
-    %Error = $jfm_Create(%Com, %Type, %BVar, %Wait)
+    %Error = $jfm_Create(%Com, %Type, %BVar, %httpOptions)
   }
 
   ;; error handling
@@ -256,18 +257,18 @@ alias JSONHttpMethod {
 
   ;; basic input validation
   elseif ($0 < 2) {
-    %Error = Missing parameters
+    %Error = PARAMETER_MISSING
   }
   elseif ($0 > 2) {
-    %Error = Excessive Parameters
+    %Error = PARAMETER_INVALID
   }
 
   ;; Validate @name parameter
   elseif ($regex($1, /(?:^\d+$)|[*:? ]/i)) {
-    %Error = Invalid Name
+    %Error = NAME_INVALID
   }
   elseif (!$com(JSON: $+ $1))  {
-    %Error = Handler Does Not Exist
+    %Error = NAME_DOES_NOT_EXIST
   }
   else {
 
@@ -279,7 +280,7 @@ alias JSONHttpMethod {
 
     ;; validate the method parameter
     if (!$len(%Method)) {
-      %Error = Invalid method
+      %Error = INVALID_METHOD
     }
 
     ;; store the method
@@ -727,7 +728,7 @@ alias JSON {
   unset %SReject/JSONForMirc/Error
 
   ;; Local variable declartions
-  var %Args, %x = 1, %Error, %Com, %i = 0, %Prefix, %Prop, %Suffix, %Offset = $iif(*toFile iswm $prop,3,2), %Type, %Output, %Result, %ChildCom, %Params
+  var %x = 1, %Args, %Params, %Error, %Com, %i = 0, %Prefix, %Prop, %Suffix, %Offset = $iif(*toFile iswm $prop,3,2), %Type, %Output, %Result, %ChildCom, %Call
 
   ;; Loop over all parameters
   while (%x <= $0) {
@@ -746,14 +747,12 @@ alias JSON {
   ;; Log the alias call
   jfm_log -S $!JSON( $+ %args $+ ) $+ $iif($len($prop), . $+ $prop)
 
-
   ;; If the alias was called with with a single input of 0 and a prop
   ;;     silently fail the call
   if ($0 == 1 && $1 == 0 && $len($prop)) {
     jfm_log -D
     return
   }
-
 
   ;; If the @name parameter starts with JSON assume its the name of the JSON com
   if (JSON:?* iswmcs $1) {
@@ -771,11 +770,11 @@ alias JSON {
     ;; loop over all coms
     while ($com(%x)) {
 
-      ;; if the com is a json handler
+      ;; if the com is a json handler and
+      ;;    The handler's index matches that of input
+      ;;    assume the handler is the one requested and make use of it for further operations
       if ($regex($v1, /^JSON:[^:]+$/)) {
         inc %i
-        ;; if the com's index matches that of the input
-        ;;   then assume the current com is the name of the JSON handler's com to use
         if (%i === $1) {
           %Com = $com(%x)
           break
@@ -832,10 +831,15 @@ alias JSON {
       %Prop = isChild
     }
 
+    ;; .isParent is depreciated; use .isContainer
+    if (%Prop == isParent) {
+      %Prop = isContainer
+    }
+
     ;; if the suffix is 'tofile', validate the 2nd parameter
     if (%Suffix, == tofile) {
       if ($0 < 2) {
-        %Error = INVALID_PARAMETER
+        %Error = INVALID_PARAMETERS
       }
       elseif (!$len($2) || $isfile($2) || (!$regex($2, /[\\\/]/) && " isin $2)) {
         %Error = INVALID_FILE
@@ -853,70 +857,50 @@ alias JSON {
 
   ;; If @Name is an index and no prop has been specified the result is the com name
   ;; So create a new bvar for the result and store the com name in it
-  if ($0 == 1 && !$prop) {
+  elseif ($0 == 1 && !$prop) {
     %Result = $jfm_TmpBvar
     bset -t %Result 1 %Com
   }
 
-  ;; if the prop is isChild, create a new bvar for the result and deduce if the specified handler is a child
+  ;; if the prop is isChild:
+  ;;   create a new bvar for the result
+  ;;   deduce if the specified handler is a child
   elseif (%prop == isChild) {
     %Result = $jfm_TmpBvar
     bset -t %Result 1 $iif(JSON:?*:?* iswm %Com, $true, $false)
   }
 
-  ;; if the prop is state, inputType, input or error
-  ;; attempt to retrieve the handler's value from the js engine
-  elseif ($wildtok(state|inputType|input|error, %Prop, 1, 124)) {
-
-    ;; If an error occured, store the error
-    if ($jfm_Eval(%Com, $v1)) {
-      %Error = $v1
-    }
-
-    ;; otherwise, retrieve the result bvar from jfm_eval's global variable
-    else {
-      %Result = %SReject/JSONForMirc/Eval
-    }
-  }
-
-  ;; if the prop is httpHead httpStatus httpStatusText httpHeaders httpBody httpResponse or debugString
-  ;; attempt to retrieve the value from the js engine
-  elseif ($wildtok(httpHead|httpStatus|httpStatusText|httpHeaders|httpBody|httpResponse, %Prop, 1, 124)) {
-
-    ;; if an error occured, store the error
+  ;; These props do not require the json data to be walked or an input to be specified:
+  ;;   Attempt to call the respective js function
+  ;;   Retrieve the result
+  elseif ($wildtok(state|error|input|inputType|httpParse|httpHead|httpStatus|httpStatusText|httpHeaders|httpBody|httpResponse, %Prop, 1, 124)) {
     if ($jfm_Exec(%Com, $v1)) {
       %Error = $v1
     }
-
-    ;; otherwise, retrieve the result bvar from jfm_exec's global variable
     else {
+      echo -s >> %SReject/JSONForMirc/Exec >> $bvar(%SReject/JSONForMirc/Exec, 1-).text
       %Result = %SReject/JSONForMirc/Exec
     }
   }
 
-  ;; if the prop is httpheader
+  ;; if the prop is httpheader:
+  ;;   Validate input parameters
+  ;;   Attempt to retrieve the specified header
+  ;;   Retrieve the result
   elseif (%Prop == httpHeader) {
-
-    ;; validate input parameters
     if ($calc($0 - %Offset) < 0) {
-      %Error = Invalid Parameters
+      %Error = INVALID_PARAMETERS
     }
-
-    ;; attempt to retrieve the header by name if it fails, store the error
     elseif ($jfm_Exec(%Com, httpHeader, $($ $+ %Offset, 2))) {
       %Error = $v1
     }
-
-    ;; otherwise, retrieve the result bvar from jfm_exec's global variable
     else {
       %Result = %SReject/JSONForMirc/Exec
     }
   }
 
-  ;; if no prop is specified or the prop is type, path, value, length, isParent or String
-  elseif (%Prop == $null || $wildtok(Type|Path|Value|Length|isParent|String|DebugString, %Prop, 1, 124)) {
-
-    ;; store the matched prop
+  ;; These props require that the json handler be walked before processing the prop itself
+  elseif (%Prop == $null || $wildtok(path|type|isContainer|length|value|string|debug, %prop, 1, 124)) {
     %Prop = $v1
 
     ;; if members have been specified then the JSON handler's json needs to be walked
@@ -930,7 +914,7 @@ alias JSON {
       %ChildCom = $+(%Com, :, %x)
 
       ;; Build the call 'string' to be evaluated
-      var %call = $!com( $+ %com $+ ,walk,1,bool, $+ $iif(fuzzy == %Prefix, $true, $false) $+ %Params $+ ,dispatch* %ChildCom $+ )
+      %Call = $!com( $+ %com $+ ,walk,1,bool, $+ $iif(fuzzy == %Prefix, $true, $false) $+ %Params $+ ,dispatch* %ChildCom $+ )
 
       ;; log the call
       jfm_log -i %call
@@ -955,75 +939,32 @@ alias JSON {
       bset -t %Result 1 %Com
     }
 
-    ;; if the prop is length, path or string
-    ;; attempt to retrieve thier value from the JSON com instance
-    elseif (%Prop == Length || %Prop == Path || %Prop == String || %Prop == debugString) {
-
-      ;; if the call resulted in an error, store the error
-      if ($jfm_Exec(%Com, json $+ %Prop)) {
+    ;; if the prop isn't value, just call the js method to return data requested by the prop
+    elseif (%prop !== value) {
+      if ($jfm_Exec(%Com, $v1)) {
         %Error = $v1
       }
-
-      ;; otherwise, retrieve the result bevar from jfm_exec's global variable
       else {
         %Result = %SReject/JSONForMirc/Exec
       }
     }
 
-    ;; if the prop is not length path or string
+    ;; if the prop is value:
+    ;;   Attempt to get it's cast-type
+    ;;   Check the value's cast type
+    ;;   Attempt to retrieve the value
+    ;;   Fill the result variable with its value
+    elseif ($jfm_Exec(%Com, type)) {
+      %Error = $v1
+    }
+    elseif ($bvar(%SReject/JSONForMirc/Exec, 1-).text == object || $v1 == array) {
+      %Error = INVALID_TYPE
+    }
+    elseif ($jfm_Exec(%Com, value)) {
+      %Error = $v1
+    }
     else {
-
-      ;; Attempt to get the JSON handler's data-type
-      ;;     if an error occured store the error
-      if ($jfm_Exec(%Com, jsonType)) {
-        %Error = $v1
-      }
-
-      ;; if the prop is 'type', retrieve the result bvar from the jfm_exec's global variable
-      elseif (%Prop == type) {
-        %Result = %SReject/JSONForMirc/Exec
-      }
-      else {
-
-        ;; Get the handler's type text
-        %Type = $bvar(%SReject/JSONForMirc/Exec, 1-).text
-
-        ;; if the prop is isParent, return $true if the type is object or array, false otherwise
-        if (%Prop == isParent) {
-          %Result = $jfm_TmpBvar
-          bset -t %Result 1 $iif(%Type == object || %Type == array, $true, $false)
-        }
-
-        ;; if the referenced item is an object or array
-        elseif (%Type == object || %Type == array) {
-
-          ;; Indicate an error if the value prop has been specified
-          if (%Prop === value) {
-            %Error = INVALID_TYPE
-          }
-
-          ;; otherwise store the com name as the result
-          else {
-            %Result = $jfm_TmpBvar
-            bset -t %Result 1 %Com
-          }
-        }
-
-        ;; if the referenced item is not an object or array
-        else {
-
-          ;; attempt to retrieve the referenced item's value
-          ;;     storing any errors that occur
-          if ($jfm_Exec(%Com, jsonValue)) {
-            %Error = $v1
-          }
-
-          ;; If no errors occured, retrieve the result bvar from jfm_exec's global variable
-          else {
-            %Result = %SReject/JSONForMirc/Exec
-          }
-        }
-      }
+      %Result = %SReject/JSONForMirc/Exec
     }
   }
 
@@ -1623,28 +1564,29 @@ alias -l jfm_Eval {
 ;;    @Source - string - required
 ;;        The source of the input
 ;;
-;;    @Wait - string - required
-;;        Indicates if the HTTP request should wait for JSONHttpFetch to be called
+;;    @httpOption - Number - Optional
+;;        Indicates how the http request should be handled, as a bitwise comparison(add values to toggle options)
+;;          1: wait for /JSONHttpFetch to be called
+;;          2: Do not parse the result of the HTTP request
 alias -l jfm_Create {
 
   ;; Insure the alias is called as an identifier
   if (!$isid) return
 
   ;; Local variable declaration
-  var %result
+  var %wait = $iif(1 & $4, $true, $false), %noParse = $iif(2 & $4, $true, $false), %result
 
   ;; Log the alias call
   jfm_log -i $!jfm_create( $+ $1 $+ , $+ $2 $+ , $+ $3 $+ , $+ $4)
 
-
   ;; Attempt to create the json handler and if an error occurs retrieve the error, log it and return it
-  if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, $2, &bstr, $3, bool, $4, dispatch* $1) || $comerr || !$com($1)) {
+  if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, $2, &bstr, $3, bool, %noParse, dispatch* $1) || $comerr || !$com($1)) {
     %Result = $jfm_GetError
     jfm_log -ied %Result
   }
 
   ;; Attempt to call the parse method if the handler should not wait for the http request
-  elseif ($2 !== http || ($2 == http && !$4)) && (!$com($1, parse, 1)) {
+  elseif ($2 !== http || ($2 == http && !%wait)) && (!$com($1, parse, 1)) {
     %Result = $jfm_GetError
     jfm_log -ied %Result
   }
@@ -1662,7 +1604,7 @@ alias -l jfm_Create {
 ;;
 ;; When debug is disabled
 ;;    the /jfm_log alias below this group is called
-#SReject/JSONForMirc/Log off
+#SReject/JSONForMirc/Log on
 
 
 

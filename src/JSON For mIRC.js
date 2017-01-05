@@ -39,30 +39,6 @@
         return Object.prototype.hasOwnProperty.call(obj, property);
     }
 
-    // checks if an instance has a pending http request
-    // if not, an error is thrown, otherwise the instance is returned
-    function httpPending(self) {
-        if (self.type !== 'http') {
-            throw new Error('HTTP_NOT_INUSE');
-        }
-        if (self.state !== 'http_pending') {
-            throw new Error('HTTP_NOT_PENDING');
-        }
-        return self.http;
-    }
-
-    // Checks if an instance http request has completed
-    // if not, an error is thrown, otherwise the instance is returned
-    function httpDone(self) {
-        if (self.type !== 'http') {
-            throw new Error('HTTP_NOT_INUSE');
-        }
-        if (self.state !== 'done') {
-            throw new Error('HTTP_PENDING');
-        }
-        return self.http;
-    }
-
     // es5 JSON polyfill
     (JSON = {}).parse = function(i) {
         try {
@@ -76,7 +52,8 @@
         throw new Error("INVALID_JSON");
     };
     JSON.stringify = function (value) {
-        var type = getType(value), output = '[';
+        var type = getType(value),
+            output = '[';
         if (value === undefined) {
             return;
         }
@@ -95,7 +72,7 @@
         if (type === 'string') {
             return '"' + value.replace(/[\\"\u0000-\u001F\u2028\u2029]/g, function(chr) {
                 return {'"': '\\"', '\\': '\\\\', '\b': '\\b', '\f': '\\f', '\n': '\\n', '\r': '\\r', '\t': '\\t'}[chr] || '\\u' + (chr.charCodeAt(0) + 0x10000).toString(16).substr(1);
-            }); + '"';
+            }) + '"';
         }
         if (type === 'array') {
             value.forEach(function (item, index) {
@@ -116,29 +93,86 @@
         return '{' + output.join(',') + '}';
     };
 
+    // Checks if an instance has been parsed
+    // if not, an error is thrown otherwise the instance is returned
+    function parsed(self) {
+        if (self._state !== 'done' || self._error || !self._parse) {
+            throw new Error('NOT_PARSED');
+        }
+        return self;
+    }
+
+    // checks if an instance has a pending http request
+    // if not, an error is thrown, otherwise the instance is returned
+    function httpPending(self) {
+        if (self._type !== 'http') {
+            throw new Error('HTTP_NOT_INUSE');
+        }
+        if (self._state !== 'http_pending') {
+            throw new Error('HTTP_NOT_PENDING');
+        }
+        return self._http;
+    }
+
+    // Checks if an instance http request has completed
+    // if not, an error is thrown, otherwise the instance is returned
+    function httpDone(self) {
+        if (self._type !== 'http') {
+            throw new Error('HTTP_NOT_INUSE');
+        }
+        if (self._state !== 'done') {
+            throw new Error('HTTP_PENDING');
+        }
+        return self._http;
+    }
+
+
+
     function JSONWrapper(parent, json) {
         if (parent === undefined) {
             parent = {};
         }
-        this.state = parent.state || 'init';
-        this.type = parent.type || 'text';
-        this.error = parent.error || false;
-        this.input = parent.input;
-        this.isChild = false;
-        this.json = parent.json;
-        this.http = parent.http || {
+        this._state = parent._state || 'init';
+        this._type = parent._type || 'text';
+        this._parse = parent._parse === false ? false : true;
+        this._error = parent._error || false;
+        this._input = parent._input;
+        this._isChild = false;
+        this._json = parent._json;
+        this._http = parent._http || {
             method: 'GET',
             url: '',
             headers: [],
-            data: null
+            data: null,
+            readAs: 'text'
         };
         if (json !== undefined) {
-            this.isChild = true;
-            this.json = json;
+            this._isChild = true;
+            this._json = json;
         }
     }
 
     JSONWrapper.prototype = {
+        state: function () {
+            return this._state;
+        },
+
+        error: function () {
+            return this._error.message;
+        },
+
+        inputType: function () {
+            return this._type;
+        },
+
+        input: function () {
+            return this._input || null;
+        },
+
+        httpParse: function () {
+            return this._parse;
+        },
+
         httpSetMethod: function (method) {
             httpPending(this).method = method;
         },
@@ -183,48 +217,47 @@
             this.parse = function () {
                 throw new Error('PARSE_NOT_PENDING');
             };
-            var request;
-            this.state = 'done';
             try {
-                if (this.type === 'http') {
-                    request = new ActiveXObject(JSONWrapper.HTTP);
-                    request.open(this.http.method, this.http.url, false);
-                    this.http.headers.forEach(function (header) {
+                this._state = 'done';
+                if (this._type === 'http') {
+                    var request = new ActiveXObject(JSONWrapper.HTTP);
+                    request.open(this._http.method, this._http.url, false);
+                    this._http.headers.forEach(function (header) {
                         request.setRequestHeader(header[0], header[1]);
                     });
-                    request.send(this.http.data);
-                    this.input = request.responseText;
-                    this.http.response = request;
+                    request.send(this._http.data);
+                    this._http.response = request;
+                    if (!this._parse) {
+                        return this;
+                    }
+                    this._input = request.responseText;
                 }
-                this.json = {
+                this._json = {
                     path: [],
-                    value: JSON.parse(this.input)
+                    value: JSON.parse(this._input)
                 };
                 return this;
             } catch (e) {
-                this.error = e.message;
+                this._error = e.message;
                 throw e;
             }
         },
 
         walk: function() {
-            if (this.state !== 'done' || this.error) {
-                throw new Error('NOT_PARSED');
-            }
-            var args = Array.prototype.slice.call(arguments),
-                type = getType(this.json.value),
+            var self = parsed(this),
+                args = Array.prototype.slice.call(arguments),
+                type = getType(self._json.value),
                 fuzzy = false,
                 path = [],
                 keys,
                 member,
                 doFuzzy,
                 result;
-
             if (typeof args[0] === 'boolean') {
                 fuzzy = args.shift();
             }
             if (!args.length) {
-                return this;
+                return self;
             }
             if (type !== 'array' && type !== 'object') {
                 throw new Error('ILLEGAL_REFERENCE');
@@ -234,14 +267,14 @@
                 doFuzzy = '~' === member.charAt(0);
                 member = member.replace(/^[~=]\x20*/, '');
                 if (doFuzzy && type === 'object') {
-                    keys = Object.keys(this.json.value);
+                    keys = Object.keys(self._json.value);
                     if (/^\d+$/.test(member)) {
                         member = parseInt(member, 10);
                         if (member >= keys.length) {
                             throw new Error('FUZZY_INDEX_NOT_FOUND');
                         }
                         member = keys[member];
-                    } else if (!hasOwnProp(this.json.value, member)) {
+                    } else if (!hasOwnProp(self._json.value, member)) {
                         member = member.toLowerCase();
                         member = keys.find(function (item) {
                             return item.toLowerCase() === member;
@@ -252,12 +285,12 @@
                     }
                 }
             }
-            if (hasOwnProp(this.json.value, member)) {
-                path = this.json.path.slice();
+            if (hasOwnProp(self._json.value, member)) {
+                path = self._json.path.slice();
                 path.push(member);
-                result = new JSONWrapper(this, {
+                result = new JSONWrapper(self, {
                     path: path,
-                    value: this.json.value[member]
+                    value: self._json.value[member]
                 });
                 args.unshift(fuzzy);
                 return result.walk.apply(result, args);
@@ -266,35 +299,32 @@
         },
 
         forEach: function () {
-            if (this.state !== 'done' || this.error) {
-                throw new Error('NOT_PARSED');
-            }
-            var self = this,
+            var self = parsed(this),
+                type = self.type(),
                 args = Array.prototype.slice.call(arguments),
                 res = [];
+
             function resultAdd(member) {
-                var path = self.json.path.slice(),
+                var path = self._json.path.slice(),
                     ref;
                 path.push(member);
                 ref = new JSONWrapper(self, {
                     path: path,
-                    value: self.json.value[member]
+                    value: self._json.value[member]
                 });
                 try {
                     if (args.length > 0) {
                         ref = ref.walk.apply(ref, args.slice());
                     }
-                    res.push(ref)
+                    res.push(ref);
                 } catch (ignore) { }
             }
-
-            if (this.jsonType() === 'object') {
-                Object.keys(this.json.value).forEach(resultAdd);
+            if (type === 'object') {
+                Object.keys(self._json.value).forEach(resultAdd);
                 return result;
             }
-
-            if (this.jsonType() === 'array') {
-                this.json.value.forEach(function (ignore, index) {
+            if (type === 'array') {
+                self._json.value.forEach(function (ignore, index) {
                     resultAdd(index);
                 });
                 return res;
@@ -302,19 +332,17 @@
             throw new Error('ILLEGAL_REFERENCE');
         },
 
-        jsonType: function () {
-            if (this.state !== 'done' || this.error) {
-                throw new Error('NOT_PARSED');
-            }
-            return getType(this.json.value);
+        type: function () {
+            return getType(parsed(this)._json.value);
         },
 
-        jsonPath: function () {
-            if (this.state !== 'done' || this.error) {
-                throw new Error('NOT_PARSED');
-            }
+        isContainer: function () {
+            return (this.type() === "object" || this.type() === "array");
+        },
+
+        path: function () {
             var result = '';
-            this.json.path.forEach(function (item) {
+            parsed(this)._json.path.forEach(function (item) {
                 result += (result ? ' ' : '') + String(item).replace(/([\\ ])/g, function (chr) {
                     return ' ' === chr ? '\s' : '\\';
                 });
@@ -322,58 +350,53 @@
             return result;
         },
 
-        jsonLength: function () {
-            if (this.state !== 'done' || this.error) {
-                throw new Error('NOT_PARSED');
-            }
-            var type = getType(this.json.value);
+        length: function () {
+            var self = parsed(this),
+                type = self.type();
             if (type === 'string' || type === 'array') {
-                return this.json.value.length;
+                return self._json.value.length;
             }
             if (type === 'object') {
-                return Object.keys(this.json.value).length;
+                return Object.keys(self.json.value).length;
             }
             throw new Error('INVALID_TYPE');
         },
 
-        jsonValue: function () {
-            if (this.state !== 'done' || this.error) {
-                throw new Error('NOT_PARSED');
+        value: function () {
+            parsed(this);
+            if (this.type() === 'number' && /./.test(String(this._json.value))) {
+                return String(this._json.value);
             }
-            if (this.jsonType() === 'number' && /./.test(String(this.json.value))) {
-                return String(this.json.value);
-            }
-            return this.json.value;
+            return this._json.value;
         },
 
-        jsonString: function () {
-            if (this.state !== 'done' || this.error) {
-                throw new Error('NOT_PARSED');
-            }
-            return JSON.stringify(this.json.value);
+        string: function () {
+            return JSON.stringify(parsed(this)._json.value);
         },
 
-        jsonDebugString: function () {
+        debug: function () {
             var result = {
-                state: this.state,
-                input: this.input,
-                type: this.type,
-                error: this.error,
+                state: this._state,
+                input: this._input,
+                type: this._type,
+                error: this._error,
+                parse: this._parse,
                 http: {
-                    url: this.http.url,
-                    method: this.http.method,
-                    headers: this.http.headers,
-                    data: this.http.data
+                    url: this._http.url,
+                    method: this._http.method,
+                    headers: this._http.headers,
+                    data: this._http.data,
+                    readAs: this._http.readAs
                 },
-                isChild: this.isChild,
-                json: this.json
+                isChild: this._isChild,
+                json: this._json
             };
-            if (this.type === "http" && this.state === "done") {
+            if (this._type === "http" && this._state === "done") {
                 result.http.response = {
-                    status: this.http.response.status,
-                    statusText: this.http.response.statusText,
-                    headers: (this.http.response.getAllResponseHeaders()).split(/[\r\n]+/g),
-                    responseText: this.http.response.responseText
+                    status: this._http.response.status,
+                    statusText: this._http.response.statusText,
+                    headers: (this._http.response.getAllResponseHeaders()).split(/[\r\n]+/g),
+                    responseText: this._http.response.responseText
                 };
             }
             return JSON.stringify(result);
@@ -387,20 +410,24 @@
         } catch (ignore) {}
     });
 
-    JSONCreate = function(type, source) {
+    JSONCreate = function(type, source, noparse) {
         var self = new JSONWrapper();
-        self.type = (type || 'text').toLowerCase();
-        self.state = 'done';
-        if (self.type === 'http') {
+        self._state = 'done';
+        self._type = (type || 'text').toLowerCase();
+
+        if (self._type === 'http') {
             if (!JSONWrapper.HTTP) {
-                self.error = 'HTTP_NOT_FOUND';
+                self._error = 'HTTP_NOT_FOUND';
                 throw new Error('HTTP_NOT_FOUND');
             }
-            self.state = 'http_pending';
-            self.http.url = source;
+            if (noparse) {
+                self._parse = false;
+            }
+            self._state = 'http_pending';
+            self._http.url = source;
         } else {
-            self.state = 'parse_pending';
-            self.input = source;
+            self._state = 'parse_pending';
+            self._input = source;
         }
         return self;
     };
