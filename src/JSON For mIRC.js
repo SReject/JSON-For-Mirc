@@ -20,12 +20,10 @@
 
     // es5 .keys() polyfill
     Object.keys = function (obj) {
-        if (obj) {
-            var keys = [], key;
-            for (key in obj) {
-                if (hasOwnProp(obj, key)) {
-                    keys.push(key);
-                }
+        var keys = [], key;
+        for (key in obj) {
+            if (hasOwnProp(obj, key)) {
+                keys.push(key);
             }
         }
         return keys;
