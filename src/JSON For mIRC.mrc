@@ -39,7 +39,7 @@ menu @SReject/JSONForMirc/Log {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %ver = 1.0.0013
+    var %ver = 1.0.1000
     if ($0) {
       return %ver
     }
@@ -1242,7 +1242,16 @@ alias JSONDebug {
     if (!$window(@SReject/JSONForMirc/Log)) {
       window -zk0e @SReject/JSONForMirc/Log
     }
-    echo $color(info2) -q @SReject/JSONForMirc/Log [JSONDebug] Debug now enabled
+    echo $color(info2) @SReject/JSONForMirc/Log Debug now enabled
+    echo $color(info2) @SReject/JSONForMirc/Log -
+    if ($~adiirc) {
+      echo $color(info2) @SReject/JSONForMirc/Log AdiIRC v $+ $version $bits $+ bit
+    }
+    else {
+      echo $color(info2) @SReject/JSONForMirc/Log mIRC v $+ $version $bits $+ bit
+    }
+    echo $color(info2) @SReject/JSONForMirc/Log $JSONVersion
+    echo $color(info2) @SReject/JSONForMirc/Log -
   }
 
   ;; if debug state is disabled and the debug window is open, indicate that debug logging is disabled
@@ -1604,7 +1613,7 @@ alias -l jfm_Create {
 ;;
 ;; When debug is disabled
 ;;    the /jfm_log alias below this group is called
-#SReject/JSONForMirc/Log on
+#SReject/JSONForMirc/Log off
 
 
 
@@ -1738,6 +1747,10 @@ alias -l jfm_SaveDebug {
 
   ;; save the debug buffer to file
   savebuf @SReject/JSONForMirc/Log $qt(%file)
+  
+  write -i1 $qt(%File) JSON: $JSONVersion
+  write -il $qt(%File) OS: $OS
+  write -il $qt(%File) mIRC: $verion
 }
 
 
