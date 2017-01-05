@@ -1,15 +1,8 @@
 [![Join the chat at https://gitter.im/SReject/JSON-For-Mirc](https://badges.gitter.im/SReject/JSON-For-Mirc.svg)](https://gitter.im/SReject/JSON-For-Mirc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Join us on IRC](https://img.shields.io/badge/IRC-SwiftIRC-brightgreen.svg "Join us on IRC")](https://qwebirc.swiftirc.net/?channels=%23jsonformirc)
 
-Back Releases
-=============
-**JSONForMirc v0.2.41** [docs](https://github.com/SReject/JSON-For-Mirc/tree/v0.2.4) - [download](https://github.com/SReject/JSON-For-Mirc/releases/tag/v0.2.41-beta)  
-**JSONForMirc v0.2.4** [docs](https://github.com/SReject/JSON-For-Mirc/tree/v0.2.4) - [downloads](https://github.com/SReject/JSON-For-Mirc/releases/tag/v0.2.4-beta)  
-
-
-
 Attention
 ===========
-> This is a WIP repo. If you are looking for a previously released version please see `Back Releases` above.  
+> This is a WIP repo. If you are looking for a previously released version please see `Releases` below.  
 
 JSON For mIRC
 ======
@@ -25,7 +18,7 @@ JSON For mIRC
 
 Requirements:
 =============
-> Mirc: 7.32 or later, or AdiIRC 2.2 or later  
+> Mirc: 7.44 or later, or AdiIRC 2.4 or later  
 >
 > Windows 2000 or later (This will not work under wine due to lack of COM support)  
 >
@@ -33,4 +26,9 @@ Requirements:
   
 Contribution Licensing:
 =========
-> By submitting a pull request to this repository, you acknowledge that you own or have rights to distribute and sublicense the source code contained therein, and that your content does not infringe upon the intellectual property rights of a third party. By opening a pull request you understand that, while maintaining copyright, you grant SReject a non-exclusive, transferable, sub-licensable, royalty-free, worldwide license to use the contents of your pull request as SReject deems fit.
+> By submitting a pull request to this repository, you acknowledge that you own or have rights to distribute and sublicense the source code contained therein, and that your content does not infringe upon the intellectual property rights of a third party. By opening a pull request you understand that, while maintaining copyright, you grant SReject a non-exclusive, transferable, sub-licensable, royalty-free, worldwide license to use the contents of your pull request as SReject deems fit.  
+
+Back Releases
+=============
+**JSONForMirc v0.2.41** [docs](https://github.com/SReject/JSON-For-Mirc/tree/v0.2.4) - [download](https://github.com/SReject/JSON-For-Mirc/releases/tag/v0.2.41-beta)  
+**JSONForMirc v0.2.4** [docs](https://github.com/SReject/JSON-For-Mirc/tree/v0.2.4) - [downloads](https://github.com/SReject/JSON-For-Mirc/releases/tag/v0.2.4-beta)  
