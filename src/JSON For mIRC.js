@@ -1,14 +1,35 @@
 /*jslint for:true*/
 /*globals ActiveXObject, JSONCreate*/
 (function() {
-    'use strict';
+    
+    // es5 .forEach() polyfill
+    Array.prototype.forEach = function (callback) {
+        for (var i = 0; i < this.length; i += 1) {
+            callback.call(this, this[i], i);
+        }
+    };
+    
+    // es5 .find() polyfill
+    Array.prototype.find = function (callback) {
+        for (var i = 0; i < this.length; i += 1) {
+            if (callback.call(this, this[i])) {
+                return this[i];
+            }
+        }
+    };
 
-    // escapes an input to be JSON-string compliant
-    function escape(input) {
-        return input.replace(/[\\"\u0000-\u001F\u2028\u2029]/g, function(chr) {
-            return {'"': '\\"', '\\': '\\\\', '\b': '\\b', '\f': '\\f', '\n': '\\n', '\r': '\\r', '\t': '\\t'}[chr] || '\\u' + (chr.charCodeAt(0) + 0x10000).toString(16).substr(1);
-        });
-    }
+    // es5 .keys() polyfill
+    Object.keys = function (obj) {
+        if (obj) {
+            var keys = [], key;
+            for (key in obj) {
+                if (hasOwnProp(obj, key)) {
+                    keys.push(key);
+                }
+            }
+        }
+        return keys;
+    };
 
     // returns the type of an input
     function getType(obj) {
@@ -44,37 +65,6 @@
         return self.http;
     }
 
-    // es5 .forEach() polyfill
-    Array.prototype.forEach = function (callback) {
-        var i;
-        for (i = 0; i < this.length; i += 1) {
-            callback.call(this, this[i], i);
-        }
-    };
-
-    // es5 .find() polyfill
-    Array.prototype.find = function (callback) {
-        var i;
-        for (i = 0; i < this.length; i += 1) {
-            if (callback.call(this, this[i])) {
-                return this[i];
-            }
-        }
-    };
-
-    // es5 .keys() polyfill
-    Object.keys = function (obj) {
-        var keys = [], key;
-        try {
-            for (key in obj) {
-                if (hasOwnProp(obj, key)) {
-                    keys.push(key);
-                }
-            }
-        } catch (ignore) {}
-        return keys;
-    };
-
     // es5 JSON polyfill
     JSON = {
         parse: function(input) {
@@ -97,6 +87,9 @@
             if (value === null) {
                 return 'null';
             }
+            if (type === 'function') {
+                return;
+            }
             if (type === 'number') {
                 return isFinite(value) ? value.toString() : 'null';
             }
@@ -104,7 +97,9 @@
                 return value.toString();
             }
             if (type === 'string') {
-                return '"' + escape(value) + '"';
+                return '"' + value.replace(/[\\"\u0000-\u001F\u2028\u2029]/g, function(chr) {
+                    return {'"': '\\"', '\\': '\\\\', '\b': '\\b', '\f': '\\f', '\n': '\\n', '\r': '\\r', '\t': '\\t'}[chr] || '\\u' + (chr.charCodeAt(0) + 0x10000).toString(16).substr(1);
+                }); + '"';
             }
             if (type === 'array') {
                 value.forEach(function (item, index) {
