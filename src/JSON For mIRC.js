@@ -1,14 +1,14 @@
 /*jslint for:true*/
 /*globals ActiveXObject, JSONCreate*/
 (function() {
-    
+
     // es5 .forEach() polyfill
     Array.prototype.forEach = function (callback) {
         for (var i = 0; i < this.length; i += 1) {
             callback.call(this, this[i], i);
         }
     };
-    
+
     // es5 .find() polyfill
     Array.prototype.find = function (callback) {
         for (var i = 0; i < this.length; i += 1) {
@@ -64,59 +64,56 @@
     }
 
     // es5 JSON polyfill
-    JSON = {
-        parse: function(input) {
-            try {
-                input = String(input).replace(/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g, function(chr) {
-                    return '\\u' + ('0000' + chr.charCodeAt(0).toString(16)).slice(-4);
-                });
-                if (/^[\],:{}\s]*$/.test(input.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-                    return eval('(' + input + ')');
-                }
-            } catch (ignore) {}
-            throw new Error("INVALID_JSON");
-        },
-
-        stringify: function (value) {
-            var type = getType(value), output = '[';
-            if (value === undefined) {
-                return;
+    (JSON = {}).parse = function(i) {
+        try {
+            i = String(i).replace(/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g, function(c) {
+                return '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4);
+            });
+            if (/^[\],:{}\s]*$/.test(i.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+                return eval('(' + i + ')');
             }
-            if (value === null) {
-                return 'null';
-            }
-            if (type === 'function') {
-                return;
-            }
-            if (type === 'number') {
-                return isFinite(value) ? value.toString() : 'null';
-            }
-            if (type === 'boolean') {
-                return value.toString();
-            }
-            if (type === 'string') {
-                return '"' + value.replace(/[\\"\u0000-\u001F\u2028\u2029]/g, function(chr) {
-                    return {'"': '\\"', '\\': '\\\\', '\b': '\\b', '\f': '\\f', '\n': '\\n', '\r': '\\r', '\t': '\\t'}[chr] || '\\u' + (chr.charCodeAt(0) + 0x10000).toString(16).substr(1);
-                }); + '"';
-            }
-            if (type === 'array') {
-                value.forEach(function (item, index) {
-                    var res = JSON.stringify(item);
-                    if (res) {
-                        output += (index ? ',' : '') + res;
-                    }
-                });
-                return output + ']';
-            }
-            output = [];
-            Object.keys(value).forEach(function (key) {
-                var res = JSON.stringify(value[key]);
-                if (res) {
-                    output.push(JSON.stringify(key) + ':' + res);
+        } catch (e) {}
+        throw new Error("INVALID_JSON");
+    };
+    JSON.stringify = function (value) {
+        var type = getType(value), output = '[';
+        if (value === undefined) {
+            return;
+        }
+        if (value === null) {
+            return 'null';
+        }
+        if (type === 'function') {
+            return;
+        }
+        if (type === 'number') {
+            return isFinite(value) ? value.toString() : 'null';
+        }
+        if (type === 'boolean') {
+            return value.toString();
+        }
+        if (type === 'string') {
+            return '"' + value.replace(/[\\"\u0000-\u001F\u2028\u2029]/g, function(chr) {
+                return {'"': '\\"', '\\': '\\\\', '\b': '\\b', '\f': '\\f', '\n': '\\n', '\r': '\\r', '\t': '\\t'}[chr] || '\\u' + (chr.charCodeAt(0) + 0x10000).toString(16).substr(1);
+            }); + '"';
+        }
+        if (type === 'array') {
+            value.forEach(function (item, index) {
+                item = JSON.stringify(item);
+                if (item) {
+                    output += (index ? ',' : '') + item;
                 }
             });
-            return '{' + output.join(',') + '}';
+            return output + ']';
         }
+        output = [];
+        Object.keys(value).forEach(function (key) {
+            var res = JSON.stringify(value[key]);
+            if (res) {
+                output.push(JSON.stringify(key) + ':' + res);
+            }
+        });
+        return '{' + output.join(',') + '}';
     };
 
     function JSONWrapper(parent, json) {
