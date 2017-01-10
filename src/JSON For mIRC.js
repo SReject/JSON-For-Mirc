@@ -144,7 +144,7 @@
             url: '',
             headers: [],
             data: null,
-            readAs: 'text'
+            timeout: 85000
         };
         if (json !== undefined) {
             this._isChild = true;
@@ -222,6 +222,7 @@
                 if (this._type === 'http') {
                     var request = new ActiveXObject(JSONWrapper.HTTP);
                     request.open(this._http.method, this._http.url, false);
+                    request.timeout = this._http.timeout;
                     this._http.headers.forEach(function (header) {
                         request.setRequestHeader(header[0], header[1]);
                     });

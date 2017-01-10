@@ -39,7 +39,7 @@ menu @SReject/JSONForMirc/Log {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %ver = 1.0.1000
+    var %ver = 1.0.1001
     if ($0) {
       return %ver
     }
@@ -878,7 +878,6 @@ alias JSON {
       %Error = $v1
     }
     else {
-      echo -s >> %SReject/JSONForMirc/Exec >> $bvar(%SReject/JSONForMirc/Exec, 1-).text
       %Result = %SReject/JSONForMirc/Exec
     }
   }
@@ -1075,7 +1074,6 @@ alias JSONForEach {
 
     ;; Make the com call and check for errors
     if (!$(%Call, 2) || $comerr || !$com(%com)) {
-      echo -a ComCall Failed: %Call
       %Error = $jfm_GetError
     }
 
@@ -1243,12 +1241,11 @@ alias JSONDebug {
       window -zk0e @SReject/JSONForMirc/Log
     }
     echo $color(info2) @SReject/JSONForMirc/Log Debug now enabled
-    echo $color(info2) @SReject/JSONForMirc/Log -
     if ($~adiirc) {
-      echo $color(info2) @SReject/JSONForMirc/Log AdiIRC v $+ $version $bits $+ bit
+      echo $color(info2) @SReject/JSONForMirc/Log AdiIRC v $+ $version $iif($beta, beta $v1) $bits $+ bit
     }
     else {
-      echo $color(info2) @SReject/JSONForMirc/Log mIRC v $+ $version $bits $+ bit
+      echo $color(info2) @SReject/JSONForMirc/Log mIRC v $+ $version $iif($beta, beta $v1) $bits $+ bit
     }
     echo $color(info2) @SReject/JSONForMirc/Log $JSONVersion
     echo $color(info2) @SReject/JSONForMirc/Log -
@@ -1747,10 +1744,6 @@ alias -l jfm_SaveDebug {
 
   ;; save the debug buffer to file
   savebuf @SReject/JSONForMirc/Log $qt(%file)
-  
-  write -i1 $qt(%File) JSON: $JSONVersion
-  write -il $qt(%File) OS: $OS
-  write -il $qt(%File) mIRC: $verion
 }
 
 
