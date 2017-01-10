@@ -24,7 +24,7 @@ Requirements:
 >
 > If you are using AdiIRC 64bit, you will need to install the [tsc.dll](http://www.eonet.ne.jp/~gakana/tablacus/scriptcontrol_en.html) for this script to work  
   
-Contribution and distributation Licensing:
+Contribution and Distributation:
 ==============
 > By submitting a pull request to this repository, you acknowledge that you own or have rights to distribute and sublicense the source code contained therein, and that your content does not infringe upon the intellectual property rights of a third party. By opening a pull request you understand that, while maintaining copyright, you grant all current and future maintainers of this repository a non-exclusive, transferable, sub-licensable, royalty-free, worldwide license to use the contents of your pull request as the maintainers of this repository deem fit.  
 >
