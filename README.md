@@ -14,7 +14,7 @@ JSON For mIRC
 >
 > "But why a JSON parser? Why not spend your time coding something that the typical user would make use of?". Its simple, to make those fancy GUI-intensive scripts, scripters need/use tools to simplify the tasks. This is one such tool.  
 >
-> The reason for a JSON parser vs. some other 'tool' is because of its overwhelming use around the web. Now-a-days, when you want data from a website they probably package it as an API that generally returns results in JSON format. Examples include: Google.com, Youtube.com, Pastebin.com, and Weather.com   
+> The reason for a JSON parser vs. some other 'tool' is because of its overwhelming use around the web. Now-a-days, when you want data from a website they probably package it as an API that generally returns results in JSON format. Examples include: Google.com, Youtube.com, Pastebin.com, and Weather.com  
 
 Requirements:
 =============
@@ -24,9 +24,12 @@ Requirements:
 >
 > If you are using AdiIRC 64bit, you will need to install the [tsc.dll](http://www.eonet.ne.jp/~gakana/tablacus/scriptcontrol_en.html) for this script to work  
   
-Contribution Licensing:
-=========
-> By submitting a pull request to this repository, you acknowledge that you own or have rights to distribute and sublicense the source code contained therein, and that your content does not infringe upon the intellectual property rights of a third party. By opening a pull request you understand that, while maintaining copyright, you grant SReject a non-exclusive, transferable, sub-licensable, royalty-free, worldwide license to use the contents of your pull request as SReject deems fit.  
+Contribution and distributation Licensing:
+==============
+> By submitting a pull request to this repository, you acknowledge that you own or have rights to distribute and sublicense the source code contained therein, and that your content does not infringe upon the intellectual property rights of a third party. By opening a pull request you understand that, while maintaining copyright, you grant all current and future maintainers of this repository a non-exclusive, transferable, sub-licensable, royalty-free, worldwide license to use the contents of your pull request as the maintainers of this repository deem fit.  
+>
+> You may not in part or whole for free or profit distribute any files contained with in this repository without prior written permission from the maintainers of this repository.  
+
 
 Back Releases
 =============
