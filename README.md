@@ -1,5 +1,6 @@
+[![Docs](https://img.shields.io/badge/Link-Docs-blue.svg)](sreject.github.io/JSON-For-Mirc) 
+[![Donate](https://img.shields.io/badge/Link-Donate-blue.svg)](https://streamjar.tv/tip/SReject) 
 [![Join us on IRC](https://img.shields.io/badge/IRC-SwiftIRC-brightgreen.svg "Join us on IRC")](https://qwebirc.swiftirc.net/?channels=%23jsonformirc) 
-[![Docs](https://img.shields.io/badge/Link-Docs-blue.svg)](sreject.github.io/JSON-For-Mirc)  
 
 JSON For mIRC
 ======
