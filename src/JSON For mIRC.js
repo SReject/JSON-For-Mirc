@@ -31,6 +31,7 @@
 
     // returns the type of an input
     function getType(obj) {
+        if (obj === null) return 'null';
         return Object.prototype.toString.call(obj).match(/^\[object ([^\]]+)\]$/)[1].toLowerCase();
     }
 

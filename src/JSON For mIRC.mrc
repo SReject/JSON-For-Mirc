@@ -1615,7 +1615,7 @@ alias -l jfm_Create {
 ;;
 ;; When debug is disabled
 ;;    the /jfm_log alias below this group is called
-#SReject/JSONForMirc/Log on
+#SReject/JSONForMirc/Log off
 
 
 
