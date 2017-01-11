@@ -177,7 +177,7 @@ alias JSONOpen {
 
     ;; if the input is a file, read the file into a bvar
     elseif (f isincs %Switches) {
-      bread $qt($file($2-).longfn) 1 $file($2-).size %BVar
+      bread $qt($file($2-).longfn) 0 $file($file($2-).longfn).size %BVar
     }
 
     ;; if the input is text, store the text in a bvar
@@ -567,7 +567,7 @@ alias JSONClose {
 
   ;; Remove switches from other input parameters
   if (-* iswm $1) {
-    %Switches = $mid($1, 1-)
+    %Switches = $mid($1, 2-)
     tokenize 32 $2-
   }
 
