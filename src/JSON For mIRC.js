@@ -138,7 +138,6 @@
         this._error = parent._error || false;
         this._input = parent._input;
         this._isChild = false;
-        this._json = parent._json;
         this._http = parent._http || {
             method: 'GET',
             url: '',
@@ -146,7 +145,9 @@
             data: null,
             timeout: 85000
         };
-        if (json !== undefined) {
+        if (json === undefined) {
+            this._json = parent._json || {};
+        } else {
             this._isChild = true;
             this._json = json;
         }
@@ -222,7 +223,6 @@
                 if (this._type === 'http') {
                     var request = new ActiveXObject(JSONWrapper.HTTP);
                     request.open(this._http.method, this._http.url, false);
-                    request.timeout = this._http.timeout;
                     this._http.headers.forEach(function (header) {
                         request.setRequestHeader(header[0], header[1]);
                     });
@@ -322,7 +322,7 @@
             }
             if (type === 'object') {
                 Object.keys(self._json.value).forEach(resultAdd);
-                return result;
+                return res;
             }
             if (type === 'array') {
                 self._json.value.forEach(function (ignore, index) {
@@ -413,7 +413,7 @@
 
     JSONCreate = function(type, source, noparse) {
         var self = new JSONWrapper();
-        self._state = 'done';
+        self._state = 'init';
         self._type = (type || 'text').toLowerCase();
 
         if (self._type === 'http') {

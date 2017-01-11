@@ -39,7 +39,7 @@ menu @SReject/JSONForMirc/Log {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %ver = 1.0.1001
+    var %ver = 1.0.1003
     if ($0) {
       return %ver
     }
@@ -1610,7 +1610,7 @@ alias -l jfm_Create {
 ;;
 ;; When debug is disabled
 ;;    the /jfm_log alias below this group is called
-#SReject/JSONForMirc/Log off
+#SReject/JSONForMirc/Log on
 
 
 
