@@ -298,7 +298,7 @@ alias JSONHttpMethod {
 
   ;; if an error occured, store the error in a global variable then log the error
   if (%error) {
-    set -u0 %SReject/JSONForMirc/Error %error
+    set -u1 %SReject/JSONForMirc/Error %error
     jfm_log -De Failed to set method: %Error
   }
 
@@ -1010,7 +1010,7 @@ alias JSON {
 
   ;; If an error occured, store and log the error
   if (%Error) {
-    set -u0 %SReject/JSONForMirc/Error %Error
+    set -u1 %SReject/JSONForMirc/Error %Error
     jfm_log -De $!JSON %Error
   }
 }
@@ -1142,7 +1142,7 @@ alias JSONForEach {
     if ($com(%Com)) {
       .comclose $v1
     }
-    set -u0 %SReject/JSONForMirc/Error %Error
+    set -u1 %SReject/JSONForMirc/Error %Error
     jfm_log -De Error: %Error
   }
 
@@ -1246,8 +1246,8 @@ alias JSONDebug {
       window -zk0e @SReject/JSONForMirc/Log
     }
     echo $color(info2) @SReject/JSONForMirc/Log Debug now enabled
-    if ($~adiirc) {
-      echo $color(info2) @SReject/JSONForMirc/Log AdiIRC v $+ $version $iif($beta, beta $v1) $bits $+ bit
+    if ($~adiircexe) {
+      echo $color(info2) @SReject/JSONForMirc/Log AdiIRC v $+ $version $iif($beta, beta) $bits $+ bit
     }
     else {
       echo $color(info2) @SReject/JSONForMirc/Log mIRC v $+ $version $iif($beta, beta $v1) $bits $+ bit
@@ -1337,7 +1337,7 @@ alias -l jfm_ComInit {
 
   ;; If the script is being ran under adiirc 64bit
   ;; attemppt to create a ScriptControl object instance
-  if ($len($~adiircexe) && $appbits == 64) {
+  if ($~adiircexe !== $null && $appbits == 64) {
     .comopen SReject/JSONForMirc/JSONShell ScriptControl
   }
 
@@ -1497,7 +1497,7 @@ alias -l jfm_Exec {
   }
 
   ;; otherwise create a temp bvar, store the result in the the bvar
-  set -u0 %SReject/JSONForMirc/Exec $jfm_tmpbvar
+  set -u1 %SReject/JSONForMirc/Exec $jfm_tmpbvar
   noop $com($1, %SReject/JSONForMirc/Exec).result
 
   ;; log the result
@@ -1553,7 +1553,7 @@ alias -l jfm_Eval {
   }
 
   ;; otherwise create a tmp bvar, store the bvar name in the result, and log the success
-  set -u0 %SReject/JSONForMirc/Eval $jfm_tmpbvar
+  set -u1 %SReject/JSONForMirc/Eval $jfm_tmpbvar
   noop $com($1, %SReject/JSONForMirc/Eval).result
   jfm_log -isd Result stored in %SReject/JSONForMirc/Eval
   jfm_log -d
@@ -1656,13 +1656,13 @@ alias -l jfm_log {
 
     ;; if the -S switch was specified, reset the indent count and indicate the message is a success message
     if (S isincs %Switches) {
-      set -u0 %SReject/JSONForMirc/LogIndent 0
+      set -u1 %SReject/JSONForMirc/LogIndent 0
       %Prefix = 13->
     }
 
     ;; If the -D switche was specified, reset the indent count
     if (D isincs %Switches) {
-      set -u0 %SReject/JSONForMirc/LogIndent 1
+      set -u1 %SReject/JSONForMirc/LogIndent 1
     }
 
     ;; if the -i switch was specified, increase the indent count
@@ -1703,7 +1703,7 @@ alias -l jfm_log {
         dec -u0 %SReject/JSONForMirc/LogIndent
       }
       else {
-        set -u0 %SReject/JSONForMirc/LogIndent 0
+        set -u1 %SReject/JSONForMirc/LogIndent 0
       }
     }
   }
