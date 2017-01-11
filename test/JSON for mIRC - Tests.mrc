@@ -1,3 +1,6 @@
+;; TODO: HTTP request validation
+
+;; /JSONTest
 alias JSONTest {
   var %x = 1, %fail, %debug = $JSONDebug
   JSONShutDown
@@ -442,5 +445,17 @@ alias _jfm_test76_forEachTest {
     }
   }
 }
-
-;; TODO: HTTP request validation
+alias -l jfm_test77 {
+  var %res = $JSONVersion, %match = /^SReject\/JSONForMirc v\d{1,4}\.\d{1,4}\.\d{1,4}$/
+  if (!$regex(%res, %match)) {
+    return $false $!JSONVersion == %res
+  }
+  return $true $!JSONVersion
+}
+alias -l jfm_test78 {
+  var %res = $JSONVersion(short), %match = /^\d{1,4}\.\d{1,4}\.\d{1,4}$/
+  if (!$regex(%res, %match)) {
+    return $false $!JSONVersion(short) == %res
+  }
+  return $true $!JSONVersion(short)
+}

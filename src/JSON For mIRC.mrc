@@ -39,7 +39,7 @@ menu @SReject/JSONForMirc/Log {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %ver = 1.0.1004
+    var %ver = 1.0.1005
     if ($0) {
       return %ver
     }
