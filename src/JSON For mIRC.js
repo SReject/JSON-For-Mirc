@@ -358,7 +358,7 @@
                 return self._json.value.length;
             }
             if (type === 'object') {
-                return Object.keys(self.json.value).length;
+                return Object.keys(self._json.value).length;
             }
             throw new Error('INVALID_TYPE');
         },

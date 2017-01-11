@@ -141,13 +141,13 @@ alias JSONOpen {
   elseif (b isincs %Switches && &* !iswm $2) {
     %Error = PARAMETER_INVALID:NOT_BVAR
   }
-  elseif (b isincs %Switches && $bvar($2, 0) == $null) {
-    %Error = PARAMETER_INVALID:BVAR_INUSE
+  elseif (b isincs %Switches && !$bvar($2, 0)) {
+    %Error = PARAMETER_INVALID:BVAR_EMPTY
   }
 
   ;; Validate file where appropriate
-  elseif (f isincs %Switches && $isfile($2-)) {
-    %Error = PARAMETER_INVALID:FILE_INUSE
+  elseif (f isincs %Switches && !$isfile($2-)) {
+    %Error = PARAMETER_INVALID:FILE_DOESNOT_EXIST
   }
 
   ;; all checks passed
@@ -666,7 +666,7 @@ alias JSONList {
     ;; If the com is a json handler, output the name
     if (JSON:?* iswm $v1) {
       inc %i
-      echo $color(info) -a * # $+ %i : $v1
+      echo $color(info) -a * # $+ %i : $v2
     }
     inc %x
   }
@@ -720,7 +720,7 @@ alias JSONShutDown {
 alias JSON {
 
   ;; Insure the alias was called as an identifier and that atleast one parameter has been stored
-  if (!$isid || !$0) {
+  if (!$isid) {
     return
   }
 
@@ -747,11 +747,16 @@ alias JSON {
   ;; Log the alias call
   jfm_log -S $!JSON( $+ %args $+ ) $+ $iif($len($prop), . $+ $prop)
 
-  ;; If the alias was called with with a single input of 0 and a prop
-  ;;     silently fail the call
-  if ($0 == 1 && $1 == 0 && $len($prop)) {
-    jfm_log -D
-    return
+  ;; If the alias was called without any inputs
+  if (!$0) || ($0 == 1 && $1 == $null) {
+    %Error = MISSING_PARAMETERS
+    goto error
+  }
+
+  ;; If the alias was called with the only parameter being 0 and a prop
+  if ($0 == 1 && $1 == 0 && $prop !== $null) {
+    %Error = PROP_NOT_APPLICABLE
+    goto error
   }
 
   ;; If the @name parameter starts with JSON assume its the name of the JSON com
