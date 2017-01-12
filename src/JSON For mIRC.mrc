@@ -1,7 +1,18 @@
-;; compatability mode variable
+;; v0.2.42 compatibility mode
 #SReject/JSONForMirc/CompatMode off
+alias JSONUrlMethod {
+  if ($isid) return
+  JSONHttpMethod $1-
+}
+alias JSONUrlHeader {
+  if ($isid) return
+  JSONHttpHeader $1-
+}
+alias JSONUrlGet {
+  if ($isid) return
+  JSONHttpFetch $1-
+}
 #SReject/JSONForMirc/CompatMode end
-
 
 
 ;; Cleanup debugging when the debug window closes
@@ -12,19 +23,17 @@ on *:CLOSE:@SReject/JSONForMirc/Log:{
 }
 
 
-
 ;; Free resources when mIRC exits
 on *:EXIT:{
   JSONShutDown
 }
 
 
-
 ;; Free resources when the script is unloaded
 on *:UNLOAD:{
+  .disable #SReject/JSONForMirc/CompatMode
   JSONShutDown
 }
-
 
 
 ;; Menu for the debug window
@@ -35,7 +44,6 @@ menu @SReject/JSONForMirc/Log {
   .-
   .Toggle Debug: jsondebug
 }
-
 
 
 ;; $JSONVersion(@Short)
@@ -54,7 +62,6 @@ alias JSONVersion {
 }
 
 
-
 ;; $JSONError
 ;;     Returns any error the last call to /JSON* or $JSON() raised
 alias JSONError {
@@ -62,22 +69,6 @@ alias JSONError {
     return %SReject/JSONForMirc/Error
   }
 }
-
-
-
-;; $JSONCompat
-;;     Returns $true if the script is in v0.2.4x compatability mode
-;;
-;; /JSONCompat
-;;     Toggles v0.2.4 compatability mode on
-;;     To disable: //disable #SReject/JSONForMirc/CompatMode  
-alias -l JSONCompat {
-  if ($isid) {
-    return $iif($group(#SReject/JSONForMirc/CompatMode) == on, $true, $false)
-  }
-  .enable #SReject/JSONForMirc/CompatMode
-}
-
 
 
 ;; /JSONOpen -dbfuw @Name @Input
@@ -248,7 +239,6 @@ alias JSONOpen {
 }
 
 
-
 ;; /JSONHttpMethod @Name @Method
 ;;     Sets a json's pending HTTP method
 ;;
@@ -328,13 +318,6 @@ alias JSONHttpMethod {
     jfm_log -Ds Successfully set method to $+(', %Method, ')
   }
 }
-
-;; Depreciated; use /JSONHttpMethod
-alias JSONUrlMethod {
-  if ($isid) return
-  JSONHttpMethod $1-
-}
-
 
 
 ;; /JSONHttpHeader @Name @Header @Value
@@ -419,15 +402,6 @@ alias JSONHttpHeader {
     jfm_log -Ds Successfully stored header $+(',%header,: $3-,')
   }
 }
-
-;; Depreciated; Use /JSONHttpHeader
-alias JSONUrlHeader {
-  if ($isid) {
-    return
-  }
-  JSONHttpHeader $1-
-}
-
 
 
 ;; /JSONHttpFetch -bf @Name @Data
@@ -557,13 +531,6 @@ alias JSONHttpFetch {
   }
 }
 
-;; Depreciated, use /JSONHttpFetch
-alias JSONUrlGet {
-  if ($isid) return
-  JSONHttpFetch $1-
-}
-
-
 
 ;; /JSONClose -w @Name
 ;;     Closes an open JSON handler and all child handlers
@@ -667,7 +634,6 @@ alias JSONClose {
 }
 
 
-
 ;; /JSONList
 ;;     Lists all open JSON handlers
 alias JSONList {
@@ -702,7 +668,6 @@ alias JSONList {
 }
 
 
-
 ;; /JSONShutDown
 ;;    Closes all JSON handler coms and unsets all global variables
 alias JSONShutDown {
@@ -734,10 +699,22 @@ alias JSONShutDown {
 }
 
 
+;; /JSONCompat
+;;     Toggles v0.2.42 compatability mode on
+;;     To disable: //disable #SReject/JSONForMirc/CompatMode
+;;
+;; $JSONCompat
+;;     Returns $true if the script is in v0.2.4x compatability mode
+alias JSONCompat {
+  if ($isid) {
+    return $iif($group(#SReject/JSONForMirc/CompatMode) == on, $true, $false)
+  }
+  .enable #SReject/JSONForMirc/CompatMode
+}
+
 
 ;; $JSON(@Name|Ref|N, [@file,] [@Members...]).@Prop
 ;;     Returns information pretaining to an open JSON handler
-;;
 alias JSON {
 
   ;; Insure the alias was called as an identifier and that atleast one parameter has been stored
@@ -957,7 +934,7 @@ alias JSON {
       %Com = %ChildCom
       jfm_log -d
     }
-    
+
     ;; If in compatability mode, and a prop hasn't been specified, return the value
     if ($JSONCompat && %Prop == $null) {
       %Prop = value
@@ -1042,10 +1019,7 @@ alias JSON {
 }
 
 
-
-
 ;; $JSONForEach(@Name|Ref|N, command, @Members).fuzzy
-;;
 alias JSONForEach {
 
   ;; Insure the alias was called as an identifier
@@ -1180,10 +1154,8 @@ alias JSONForEach {
 }
 
 
-
 ;; Todo: $JSONPath(@Name, N)
 ;;    Returns information related to a handler's path result
-
 
 
 ;; /JSONDebug @State
@@ -1289,7 +1261,6 @@ alias JSONDebug {
 }
 
 
-
 ;; $jfm_TmpBVar
 ;;     Returns the name of a not-in-use temporarily bvar
 alias -l jfm_TmpBVar {
@@ -1310,21 +1281,6 @@ alias -l jfm_TmpBVar {
   inc %n
   goto next
 }
-
-
-
-;; /jfm_badd @bvar @Text
-;;     Appends the specified text to a bvar
-;;
-;;     @Bvar - String - Required
-;;         The bvar to append text to
-;;
-;;     @Text - String - Required
-;;         The text to append to the bvar
-alias -l jfm_badd {
-  bset -t $1 $calc(1 + $bvar($1, 0)) $2-
-}
-
 
 
 ;; $jfm_ComInit
@@ -1349,9 +1305,7 @@ alias -l jfm_ComInit {
   }
 
   ;; Retrieve the javascript to execute
-  ;;> FILE:jscript:START file="json for mirc.min.js" prefix="jfm_badd %js"
   jfm_jscript %js
-  ;;> FILE:jscript:END
 
   ;; close the Engine and shell coms if either but not both are open
   if ($com(SReject/JSONForMirc/JSONEngine)) {
@@ -1425,7 +1379,6 @@ alias -l jfm_ComInit {
 }
 
 
-
 ;; $jfm_GetError
 ;;     Attempts to get the last error that occured in the JS handler
 alias -l jfm_GetError {
@@ -1469,6 +1422,53 @@ alias -l jfm_GetError {
   return %Error
 }
 
+
+;; $jfm_create(@Name, @type, @Source, @Wait)
+;;    Attempts to create the JSON handler com instance
+;;
+;;    @Name - String - Required
+;;        The name of the JSON handler to create
+;;
+;;    @Type - string - required
+;;        The type of json handler
+;;            text: the input is a bvar
+;;            http: the input is a url
+;;
+;;    @Source - string - required
+;;        The source of the input
+;;
+;;    @httpOption - Number - Optional
+;;        Indicates how the http request should be handled, as a bitwise comparison(add values to toggle options)
+;;          1: wait for /JSONHttpFetch to be called
+;;          2: Do not parse the result of the HTTP request
+alias -l jfm_Create {
+
+  ;; Insure the alias is called as an identifier
+  if (!$isid) return
+
+  ;; Local variable declaration
+  var %wait = $iif(1 & $4, $true, $false), %noParse = $iif(2 & $4, $true, $false), %result
+
+  ;; Log the alias call
+  jfm_log -i $!jfm_create( $+ $1 $+ , $+ $2 $+ , $+ $3 $+ , $+ $4)
+
+  ;; Attempt to create the json handler and if an error occurs retrieve the error, log it and return it
+  if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, $2, &bstr, $3, bool, %noParse, dispatch* $1) || $comerr || !$com($1)) {
+    %Result = $jfm_GetError
+    jfm_log -ied %Result
+  }
+
+  ;; Attempt to call the parse method if the handler should not wait for the http request
+  elseif ($2 !== http || ($2 == http && !%wait)) && (!$com($1, parse, 1)) {
+    %Result = $jfm_GetError
+    jfm_log -ied %Result
+  }
+
+  if (%error) {
+    jfm_log -d
+  }
+  return %Result
+}
 
 
 ;; $jfm_Exec(@Name, @Method, [@Args])
@@ -1530,110 +1530,6 @@ alias -l jfm_Exec {
   jfm_log -isd Result stored in %SReject/JSONForMirc/Exec
   jfm_log -d
 }
-
-
-
-;; $jfm_Eval(@Name, @Property, [@args])
-;;     Evaluates the js method of the specified name
-;;         Stores the result in a tmp bvar and stores that bvar name in %SReject/JSONForMirc/Eval
-;;         If an error occur, returns the error
-;;
-;;     @Name - string - Required
-;;         The name of the open JSON handler
-;;
-;;     @Method - string - Required
-;;         The method of the open JSON handler to call
-;;
-;;     @Args - string - Optional
-;;         The arguments to pass to the method
-alias -l jfm_Eval {
-
-  ;; Local variable declaration
-  var %Args, %Index = 1, %Result, %Params
-
-  ;; cleanup from previous call
-  unset %SReject/JSONForMirc/Eval
-
-  ;; Loop over inputs, storing them in %args(for logging), and %params(for com calling)
-  :args
-  if (%Index <= $0) {
-    %Args = %Args $+ $iif($len(%Args), $chr(44)) $+ $($ $+ %Index, 2)
-    if (%Index >= 3) {
-      %Params = %Params $+ ,bstr,$ $+ %Index
-    }
-    inc %Index
-    goto args
-  }
-  jfm_log -i $!jfm_Exec( $+ %Args $+ )
-
-  ;; Build the com call
-  %Params = $!com($1,$2,2 $+ %Params $+ )
-
-  ;; Attempt to make the com call and if an error occurs
-  if (!$(%Params, 2) || $comerr) {
-
-    ;; retrieve the error, store it in %result, and return it
-    %Result = $jfm_GetError
-    jfm_log -ed Error: %Result
-    return %Result
-  }
-
-  ;; otherwise create a tmp bvar, store the bvar name in the result, and log the success
-  set -u1 %SReject/JSONForMirc/Eval $jfm_tmpbvar
-  noop $com($1, %SReject/JSONForMirc/Eval).result
-  jfm_log -isd Result stored in %SReject/JSONForMirc/Eval
-  jfm_log -d
-}
-
-
-
-;; $jfm_create(@Name, @type, @Source, @Wait)
-;;    Attempts to create the JSON handler com instance
-;;
-;;    @Name - String - Required
-;;        The name of the JSON handler to create
-;;
-;;    @Type - string - required
-;;        The type of json handler
-;;            text: the input is a bvar
-;;            http: the input is a url
-;;
-;;    @Source - string - required
-;;        The source of the input
-;;
-;;    @httpOption - Number - Optional
-;;        Indicates how the http request should be handled, as a bitwise comparison(add values to toggle options)
-;;          1: wait for /JSONHttpFetch to be called
-;;          2: Do not parse the result of the HTTP request
-alias -l jfm_Create {
-
-  ;; Insure the alias is called as an identifier
-  if (!$isid) return
-
-  ;; Local variable declaration
-  var %wait = $iif(1 & $4, $true, $false), %noParse = $iif(2 & $4, $true, $false), %result
-
-  ;; Log the alias call
-  jfm_log -i $!jfm_create( $+ $1 $+ , $+ $2 $+ , $+ $3 $+ , $+ $4)
-
-  ;; Attempt to create the json handler and if an error occurs retrieve the error, log it and return it
-  if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, $2, &bstr, $3, bool, %noParse, dispatch* $1) || $comerr || !$com($1)) {
-    %Result = $jfm_GetError
-    jfm_log -ied %Result
-  }
-
-  ;; Attempt to call the parse method if the handler should not wait for the http request
-  elseif ($2 !== http || ($2 == http && !%wait)) && (!$com($1, parse, 1)) {
-    %Result = $jfm_GetError
-    jfm_log -ied %Result
-  }
-
-  if (%error) {
-    jfm_log -d
-  }
-  return %Result
-}
-
 
 
 ;; When debug is enabled
@@ -1778,12 +1674,22 @@ alias -l jfm_SaveDebug {
 }
 
 
+;; /jfm_badd @bvar @Text
+;;     Appends the specified text to a bvar
+;;
+;;     @Bvar - String - Required
+;;         The bvar to append text to
+;;
+;;     @Text - String - Required
+;;         The text to append to the bvar
+alias -l jfm_badd {
+  bset -t $1 $calc(1 + $bvar($1, 0)) $2-
+}
 
-;;> REMOVE:helper_alias:START
+
 ;; /jfm_jscript @Bvar
 ;;     reads the "JSON For Mirc.js" file and outputs the contents to the specified bvar
 alias -l jfm_jscript {
   var %file = $qt($scriptdirJSON For Mirc.js)
   bread $qt(%file) 0 $file(%file).size $1
 }
-;;> REMOVE:helper_alias:END
