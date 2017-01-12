@@ -1,3 +1,9 @@
+;; compatability mode variable
+#SReject/JSONForMirc/CompatMode off
+#SReject/JSONForMirc/CompatMode end
+
+
+
 ;; Cleanup debugging when the debug window closes
 on *:CLOSE:@SReject/JSONForMirc/Log:{
   if ($jsondebug) {
@@ -55,6 +61,21 @@ alias JSONError {
   if ($isid) {
     return %SReject/JSONForMirc/Error
   }
+}
+
+
+
+;; $JSONCompat
+;;     Returns $true if the script is in v0.2.4x compatability mode
+;;
+;; /JSONCompat
+;;     Toggles v0.2.4 compatability mode on
+;;     To disable: //disable #SReject/JSONForMirc/CompatMode  
+alias -l JSONCompat {
+  if ($isid) {
+    return $iif($group(#SReject/JSONForMirc/CompatMode) == on, $true, $false)
+  }
+  .enable #SReject/JSONForMirc/CompatMode
 }
 
 
@@ -936,6 +957,11 @@ alias JSON {
       %Com = %ChildCom
       jfm_log -d
     }
+    
+    ;; If in compatability mode, and a prop hasn't been specified, return the value
+    if ($JSONCompat && %Prop == $null) {
+      %Prop = value
+    }
 
     ;; No Prop? then the result is the child com's name
     if (!%Prop) {
@@ -944,7 +970,7 @@ alias JSON {
     }
 
     ;; if the prop isn't value, just call the js method to return data requested by the prop
-    elseif (%prop !== value) {
+    elseif (%Prop !== value) {
       if ($jfm_Exec(%Com, $v1)) {
         %Error = $v1
       }
