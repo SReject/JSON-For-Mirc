@@ -417,42 +417,58 @@ alias -l jfm_test75 {
   if ($true !== %res) return $false $!JSON(jfm_testvalues, ~ 1).fuzzyValue == $v2
   return $true $!JSON(jfm_testvalues, ~ 1).fuzzyValue
 }
+
 alias -l jfm_test76 {
-  set -u0 %_jfm_test76_forEachTest $false
-  var %res = $JSONForEach($JSON(jfm_testvalues, array), _jfm_test76_forEachTest)
-  if ($JSONError) return $false $!JSONForEach($JSON(jfm_testvalues, array), _jfm_test76_forEachTest)
-  if (%_jfm_test76_forEachTest) return $false $v1
-  if (3 !== %res) return $false $!JSONForEach($JSON(jfm_testvalues, array), _jfm_test76_forEachTest) == $v2
-  unset %_jfm_test76_forEachTest
-  return $true $!JSONForEach($JSON(jfm_testvalues, array), _jfm_test76_forEachTest)
+  var %JSON = $json(jfm_testvalues, array), %res
+  if ($JSONError) return $false $!JSON(jfm_testvalues, array) $+([,$v1,])
+  %res = $JSONPath(%JSON,0)
+  if ($JSONError) return $false $!JSONPath( $+ %JSON $+ ,0) $+([,$v1,])
+  if (1 !== %res) return $false $!JSONPath( $+ %JSON $+ ,0) ==  $v2
+  return $true $!JSONPath( $+ %JSON $+ ,0)
 }
-alias _jfm_test76_forEachTest {
-  if (!%_jfm_test76_forEachTest) {
+alias -l jfm_test77 {
+  var %JSON = $json(jfm_testvalues, array, 0), %res = $JSONPath(%JSON,1)
+  if ($JSONError) return $false $!JSONPath( $+ %JSON $+ ,1) $+([,$v1,])
+  if (array !== %res) return $false $!JSONPath( $+ %JSON $+ ,1) ==  $v2
+  return $true $!JSONPath( $+ %JSON $+ ,1)
+}
+
+alias -l jfm_test78 {
+  set -u0 %_jfm_test78_forEachTest $false
+  var %res = $JSONForEach($JSON(jfm_testvalues, array), _jfm_test78_forEachTest)
+  if ($JSONError) return $false $!JSONForEach($JSON(jfm_testvalues, array), _jfm_test78_forEachTest)
+  if (%_jfm_test78_forEachTest) return $false $v1
+  if (3 !== %res) return $false $!JSONForEach($JSON(jfm_testvalues, array), _jfm_test78_forEachTest) == $v2
+  unset %_jfm_test78_forEachTest
+  return $true $!JSONForEach($JSON(jfm_testvalues, array), _jfm_test78_forEachTest)
+}
+alias _jfm_test78_forEachTest {
+  if (!%_jfm_test78_forEachTest) {
     if ($0 !== 1) {
-      set -u0 %_jfm_test76_forEachTest INVALID_PARAMETERS
+      set -u0 %_jfm_test78_forEachTest INVALID_PARAMETERS
     }
     elseif (!$com($1)) {
-      set -u0 %_jfm_test76_forEachTest COM_DOESNOT_EXIST
+      set -u0 %_jfm_test78_forEachTest COM_DOESNOT_EXIST
     }
     else {
       var %res = $JSON($1).value
       if ($jsonerror) {
-        set -u0 %_jfm_test76_forEachTest $v1
+        set -u0 %_jfm_test78_forEachTest $v1
       }
       elseif (item* !iswm %Res) {
-        set -u0 %_jfm_test76_forEachTest $!JSON( $+ $1 $+ ).value == %Res
+        set -u0 %_jfm_test78_forEachTest $!JSON( $+ $1 $+ ).value == %Res
       }
     }
   }
 }
-alias -l jfm_test77 {
+alias -l jfm_test79 {
   var %res = $JSONVersion, %match = /^SReject\/JSONForMirc v\d{1,4}\.\d{1,4}\.\d{1,4}$/
   if (!$regex(%res, %match)) {
     return $false $!JSONVersion == %res
   }
   return $true $!JSONVersion
 }
-alias -l jfm_test78 {
+alias -l jfm_test80 {
   var %res = $JSONVersion(short), %match = /^\d{1,4}\.\d{1,4}\.\d{1,4}$/
   if (!$regex(%res, %match)) {
     return $false $!JSONVersion(short) == %res

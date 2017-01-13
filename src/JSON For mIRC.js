@@ -366,6 +366,14 @@
             return (this.type() === "object" || this.type() === "array");
         },
 
+        pathLength: function () {
+            return parsed(this)._json.path.length;
+        },
+        
+        pathAtIndex: function (index) {
+            return parsed(this)._json.path[index];
+        },
+
         path: function () {
             var result = '';
             parsed(this)._json.path.forEach(function (item) {

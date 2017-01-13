@@ -889,7 +889,7 @@ alias JSON {
   }
 
   ;; These props require that the json handler be walked before processing the prop itself
-  elseif (%Prop == $null || $wildtok(path|type|isContainer|length|value|string|debug, %prop, 1, 124)) {
+  elseif (%Prop == $null || $wildtok(path|pathLength|type|isContainer|length|value|string|debug, %prop, 1, 124)) {
     %Prop = $v1
 
     ;; if members have been specified then the JSON handler's json needs to be walked
@@ -1175,10 +1175,96 @@ alias JSONForEach {
 }
 
 
-;; $JSONPath(@Name, N)
-;;    Returns information related to a handler's path result
+;; $JSONPath(@Name|ref|N, index)
+;;    Returns information related to a handler's path
 alias JSONPath {
-  ;; to do
+  if (!$isid) return
+
+  ;; Unset the global error variable incase the last call ended in error
+  unset %SReject/JSONForMirc/Error
+
+  ;; Local variable declarations
+  var %Error, %Param, %x = 0, %JSON, %Result
+
+  while (%x < $0) {
+    inc %x
+    %param = %Param $+ $($ $+ %x, 2) $+ ,
+  }
+
+  ;; log the call
+  jfm_log -I $!JSONPath( $+ $left(%param, -1) $+ )
+
+  ;; validate inputs
+  if ($0 !== 2) {
+    %Error = INVALID_PARAMETERS
+  }
+  elseif ($prop !== $null) {
+    %Error = PROP_NOT_APPLICABLE
+  }
+  elseif (!$1 || $1 == 0 || !$regex($1, /^(?:(?:JSON:[^?:*]+(?::\d+)*)?|([^?:*]+))$/i)) {
+    %Error = NAME_INVALID
+  }
+  elseif ($2 !isnum 0- || . isin $2) {
+    %Error = INVALID_INDEX
+  }
+  else {
+
+    ;; Attempt to retrieve a handler for the @Name|Ref|N input
+    %JSON = $JSON($1)
+    if ($JSONError) {
+      %Error = $v1
+    }
+    elseif (!%JSON) {
+      %Error = HANDLER_NOT_FOUND
+    }
+    elseif ($JSON(%JSON).pathLength == $null) {
+      %Error = $JSONError
+    }
+    else {
+
+      ;; Store the result of the .pathLength call
+      %Result = $v1
+
+      ;; if $2 is 0 do nothing
+      if (!$2) {
+        noop
+      }
+
+      ;; if $2 is greater than the path length, %result is nothing/null
+      elseif ($2 >= %Result) {
+        unset %Result
+      }
+
+      ;; attempt to retrieve the path item at the specified index
+      elseif (!$com(%JSON, pathAtIndex, 1, bstr, $calc($2 -1)) || $comerr) {
+        %Error = $jfm_GetError
+      }
+
+      ;; retrieve the result from the com
+      else {
+        %Result = $com(%JSON).result
+      }
+    }
+  }
+
+  ;; Handle errors
+  :error
+  if ($error) {
+    %Error = $v1
+    reseterror
+  }
+
+  ;; If an error occured, store it then log the error
+  if (%Error) {
+    set -u0 %SReject/JSONForMirc/Error %Error
+    jfm_log -EeD %Error
+  }
+
+  ;; otherwise, log the result and return it
+  else {
+    jfm_log -EsD %Result
+    return %Result
+  }
 }
 
 
