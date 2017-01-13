@@ -27,10 +27,4 @@ Contribution and Distributation:
 ==============
 > By submitting a pull request to this repository, you acknowledge that you own or have rights to distribute and sublicense the source code contained therein, and that your content does not infringe upon the intellectual property rights of a third party. By opening a pull request you understand that, while maintaining copyright, you grant all current and future maintainers of this repository a non-exclusive, transferable, sub-licensable, royalty-free, worldwide license to use the contents of your pull request as the maintainers of this repository deem fit.  
 >
-> You may not in part or whole for free or profit distribute any files contained with in this repository without prior written permission from the maintainers of this repository.  
-
-
-Back Releases
-=============
-**JSONForMirc v0.2.41** [docs](https://github.com/SReject/JSON-For-Mirc/tree/v0.2.4) - [download](https://github.com/SReject/JSON-For-Mirc/releases/tag/v0.2.41-beta)  
-**JSONForMirc v0.2.4** [docs](https://github.com/SReject/JSON-For-Mirc/tree/v0.2.4) - [downloads](https://github.com/SReject/JSON-For-Mirc/releases/tag/v0.2.4-beta)  
+> You may not in part or whole for free or profit distribute any files contained with in this repository without prior written permission from the maintainers of this repository.
