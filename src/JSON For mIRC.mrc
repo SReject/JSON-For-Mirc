@@ -46,30 +46,14 @@ menu @SReject/JSONForMirc/Log {
 }
 
 
-;; $JSONVersion(@Short)
-;;     Returns script version information
-;;
-;;     @Short - Any text
-;;         Returns the short version
-alias JSONVersion {
-  if ($isid) {
-    var %ver = 1.0.1005
-    if ($0) {
-      return %ver
-    }
-    return SReject/JSONForMirc v $+ %ver
-  }
-}
 
 
-;; $JSONError
-;;     Returns any error the last call to /JSON* or $JSON() raised
-alias JSONError {
-  if ($isid) {
-    return %SReject/JSONForMirc/Error
-  }
-}
 
+;;===================================;;
+;;                                   ;;
+;;          PUBLIC COMMANDS          ;;
+;;                                   ;;
+;;===================================;;
 
 ;; /JSONOpen -dbfuw @Name @Input
 ;;     Creates a JSON handle instance
@@ -103,7 +87,7 @@ alias JSONOpen {
   var %Switches, %Error, %Com = $false, %Type = text, %httpOptions = 0, %BVar, %BUnset = $true
 
   ;; log the /JSONOpen command is being called
-  jfm_log -S /JSONOpen $1-
+  jfm_log -I /JSONOpen $1-
 
   ;; remove switches from other input parameters
   if (-* iswm $1) {
@@ -225,7 +209,7 @@ alias JSONOpen {
     if (%Com && $com(%Com)) {
       $+(.timer, %com) 1 0 JSONClose $unsafe($1)
     }
-    jfm_log -De %Error
+    jfm_log -EeD %Error
   }
 
   ;; Otherwise, if the -d switch was specified start a timer to close the com
@@ -234,7 +218,7 @@ alias JSONOpen {
     if (d isincs %Switches) {
       $+(.timer, %Com) -o 1 0 JSONClose $unsafe($1)
     }
-    jfm_log -Ds Created $1 (as com %Com $+ )
+    jfm_log -EsD Created $1 (as com %Com $+ )
   }
 }
 
@@ -259,7 +243,7 @@ alias JSONHttpMethod {
   var %Error, %Com, %Method
 
   ;; Log the alias call
-  jfm_log -S /JSONHttpMethod $1-
+  jfm_log -I /JSONHttpMethod $1-
 
   ;; Call the com interface initializer
   if ($jfm_ComInit) {
@@ -310,12 +294,12 @@ alias JSONHttpMethod {
   ;; if an error occured, store the error in a global variable then log the error
   if (%error) {
     set -u1 %SReject/JSONForMirc/Error %error
-    jfm_log -De Failed to set method: %Error
+    jfm_log -EeD %Error
   }
 
   ;; if no errors, log the success
   else {
-    jfm_log -Ds Successfully set method to $+(', %Method, ')
+    jfm_log -EsD Set Method to $+(', %Method, ')
   }
 }
 
@@ -343,7 +327,7 @@ alias JSONHttpHeader {
   var %Error, %Com, %Header
 
   ;; Log the alias call
-  jfm_log -S /JSONHttpHeader $1-
+  jfm_log -I /JSONHttpHeader $1-
 
   ;; Call the Com interfave initializer
   if ($jfm_ComInit) {
@@ -394,12 +378,12 @@ alias JSONHttpHeader {
   ;; if an error occured, store the error in a global variable then log the error
   if (%Error) {
     set -eu0 %SReject/JSONForMirc/Error %Error
-    jfm_log -De Failed to store header: %Error
+    jfm_log -EeD %Error
   }
 
   ;; If no error, log the success
   else {
-    jfm_log -Ds Successfully stored header $+(',%header,: $3-,')
+    jfm_log -EsD Stored Header $+(',%header,: $3-,')
   }
 }
 
@@ -427,7 +411,7 @@ alias JSONHttpFetch {
   var %Switches = -, %Error, %Com, %BVar, %BUnset
 
   ;; Log the alias call
-  jfm_log -S /JSONHttpFetch $1-
+  jfm_log -I /JSONHttpFetch $1-
 
   ;; Remove switches from other input parameters
   if (-* iswm $1) {
@@ -522,12 +506,12 @@ alias JSONHttpFetch {
   ;; if an error occured, store the error in a global variable then log the error
   if (%Error) {
     set -eu0 %SReject/JSONForMirc/Error %Error
-    jfm_log -De Unable to retreive and parse HTTP data: %Error
+    jfm_log -EeD %Error
   }
 
   ;; Otherwise log the success
   else {
-    jfm_log -Ds HTTP data retrieved and parsed
+    jfm_log -EsD Http Data retrieved
   }
 }
 
@@ -551,7 +535,7 @@ alias JSONClose {
   var %Switches, %Error, %Match, %Com, %x = 1
 
   ;; Log the alias call
-  jfm_log -S /JSONClose $1-
+  jfm_log -I /JSONClose $1-
 
   ;; Remove switches from other input parameters
   if (-* iswm $1) {
@@ -589,9 +573,6 @@ alias JSONClose {
     }
     %Match = /^JSON:\Q $+ %Match $+ \E(?:$|:)/i
 
-    ;; Increase the indent for log lines
-    jfm_log -i
-
     ;; Loop over all comes
     while (%x <= $com(0)) {
       %Com = $com(%x)
@@ -604,7 +585,7 @@ alias JSONClose {
         if ($timer(%Com)) {
           $+(.timer, %Com) off
         }
-        jfm_log -s Closed %Com
+        jfm_log Closed %Com
       }
 
       ;; Otherwise move on to the next com
@@ -624,7 +605,7 @@ alias JSONClose {
   ;; if an error occured, store the error in a global variable then log the error
   if (%error) {
     set -eu0 %SReject/JSONForMirc/Error %Error
-    jfm_log -De /JSONClose %Error
+    jfm_log -EeD /JSONClose %Error
   }
 
   ;; If no errors, decrease the indent for log lines
@@ -645,7 +626,7 @@ alias JSONList {
   var %x = 1, %i = 0
 
   ;; Log the alias call
-  jfm_log -S /JSONList $1-
+  jfm_log /JSONList $1-
 
   ;; loop over all open coms
   while ($com(%x)) {
@@ -662,9 +643,6 @@ alias JSONList {
   if (!%i) {
     echo $color(info) -a * No active JSON handlers
   }
-
-  ;; Decrease the indent for log lines
-  jfm_log -D
 }
 
 
@@ -713,6 +691,15 @@ alias JSONCompat {
 }
 
 
+
+
+
+;;======================================;;
+;;                                      ;;
+;;          PUBLIC IDENTIFIERS          ;;
+;;                                      ;;
+;;======================================;;
+
 ;; $JSON(@Name|Ref|N, [@file,] [@Members...]).@Prop
 ;;     Returns information pretaining to an open JSON handler
 alias JSON {
@@ -743,7 +730,7 @@ alias JSON {
   %x = 1
 
   ;; Log the alias call
-  jfm_log -S $!JSON( $+ %args $+ ) $+ $iif($len($prop), . $+ $prop)
+  jfm_log -I $!JSON( $+ %args $+ ) $+ $iif($len($prop), . $+ $prop)
 
   ;; If the alias was called without any inputs
   if (!$0) || ($0 == 1 && $1 == $null) {
@@ -788,7 +775,7 @@ alias JSON {
 
     ;; if @Name is 0 return the total number of JSON handlers
     if ($1 === 0) {
-      jfm_log -Ds %i
+      jfm_log -EsD
       return %i
     }
   }
@@ -919,7 +906,7 @@ alias JSON {
       %Call = $!com( $+ %com $+ ,walk,1,bool, $+ $iif(fuzzy == %Prefix, $true, $false) $+ %Params $+ ,dispatch* %ChildCom $+ )
 
       ;; log the call
-      jfm_log -i %call
+      jfm_log %call
 
       ;; Attempt to call the js-side's walk function: walk(isFuzzy, member, ...)
       ;; if an error occurs, store the error and skip to error handling
@@ -932,7 +919,7 @@ alias JSON {
       ;; and decrease the indent for log lines
       $+(.timer, %ChildCom) -o 1 0 JSONClose %ChildCom
       %Com = %ChildCom
-      jfm_log -d
+      jfm_log
     }
 
     ;; If in compatability mode, and a prop hasn't been specified, return the value
@@ -987,20 +974,12 @@ alias JSON {
     if (%Suffix == tofile) {
       bwrite %Output -1 -1 %Result
       bunset %Result
-      jfm_log -Ds %Output
-      return %Output
+      %Result = %Output
     }
 
     ;; if the tobvar suffix was specified, return the result bvar
-    elseif (%Suffix == tobvar) {
-      jfm_log -Ds %Result
-      return %Result
-    }
-
-    ;; otherwise return the result text, chopped to 4000 bytes
-    else {
-      jfm_log -Ds $bvar(%Result, 1, 4000).text
-      return $bvar(%Result, 1, 4000).text
+    elseif (%Suffix !== tobvar) {
+      %Result = $bvar(%Result, 1, 4000).text
     }
   }
 
@@ -1014,12 +993,17 @@ alias JSON {
   ;; If an error occured, store and log the error
   if (%Error) {
     set -u1 %SReject/JSONForMirc/Error %Error
-    jfm_log -De $!JSON %Error
+    jfm_log -EeD $!JSON %Error
+  }
+  else {
+    jfm_log -EsD %Result
+    return %Result
   }
 }
 
 
-;; $JSONForEach(@Name|Ref|N, command, @Members).fuzzy
+;; $JSONForEach(@Name|Ref|N, @command, @Members)[.fuzzy]
+;; $JSONForEach(@Name|Ref|N, @Command).walk
 alias JSONForEach {
 
   ;; Insure the alias was called as an identifier
@@ -1029,16 +1013,13 @@ alias JSONForEach {
   unset %SReject/JSONForMirc/Error
 
   ;; Local variable declarations
-  var %Error, %Log, %Call, %x = 0, %JSON, %Com, %Result = 0, %Child, %Name
+  var %Error, %Log, %Call, %x = 0, %JSON, %Com, %Result = 0, %Name
 
   ;; build log message and call parameter portion:
   ;;   log: $JSONForEach(@Name, @Command, members...)[@Prop]
-  ;;   call: ,forEach,1[,bool,$true|$false,bstr,$N,...]
+  ;;   call: ,forEach,1,bool,$true|$false,bool,$true|$false[,bstr,$N,...]
   %Log = $!JSONForEach(
-  %Call = ,forEach,1
-  if ($0 > 2) {
-    %Call = %Call $+ ,bool, $+ $iif($prop == fuzzy, $true, $false)
-  }
+  %Call = ,forEach,1,bool, $+ $iif(walk == $prop, $true, $false) $+ ,bool, $+ $iif(fuzzy == $prop, $true, $false)
   :next
   if (%x < $0) {
     inc %x
@@ -1050,7 +1031,7 @@ alias JSONForEach {
   }
 
   ;; Log the alias call
-  jfm_log -S $left(%Log, -1) $+ $chr(41) $+ $iif($prop !== $null, . $+ $v1)
+  jfm_log -I $left(%Log, -1) $+ $chr(41) $+ $iif($prop !== $null, . $+ $v1)
 
   ;; Validate inputs
   if ($0 < 2) {
@@ -1059,75 +1040,115 @@ alias JSONForEach {
   elseif ($1 == 0) {
     %Error = INVALID_HANDLER
   }
-  elseif ($prop && $prop !== fuzzy) {
+  elseif ($prop !== $null && $prop !== walk && $prop !== fuzzy) {
     %Error = INVALID_PROPERTY
   }
-  elseif ($JSON($1)) {
-    %JSON = $v1
+  elseif ($0 > 2 && $prop == walk) {
+    %Error = PARAMETERS_NOT_APPLICABLE
+  }
+  elseif (!$1 || $1 == 0 || !$regex($1, /^(?:(?:JSON:[^?:*]+(?::\d+)*)?|([^?:*]+))$/i)) {
+    %Error = NAME_INVALID
+  }
+  else {
 
-    ;; Get an available com name based on the input com's name
-    %x = $ticks
-    :next2
-    if ($com(%JSON $+ : $+ %x)) {
-      inc %x
-      goto next2
+    ;; deduce json handle
+    ;; this could be done by calling $JSON() but this way is much faster
+    if (JSON:?* iswm $1) {
+      %JSON = $com($1)
     }
-    %Com = %JSON $+ : $+ %x
-
-    ;; Build comcall: $com(com_name,forEach,1,[call_parameters],dispatch* new_com)
-    %Call = $!com( $+ %JSON $+ %Call $+ ,dispatch* %Com $+ )
-
-    ;; Make the com call and check for errors
-    if (!$(%Call, 2) || $comerr || !$com(%com)) {
-      %Error = $jfm_GetError
+    elseif ($regex($1, /^\d+$/i)) {
+      %x = 1
+      %JSON = 0
+      while ($com(%x)) {
+        if ($regex($1, /^JSON:[^?*:]+$/)) {
+          inc %JSON
+          if (%JSON == $1) {
+            %JSON = $com(%x)
+            break
+          }
+          elseif (%x == $com(0)) {
+            %JSON = $null
+          }
+        }
+        inc %x
+      }
+    }
+    else {
+      %JSON = $com($1)
     }
 
-    ;; Successfully called
+
+    if (!%JSON) {
+      %Error = HANDLE_NOT_FOUND
+    }
     else {
 
-      ;; start a timer to close the com
-      .timer -m 1 0 JSONClose $unsafe(%com)
+      ;; Get an available com name based on the input com's name
+      %x = $ticks
+      :next2
+      if ($com(%JSON $+ : $+ %x)) {
+        inc %x
+        goto next2
+      }
+      %Com = %JSON $+ : $+ %x
 
-      ;; check length
-      if (!$com(%Com, length, 2) || $comerr) {
+      ;; Build com call: $com(com_name,forEach,1,[call_parameters],dispatch* new_com)
+      %Call = $!com( $+ %JSON $+ %Call $+ ,dispatch* %Com $+ )
+
+      ;; log the call
+      jfm_log %call
+
+      ;; Make the com call and check for errors
+      if (!$(%Call, 2) || $comerr || !$com(%Com)) {
         %Error = $jfm_GetError
       }
 
-      elseif ($com(%com).result) {
-        %Result = $v1
-        %Child = $ticks
-        %x = 0
+      ;; Successfully called
+      else {
 
-        ;; Loop over each item in the returned list
-        while (%x < %Result) {
+        ;; start a timer to close the com
+        .timer -m 1 0 JSONClose $unsafe(%com)
 
-          ;; get a name to use for the child com
-          :next3
-          if ($com(%Com $+ : $+ %Child)) {
-            inc %child
-            goto next3
+        ;; check length
+        if (!$com(%Com, length, 2) || $comerr) {
+          %Error = $jfm_GetError
+        }
+
+        elseif ($com(%Com).result) {
+          %Result = $v1
+          %x = 0
+
+          ;; Loop over each item in the returned list
+          while (%x < %Result) {
+
+            ;; get a name to use for the child com
+            %name = $ticks
+            :next3
+            if ($com(%Com $+ : $+ %Name)) {
+              inc %Name
+              goto next3
+            }
+            %Name = %Com $+ : $+ %Name
+
+            ;; Attempt to get a reference to the nTH item and then check for errors
+            if (!$com(%Com, %x, 2, dispatch* %Name) || $comerr || !$com(%Name)) {
+              %Error = $jfm_GetError
+              break
+            }
+
+            ;; if successful, start a timer to close the com and then call the specified command
+            else {
+              jfm_log -I Calling $iif(/ $+ * !iswm $2, /) $+ $2 %Name
+              $+(.timer, %Name) -m 1 0 JSONClose $unsafe(%Name)
+              $2 %Name
+              jfm_log -D
+            }
+
+            inc %x
           }
-          %Name = %Com $+ : $+ %Child
-
-          ;; Attempt to get a reference to the nTH item and then check for errors
-          if (!$com(%Com, %x, 2, dispatch* %Name) || $comerr || !$com(%Name)) {
-            %Error = $jfm_GetError
-            break
-          }
-
-          ;; if successful, start a timer to close the com and then call the specified command
-          else {
-            $+(.timer, %Name) -m 1 0 JSONClose $unsafe(%Name)
-            $2 %Name
-          }
-
-          inc %x
         }
       }
     }
-  }
-  else {
-    %Error = INVALID_HANDLER
   }
 
   ;; Handle Errors
@@ -1143,20 +1164,57 @@ alias JSONForEach {
       .comclose $v1
     }
     set -u1 %SReject/JSONForMirc/Error %Error
-    jfm_log -De Error: %Error
+    jfm_log -EeD %Error
   }
 
   ;; Successful, return the number of results looped over
   else {
-    jfm_log -Ds Result: %Result
+    jfm_log -EsD %Result
     return %Result
   }
 }
 
 
-;; Todo: $JSONPath(@Name, N)
+;; $JSONPath(@Name, N)
 ;;    Returns information related to a handler's path result
+alias JSONPath {
+  ;; to do
+}
 
+
+;; $JSONError
+;;     Returns any error the last call to /JSON* or $JSON() raised
+alias JSONError {
+  if ($isid) {
+    return %SReject/JSONForMirc/Error
+  }
+}
+
+
+;; $JSONVersion(@Short)
+;;     Returns script version information
+;;
+;;     @Short - Any text
+;;         Returns the short version
+alias JSONVersion {
+  if ($isid) {
+    var %ver = 1.0.1006
+    if ($0) {
+      return %ver
+    }
+    return SReject/JSONForMirc v $+ %ver
+  }
+}
+
+
+
+
+
+;;==============================================;;
+;;                                              ;;
+;;          PUBLIC COMMAND+IDENTIFIERS          ;;
+;;                                              ;;
+;;==============================================;;
 
 ;; /JSONDebug @State
 ;;     Changes the current debug state
@@ -1250,7 +1308,7 @@ alias JSONDebug {
     else {
       echo $color(info2) @SReject/JSONForMirc/Log mIRC v $+ $version $iif($beta, beta $v1) $bits $+ bit
     }
-    echo $color(info2) @SReject/JSONForMirc/Log $JSONVersion
+    echo $color(info2) @SReject/JSONForMirc/Log $JSONVersion $iif($JSONCompat, [CompatMode], [NormalMode])
     echo $color(info2) @SReject/JSONForMirc/Log -
   }
 
@@ -1261,6 +1319,15 @@ alias JSONDebug {
 }
 
 
+
+
+
+;;===================================;;
+;;                                   ;;
+;;          PRIVATE ALIASES          ;;
+;;                                   ;;
+;;===================================;;
+
 ;; $jfm_TmpBVar
 ;;     Returns the name of a not-in-use temporarily bvar
 alias -l jfm_TmpBVar {
@@ -1269,13 +1336,12 @@ alias -l jfm_TmpBVar {
   var %n = $ticks
 
   ;; Log the alias call
-  jfm_log -i $!jfm_TmpBVar
+  jfm_log -I $!jfm_TmpBVar
 
   ;; loop until a bvar that isn't in use is found
   :next
   if (!$bvar(&SReject/JSONForMirc/Tmp $+ %n)) {
-    jfm_log -isd Returning: &SReject/JSONForMirc/Tmp $+ %n
-    jfm_log -d
+    jfm_log -EsD &SReject/JSONForMirc/Tmp $+ %n
     return &SReject/JSONForMirc/Tmp $+ %n
   }
   inc %n
@@ -1295,12 +1361,11 @@ alias -l jfm_ComInit {
   var %Error, %js = $jfm_tmpbvar, %s = jfm_badd %js
 
   ;; Log the alias call
-  jfm_log -i $!jfm_ComInit
+  jfm_log -I $!jfm_ComInit
 
   ;; If the JS Shell and engine are already open, log that the com is initialized and return
   if ($com(SReject/JSONForMirc/JSONShell) && $com(SReject/JSONForMirc/JSONEngine)) {
-    jfm_log -isd initialized
-    jfm_log -d
+    jfm_log -EsD Already Initialized
     return
   }
 
@@ -1351,12 +1416,6 @@ alias -l jfm_ComInit {
     %Error = Unable to get jScript engine reference
   }
 
-  ;; If all attempts succeeded, log the success
-  else {
-    jfm_log -isd Successfully initialized
-    jfm_log -d
-  }
-
   ;; Handle errors
   :error
   if ($error) {
@@ -1372,9 +1431,11 @@ alias -l jfm_ComInit {
     if ($com(SReject/JSONForMirc/JSONShell)) {
       .comclose $v1
     }
-    jfm_log -ied Error: %Error
-    jfm_log -d
+    jfm_log -EeD %Error
     return %Error
+  }
+  else {
+    jfm_log -EsD Successfully initialized
   }
 }
 
@@ -1390,7 +1451,7 @@ alias -l jfm_GetError {
   var %Error = UNKNOWN
 
   ;; log the alias call
-  jfm_log -i $!jfm_GetError
+  jfm_log -I $!jfm_GetError
 
   ;; retrieve the errortext property from the shell com
   if ($com(SReject/JSONForMirc/JSONShell).errortext) {
@@ -1417,8 +1478,7 @@ alias -l jfm_GetError {
   }
 
   ;; log and return the error
-  jfm_log -isd %Error
-  jfm_log -d
+  jfm_log -EsD %Error
   return %Error
 }
 
@@ -1447,27 +1507,26 @@ alias -l jfm_Create {
   if (!$isid) return
 
   ;; Local variable declaration
-  var %wait = $iif(1 & $4, $true, $false), %noParse = $iif(2 & $4, $true, $false), %result
+  var %wait = $iif(1 & $4, $true, $false), %noParse = $iif(2 & $4, $true, $false), %Error
 
   ;; Log the alias call
-  jfm_log -i $!jfm_create( $+ $1 $+ , $+ $2 $+ , $+ $3 $+ , $+ $4)
+  jfm_log -I $!jfm_create( $+ $1 $+ , $+ $2 $+ , $+ $3 $+ , $+ $4)
 
   ;; Attempt to create the json handler and if an error occurs retrieve the error, log it and return it
   if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, $2, &bstr, $3, bool, %noParse, dispatch* $1) || $comerr || !$com($1)) {
-    %Result = $jfm_GetError
-    jfm_log -ied %Result
+    %Error = $jfm_GetError
   }
 
   ;; Attempt to call the parse method if the handler should not wait for the http request
   elseif ($2 !== http || ($2 == http && !%wait)) && (!$com($1, parse, 1)) {
-    %Result = $jfm_GetError
-    jfm_log -ied %Result
+    %Error = $jfm_GetError
   }
 
-  if (%error) {
-    jfm_log -d
+  if (%Error) {
+    jfm_log -EeD %Error
+    return %Error
   }
-  return %Result
+  jfm_log -EsD Created $1
 }
 
 
@@ -1487,7 +1546,7 @@ alias -l jfm_Create {
 alias -l jfm_Exec {
 
   ;; local variable declaration
-  var %Args, %Index = 1, %value, %Result, %Params
+  var %Args, %Index = 1, %Value, %Params, %Error
 
   ;; cleanup from previous call
   unset %SReject/JSONForMirc/Exec
@@ -1495,10 +1554,10 @@ alias -l jfm_Exec {
   ;; Loop over inputs, storing them in %args(for logging), and %params(for com calling)
   :args
   if (%Index <= $0) {
-    %value = $($ $+ %index, 2)
+    %Value = $($ $+ %index, 2)
     %Args = %Args $+ $iif($len(%Args), $chr(44)) $+ $($ $+ %Index, 2)
     if (%Index >= 3) {
-      if ($prop == fromBvar && $regex(%value, /^& (&\S+)$/)) {
+      if ($prop == fromBvar && $regex(%Value, /^& (&\S+)$/)) {
         %Params = %Params $+ ,&bstr, $+ $regml(1)
       }
       else {
@@ -1508,27 +1567,24 @@ alias -l jfm_Exec {
     inc %Index
     goto args
   }
-  jfm_log -i $!jfm_Exec( $+ %Args $+ )
+  %Params = $!com($1,$2,1 $+ %Params $+ )
 
-  ;; Build the com call
-  %params = $!com($1,$2,1 $+ %Params $+ )
+  ;; Log the call
+  jfm_log -I $!jfm_Exec( $+ %Args $+ )
 
   ;; Attempt the com call and if an error occurs
+  ;;   retrieve the error, log the error, and return it
   if (!$(%Params, 2) || $comerr) {
+    %Error = $jfm_GetError
+    jfm_log -EeD %Error
 
-    ;; retrieve the error, store it in result, log the error, and return it
-    %Result = $jfm_GetError
-    jfm_log -ed Error: %Result
-    return %Result
   }
-
   ;; otherwise create a temp bvar, store the result in the the bvar
-  set -u1 %SReject/JSONForMirc/Exec $jfm_tmpbvar
-  noop $com($1, %SReject/JSONForMirc/Exec).result
-
-  ;; log the result
-  jfm_log -isd Result stored in %SReject/JSONForMirc/Exec
-  jfm_log -d
+  else {
+    set -u1 %SReject/JSONForMirc/Exec $jfm_tmpbvar
+    noop $com($1, %SReject/JSONForMirc/Exec).result
+    jfm_log -EsD Result stored in %SReject/JSONForMirc/Exec
+  }
 }
 
 
@@ -1537,10 +1593,7 @@ alias -l jfm_Exec {
 ;;
 ;; When debug is disabled
 ;;    the /jfm_log alias below this group is called
-#SReject/JSONForMirc/Log off
-
-
-
+;;
 ;; /jfm_log -dDeisS @message
 ;;     Logs debug messages
 ;;
@@ -1555,13 +1608,14 @@ alias -l jfm_Exec {
 ;;
 ;;     @Message - optional
 ;;         The message to be logged
+#SReject/JSONForMirc/Log on
 alias -l jfm_log {
 
   ;; Insure the alias was called as a command
   if ($isid) return
 
   ;; Local variable declartion
-  var %switches = -, %Prefix
+  var %switches, %Prefix ->, %Color = 03, %indent
 
   ;; if the debug window is not open, disable logging and unset the log indent variable
   if (!$window(@SReject/JSONForMirc/Log)) {
@@ -1576,63 +1630,47 @@ alias -l jfm_log {
       tokenize 32 $2-
     }
 
-    ;; if the -S switch was specified, reset the indent count and indicate the message is a success message
-    if (S isincs %Switches) {
-      set -u1 %SReject/JSONForMirc/LogIndent 0
-      %Prefix = 13->
+    if (i isincs %switches) {
+      inc -u1 %SReject/JSONForMirc/LogIndent
     }
 
-    ;; If the -D switche was specified, reset the indent count
-    if (D isincs %Switches) {
-      set -u1 %SReject/JSONForMirc/LogIndent 1
-    }
-
-    ;; if the -i switch was specified, increase the indent count
-    if (i isincs %Switches) {
-      inc -u0 %SReject/JSONForMirc/LogIndent
-    }
-
-    ;; if a log message has been specified
     if ($0) {
 
-      ;; if the -e switch has been specified, the message is an error
-      if (e isincs %Switches) {
-        %Prefix = 04->
+      ;; Deduce the message prefix
+      if (E isincs %Switches) {
+        %Prefix = <-
       }
 
-      ;; if the -s switch has been specified, the message is a success
-      elseif (s isincs %Switches) {
-        %Prefix = 12->
+      ;; Deduce the prefix color
+      if (e isincs %switches) {
+        %Color = 04
+      }
+      elseif (s isincs %switches) {
+        %Color = 12
+      }
+      elseif (l isincs %switches) {
+        %Color = 13
       }
 
-      ;; otherwise the message is info
-      else {
-        %Prefix = 03->
-      }
+      ;; Compile the prefix
+      %Prefix = $chr(3) $+ %Color $+ %Prefix $+ $chr(15)
 
-      ;; Log the line to the debug window
-      aline @SReject/JSONForMirc/Log $str($chr(32) $+ , $calc(%SReject/JSONForMirc/LogIndent *4)) $+ %Prefix $1-
+      ;; Compile the indent
+      %Indent = $str($chr(15) $+ $chr(32), $calc(%SReject/JSONForMirc/LogIndent *4))
+
+      ;; Add the log message to the log window
+      aline @SReject/JSONForMirc/Log %Indent $+ %Prefix $1-
     }
 
-    ;; if the -D switch was specified, unset the indent count variable
-    if (D isincs %Switches) {
-      unset %SReject/JSONForMirc/LogIndent
+    if (I isincs %switches) {
+      inc -u1 %SReject/JSONForMirc/LogIndent 1
     }
-
-    ;; if the -d switch was specified, decrease the indent count variable
-    elseif (d isincs %Switches) {
-      if (%SReject/JSONForMirc/LogIndent > 0) {
-        dec -u0 %SReject/JSONForMirc/LogIndent
-      }
-      else {
-        set -u1 %SReject/JSONForMirc/LogIndent 0
-      }
+    if (D isincs %switches && %SReject/JSONForMirc/LogIndent > 0) {
+      dec -u1 %SReject/JSONForMirc/LogIndent 1
     }
   }
 }
 #SReject/JSONForMirc/Log end
-
-;; called when debugging is disabled
 alias -l jfm_log noop
 
 
@@ -1688,7 +1726,7 @@ alias -l jfm_badd {
 
 
 ;; /jfm_jscript @Bvar
-;;     reads the "JSON For Mirc.js" file and outputs the contents to the specified bvar
+;;     Fills the specified bvar with the required jscript
 alias -l jfm_jscript {
   var %file = $qt($scriptdirJSON For Mirc.js)
   bread $qt(%file) 0 $file(%file).size $1

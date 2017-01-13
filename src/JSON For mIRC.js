@@ -300,38 +300,62 @@
             throw new Error('REFERENCE_NOT_FOUND');
         },
 
-        forEach: function () {
+        forEach: function (walk, fuzzy) {
             var self = parsed(this),
-                type = self.type(),
                 args = Array.prototype.slice.call(arguments),
-                res = [];
+                path = self._json.path.slice(0),
+                type = self.type(),
+                res = [],
+                maxDepth = args[0] ? Infinity : 1;
 
-            function resultAdd(member) {
-                var path = self._json.path.slice(),
-                    ref;
-                path.push(member);
-                ref = new JSONWrapper(self, {
-                    path: path,
-                    value: self._json.value[member]
-                });
-                try {
-                    if (args.length > 0) {
-                        ref = ref.walk.apply(ref, args.slice());
-                    }
-                    res.push(ref);
-                } catch (ignore) { }
+            args.pop(0);
+
+            function addResult(item, path) {
+                var ref = new JSONWrapper(self, {
+                        path: path,
+                        value: item
+                    }),
+                    params = args.slice(0);
+
+                if (maxDepth !== Infinity && args.length > 1) {
+                    ref = ref.walk.apply(ref, params)
+                }
+                res.push(ref);
             }
-            if (type === 'object') {
-                Object.keys(self._json.value).forEach(resultAdd);
-                return res;
+
+            function walk(item, path, depth) {
+                var type = getType(item);
+
+                depth += 1;
+                path = path.slice(0);
+
+                if (depth > maxDepth) {
+                    addResult(item, path);
+
+                } else if (type === 'object') {
+                    Object.keys(item).forEach(function (key) {
+                        var kpath = path.slice(0);
+                        kpath.push(key)
+                        walk(item[key], kpath, depth);
+                    });
+
+                } else if (type === 'array') {
+                    item.forEach(function (value, index) {
+                        var kpath = path.slice(0);
+                        kpath.push(index);
+                        walk(value, kpath, depth);
+                    });
+
+                } else {
+                    addResult(item, path);
+                }
             }
-            if (type === 'array') {
-                self._json.value.forEach(function (ignore, index) {
-                    resultAdd(index);
-                });
-                return res;
+
+            if (type !== 'object' && type !== 'array') {
+                throw new Error('ILLEGAL_REFERENCE');
             }
-            throw new Error('ILLEGAL_REFERENCE');
+            walk(self._json.value, path, 1);
+            return res;
         },
 
         type: function () {
