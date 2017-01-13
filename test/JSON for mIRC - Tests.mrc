@@ -2,12 +2,9 @@
 
 ;; /JSONTest
 alias JSONTest {
-  var %x = 1, %fail, %debug = $JSONDebug
+  var %x = 1, %fail
   JSONShutDown
-  if (%debug) {
-    JSONDebug on
-    window -n @SReject/JSONForMirc/log
-  }
+  JSONDebug on
   while ($isalias(jfm_test $+ %x)) {
     tokenize 32 $jfm_test [ $+ [ %x ] ]
     if (!$1) {

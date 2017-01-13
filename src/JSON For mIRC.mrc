@@ -14,6 +14,19 @@ alias JSONUrlGet {
 }
 #SReject/JSONForMirc/CompatMode end
 
+;; On load, check to make sure mIRC/AdiIRC is of an applicable version
+on *:LOAD:{
+  if ($~adiircexe) {
+    if ($version < 2.6) {
+      echo -a [JSON For mIRC] AdiIRC v2.6 or later is required
+    }
+  }
+  elseif ($version < 7.44) {
+    echo -a [JSON For mIRC] mIRC v7.44 or later is required
+    .unload -rs $qt($script)
+  }
+}
+
 
 ;; Cleanup debugging when the debug window closes
 on *:CLOSE:@SReject/JSONForMirc/Log:{

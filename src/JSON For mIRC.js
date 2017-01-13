@@ -222,12 +222,17 @@
             try {
                 this._state = 'done';
                 if (this._type === 'http') {
-                    var request = new ActiveXObject(JSONWrapper.HTTP);
-                    request.open(this._http.method, this._http.url, false);
-                    this._http.headers.forEach(function (header) {
-                        request.setRequestHeader(header[0], header[1]);
-                    });
-                    request.send(this._http.data);
+                    try {
+                      var request = new ActiveXObject(JSONWrapper.HTTP);
+                      request.open(this._http.method, this._http.url, false);
+                      this._http.headers.forEach(function (header) {
+                          request.setRequestHeader(header[0], header[1]);
+                      });
+                      request.send(this._http.data);
+                    } catch (e) {
+                        e.message = "HTTP: " + e.message;
+                        throw e;
+                    }
                     this._http.response = request;
                     if (!this._parse) {
                         return this;
