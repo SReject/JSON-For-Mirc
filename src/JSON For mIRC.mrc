@@ -1284,7 +1284,7 @@ alias JSONError {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %ver = 1.0.1006
+    var %ver = 1.0.1007
     if ($0) {
       return %ver
     }
@@ -1694,7 +1694,7 @@ alias -l jfm_Exec {
 ;;
 ;;     @Message - optional
 ;;         The message to be logged
-#SReject/JSONForMirc/Log on
+#SReject/JSONForMirc/Log off
 alias -l jfm_log {
 
   ;; Insure the alias was called as a command
