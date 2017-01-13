@@ -19,7 +19,7 @@ Requirements:
 =============
 > Mirc: 7.44 or later, or AdiIRC 2.4 or later  
 >
-> Windows 2000 or later (This will not work under wine due to lack of COM support)  
+> Windows 2000 or later (This will not work under wine due to lack of COM support). This script may not be able to access certain https endpoints if it is ran under older supported operating systems  
 >
 > If you are using AdiIRC 64bit, you will need to install the [tsc.dll](http://www.eonet.ne.jp/~gakana/tablacus/scriptcontrol_en.html) for this script to work  
   
