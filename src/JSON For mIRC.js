@@ -1,7 +1,7 @@
 /*jslint for:true*/
 /*globals ActiveXObject, JSONCreate*/
 (function() {
-    
+
     // returns the type of an input
     function getType(obj) {
         if (obj === null) return 'null';
@@ -12,7 +12,7 @@
     function hasOwnProp(obj, property) {
         return Object.prototype.hasOwnProperty.call(obj, property);
     }
-    
+
     // Checks if an instance has been parsed
     // if not, an error is thrown otherwise the instance is returned
     function parsed(self) {
@@ -85,7 +85,7 @@
         } catch (e) {}
         throw new Error("INVALID_JSON");
     };
-    
+
     // es5 JSON.stringify polyfill
     JSON.stringify = function (value) {
         var type = getType(value),
@@ -125,8 +125,7 @@
         });
         return '{' + output.join(',') + '}';
     };
-    
-    
+
     HTTPObject = ['MSXML2.SERVERXMLHTTP.6.0', 'MSXML2.SERVERXMLHTTP.3.0', 'MSXML2.SERVERXMLHTTP'].find(function (xhr) {
         try {
             var test = new ActiveXObject(xhr);
@@ -154,8 +153,7 @@
             method: 'GET',
             url: '',
             headers: [],
-            data: null,
-            timeout: 85000
+            timeout: 30000
         };
     }
 
@@ -220,35 +218,81 @@
             return this.httpHead() + '\r\n\r\n' + this.httpBody();
         },
 
+        // Retrieves and parses input json
         parse: function () {
+
+            // overwrite the parse function so subsequent calls returns in an error
             this.parse = function () {
                 throw new Error('PARSE_NOT_PENDING');
             };
+
+            this._state = 'done';
             try {
-                this._state = 'done';
+                // if the type is an http request
                 if (this._type === 'http') {
                     try {
-                      var request = new ActiveXObject(HTTPObject);
-                      request.open(this._http.method, this._http.url, false);
-                      this._http.headers.forEach(function (header) {
-                          request.setRequestHeader(header[0], header[1]);
-                      });
-                      request.send(this._http.data);
+                        var setTypeHeader   = false,
+                            setLengthHeader = false,
+                            request         = new ActiveXObject(HTTPObject);
+
+                        // Create the request
+                        request.setTimeouts(30000, 60000, 60000, 60000);
+                        request.open(this._http.method, this._http.url, false);
+
+                        // Apply headers
+                        this._http.headers.forEach(function (header) {
+                            request.setRequestHeader(header[0], header[1]);
+                            if (header[0].toLowerCase() === "content-type") {
+                                setTypeHeader = true
+                            }
+                            if (header[0].toLowerCase() === "content-length") {
+                                setLengthHeader = true;
+                            }
+                        });
+
+                        // if there's data to be sent, apply default headers as needed
+                        if (this._http.data !== undefined) {
+                            if (!setTypeHeader) {
+                                request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                            }
+                            if (!setLengthHeader) {
+                                if (this._http.data == null) {
+                                    request.setRequestHeader("Content-Length", 0);
+                                } else {
+                                    request.setRequestHeader("Content-Length", String(data).length);
+                                }
+                            }
+                        }
+
+                        // make the request
+                        request.send(this._http.data);
+
+                        // store the response
+                        this._http.response = request;
+
+                        // if the response isn't to be parsed, return the handle instance
+                        if (!this._parse) {
+                            return this;
+                        }
+
+                        // otherwise store the response as the input data to be parsed
+                        this._input = request.responseText;
+
+                    // handle http errors
                     } catch (e) {
                         e.message = "HTTP: " + e.message;
                         throw e;
                     }
-                    this._http.response = request;
-                    if (!this._parse) {
-                        return this;
-                    }
-                    this._input = request.responseText;
                 }
+
+                // parse the input json and return the handle instance
                 this._json = {
                     path: [],
                     value: JSON.parse(this._input)
                 };
                 return this;
+
+            // Store any errors in the instance and rethrow the error
             } catch (e) {
                 this._error = e.message;
                 throw e;
@@ -375,7 +419,7 @@
         pathLength: function () {
             return parsed(this)._json.path.length;
         },
-        
+
         pathAtIndex: function (index) {
             return parsed(this)._json.path[index];
         },
@@ -425,8 +469,7 @@
                     url: this._http.url,
                     method: this._http.method,
                     headers: this._http.headers,
-                    data: this._http.data,
-                    readAs: this._http.readAs
+                    data: this._http.data
                 },
                 isChild: this._isChild,
                 json: this._json

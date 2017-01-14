@@ -1501,9 +1501,14 @@ alias -l jfm_ComInit {
   elseif (!$com(SReject/JSONForMirc/JSONShell, language, 4, bstr, jscript) || $comerr) {
     %Error = Unable to set ScriptControl's language
   }
+  
+  ;; attempt to set the com's AllowUI property
+  elseif (!$com(SReject/JSONForMirc/JSONShell, AllowUI, 4, bool, $false) || $comerr) {
+    %Error = Unable to set ScriptControl's AllowUI property
+  }
 
   ;; attempt to set the com's timeout property
-  elseif (!$com(SReject/JSONForMirc/JSONShell, timeout, 4, bstr, 90000) || $comerr) {
+  elseif (!$com(SReject/JSONForMirc/JSONShell, timeout, 4, integer, -1) || $comerr) {
     %Error = Unable to set ScriptControl's timeout to 90seconds
   }
 
