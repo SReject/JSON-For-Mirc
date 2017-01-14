@@ -423,7 +423,7 @@ alias JSONHttpFetch {
   unset %SReject/JSONForMirc/Error
 
   ;; Local variable declarations
-  var %Switches = -, %Error, %Com, %BVar, %BUnset
+  var %Switches, %Error, %Com, %BVar, %BUnset
 
   ;; Log the alias call
   jfm_log -I /JSONHttpFetch $1-
@@ -440,7 +440,7 @@ alias JSONHttpFetch {
   }
 
   ;; Basic input validatition
-  if ($0 == 0 || (%Switches != - && $0 < 2)) {
+  if ($0 == 0 || (%Switches != $null && $0 < 2)) {
     %Error = PARAMETER_MISSING
   }
 
