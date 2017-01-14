@@ -220,7 +220,7 @@ alias JSONOpen {
   ;;     Start a timer to close the handler script-execution finishes
   ;;     Log the error
   if (%Error) {
-    set -eu0 %SReject/JSONForMirc/Error %Error
+    set -u1 %SReject/JSONForMirc/Error %Error
     if (%Com && $com(%Com)) {
       .timer $+ %Com -iom 1 0 JSONClose $unsafe($1)
     }
@@ -392,7 +392,7 @@ alias JSONHttpHeader {
 
   ;; if an error occured, store the error in a global variable then log the error
   if (%Error) {
-    set -eu0 %SReject/JSONForMirc/Error %Error
+    set -u1 %SReject/JSONForMirc/Error %Error
     jfm_log -EeD %Error
   }
 
@@ -520,7 +520,7 @@ alias JSONHttpFetch {
 
   ;; if an error occured, store the error in a global variable then log the error
   if (%Error) {
-    set -eu0 %SReject/JSONForMirc/Error %Error
+    set -u1 %SReject/JSONForMirc/Error %Error
     jfm_log -EeD %Error
   }
 
@@ -619,7 +619,7 @@ alias JSONClose {
 
   ;; if an error occured, store the error in a global variable then log the error
   if (%Error) {
-    set -eu0 %SReject/JSONForMirc/Error %Error
+    set -u1 %SReject/JSONForMirc/Error %Error
     jfm_log -EeD /JSONClose %Error
   }
 
@@ -1271,7 +1271,7 @@ alias JSONPath {
 
   ;; If an error occured, store it then log the error
   if (%Error) {
-    set -u0 %SReject/JSONForMirc/Error %Error
+    set -u1 %SReject/JSONForMirc/Error %Error
     jfm_log -EeD %Error
   }
 
@@ -1567,7 +1567,7 @@ alias -l jfm_GetError {
   ;; attempt to retrieve the shell com's last error
   if ($com(SReject/JSONForMirc/JSONShell, Error, 2, dispatch* SReject/JSONForMirc/JSONShellError) && !$comerr && $com(SReject/JSONForMirc/JSONShellError) && $com(SReject/JSONForMirc/JSONShellError, Description, 2) && !$comerr) {
 
-    ;; retrieve the result and store it in %Rrror
+    ;; retrieve the result and store it in %Error
     if ($com(SReject/JSONForMirc/JSONShellError).result) {
       %Error = $v1
     }
