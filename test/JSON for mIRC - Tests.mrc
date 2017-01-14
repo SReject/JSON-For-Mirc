@@ -273,7 +273,7 @@ alias -l jfm_test51 {
   return $true $!JSON(jfm_testprops).String
 }
 alias -l jfm_test52 {
-  var %debug = {"state":"done","input":"{\"key\":\"value\"}","type":"text","error":false,"parse":true,"http":{"url":"","method":"GET","headers":[],"data":null},"isChild":false,"json":{"path":[],"value":{"key":"value"}}}
+  var %debug = {"state":"done","input":"{\"key\":\"value\"}","type":"text","error":false,"parse":true,"http":{"url":"","method":"GET","headers":[]},"isChild":false,"json":{"path":[],"value":{"key":"value"}}}
   if (%debug !== $JSON(jfm_testprops).Debug) return $false $!JSON(jfm_testprops).Debug == $v2
   return $true $!JSON(jfm_testprops).Debug
 }
