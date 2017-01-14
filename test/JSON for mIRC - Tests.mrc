@@ -5,6 +5,7 @@ alias JSONTest {
   var %x = 1, %fail
   JSONShutDown
   JSONDebug on
+  window -n @SReject/JSONForMirc/Log
   while ($isalias(jfm_test $+ %x)) {
     tokenize 32 $jfm_test [ $+ [ %x ] ]
     if (!$1) {
@@ -433,7 +434,7 @@ alias -l jfm_test77 {
 alias -l jfm_test78 {
   set -u0 %_jfm_test78_forEachTest $false
   var %res = $JSONForEach($JSON(jfm_testvalues, array), _jfm_test78_forEachTest)
-  if ($JSONError) return $false $!JSONForEach($JSON(jfm_testvalues, array), _jfm_test78_forEachTest)
+  if ($JSONError) return $false $!JSONForEach($JSON(jfm_testvalues, array), _jfm_test78_forEachTest) $+([,$v1,])
   if (%_jfm_test78_forEachTest) return $false $v1
   if (3 !== %res) return $false $!JSONForEach($JSON(jfm_testvalues, array), _jfm_test78_forEachTest) == $v2
   unset %_jfm_test78_forEachTest
@@ -471,4 +472,32 @@ alias -l jfm_test80 {
     return $false $!JSONVersion(short) == %res
   }
   return $true $!JSONVersion(short)
+}
+alias -l jfm_test81 {
+  set -u0 %_jfm_test81_forEachTest $false
+  var %res = $JSONForEach($JSON(jfm_testvalues, object), _jfm_test81_forEachTest)
+  if ($JSONError) return $false $!JSONForEach($JSON(jfm_testvalues, object), _jfm_test81_forEachTest) $+([,$v1,])
+  if (%_jfm_test81_forEachTest) return $false $v1
+  if (3 !== %res) return $false $!JSONForEach($JSON(jfm_testvalues, object), _jfm_test81_forEachTest) == $v2
+  unset %_jfm_test81_forEachTest
+  return $true $!JSONForEach($JSON(jfm_testvalues, object), _jfm_test81_forEachTest)
+}
+alias _jfm_test81_forEachTest {
+  if (!%_jfm_test81_forEachTest) {
+    if ($0 !== 1) {
+      set -u0 %_jfm_test81_forEachTest INVALID_PARAMETERS
+    }
+    elseif (!$com($1)) {
+      set -u0 %_jfm_test81_forEachTest COM_DOESNOT_EXIST
+    }
+    else {
+      var %res = $JSON($1).value
+      if ($jsonerror) {
+        set -u0 %_jfm_test81_forEachTest $v1
+      }
+      elseif (item* !iswm %Res) {
+        set -u0 %_jfm_test81_forEachTest $!JSON( $+ $1 $+ ).value == %Res
+      }
+    }
+  }
 }

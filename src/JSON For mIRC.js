@@ -1,34 +1,7 @@
 /*jslint for:true*/
 /*globals ActiveXObject, JSONCreate*/
 (function() {
-
-    // es5 .forEach() polyfill
-    Array.prototype.forEach = function (callback) {
-        for (var i = 0; i < this.length; i += 1) {
-            callback.call(this, this[i], i);
-        }
-    };
-
-    // es5 .find() polyfill
-    Array.prototype.find = function (callback) {
-        for (var i = 0; i < this.length; i += 1) {
-            if (callback.call(this, this[i])) {
-                return this[i];
-            }
-        }
-    };
-
-    // es5 .keys() polyfill
-    Object.keys = function (obj) {
-        var keys = [], key;
-        for (key in obj) {
-            if (hasOwnProp(obj, key)) {
-                keys.push(key);
-            }
-        }
-        return keys;
-    };
-
+    
     // returns the type of an input
     function getType(obj) {
         if (obj === null) return 'null';
@@ -39,61 +12,7 @@
     function hasOwnProp(obj, property) {
         return Object.prototype.hasOwnProperty.call(obj, property);
     }
-
-    // es5 JSON polyfill
-    (JSON = {}).parse = function(i) {
-        try {
-            i = String(i).replace(/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g, function(c) {
-                return '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4);
-            });
-            if (/^[\],:{}\s]*$/.test(i.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-                return eval('(' + i + ')');
-            }
-        } catch (e) {}
-        throw new Error("INVALID_JSON");
-    };
-    JSON.stringify = function (value) {
-        var type = getType(value),
-            output = '[';
-        if (value === undefined) {
-            return;
-        }
-        if (value === null) {
-            return 'null';
-        }
-        if (type === 'function') {
-            return;
-        }
-        if (type === 'number') {
-            return isFinite(value) ? value.toString() : 'null';
-        }
-        if (type === 'boolean') {
-            return value.toString();
-        }
-        if (type === 'string') {
-            return '"' + value.replace(/[\\"\u0000-\u001F\u2028\u2029]/g, function(chr) {
-                return {'"': '\\"', '\\': '\\\\', '\b': '\\b', '\f': '\\f', '\n': '\\n', '\r': '\\r', '\t': '\\t'}[chr] || '\\u' + (chr.charCodeAt(0) + 0x10000).toString(16).substr(1);
-            }) + '"';
-        }
-        if (type === 'array') {
-            value.forEach(function (item, index) {
-                item = JSON.stringify(item);
-                if (item) {
-                    output += (index ? ',' : '') + item;
-                }
-            });
-            return output + ']';
-        }
-        output = [];
-        Object.keys(value).forEach(function (key) {
-            var res = JSON.stringify(value[key]);
-            if (res) {
-                output.push(JSON.stringify(key) + ':' + res);
-            }
-        });
-        return '{' + output.join(',') + '}';
-    };
-
+    
     // Checks if an instance has been parsed
     // if not, an error is thrown otherwise the instance is returned
     function parsed(self) {
@@ -127,18 +46,110 @@
         return self._http;
     }
 
+    // es5 .forEach() polyfill
+    Array.prototype.forEach = function (callback) {
+        for (var i = 0; i < this.length; i += 1) {
+            callback.call(this, this[i], i);
+        }
+    };
 
+    // es6 .find() polyfill
+    Array.prototype.find = function (callback) {
+        for (var i = 0; i < this.length; i += 1) {
+            if (callback.call(this, this[i])) {
+                return this[i];
+            }
+        }
+    };
+
+    // es5 .keys() polyfill
+    Object.keys = function (obj) {
+        var keys = [], key;
+        for (key in obj) {
+            if (hasOwnProp(obj, key)) {
+                keys.push(key);
+            }
+        }
+        return keys;
+    };
+
+    // es5 JSON.parse polyfill
+    (JSON = {}).parse = function(i) {
+        try {
+            i = String(i).replace(/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g, function(c) {
+                return '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4);
+            });
+            if (/^[\],:{}\s]*$/.test(i.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+                return eval('(' + i + ')');
+            }
+        } catch (e) {}
+        throw new Error("INVALID_JSON");
+    };
+    
+    // es5 JSON.stringify polyfill
+    JSON.stringify = function (value) {
+        var type = getType(value),
+            output = '[';
+        if (value === undefined || type === 'function') {
+            return;
+        }
+        if (value === null) {
+            return 'null';
+        }
+        if (type === 'number') {
+            return isFinite(value) ? value.toString() : 'null';
+        }
+        if (type === 'boolean') {
+            return value.toString();
+        }
+        if (type === 'string') {
+            return '"' + value.replace(/[\\"\u0000-\u001F\u2028\u2029]/g, function(chr) {
+                return {'"': '\\"', '\\': '\\\\', '\b': '\\b', '\f': '\\f', '\n': '\\n', '\r': '\\r', '\t': '\\t'}[chr] || '\\u' + (chr.charCodeAt(0) + 0x10000).toString(16).substr(1);
+            }) + '"';
+        }
+        if (type === 'array') {
+            value.forEach(function (item, index) {
+                item = JSON.stringify(item);
+                if (item) {
+                    output += (index ? ',' : '') + item;
+                }
+            });
+            return output + ']';
+        }
+        output = [];
+        Object.keys(value).forEach(function (key) {
+            var res = JSON.stringify(value[key]);
+            if (res) {
+                output.push(JSON.stringify(key) + ':' + res);
+            }
+        });
+        return '{' + output.join(',') + '}';
+    };
+    
+    
+    HTTPObject = ['MSXML2.SERVERXMLHTTP.6.0', 'MSXML2.SERVERXMLHTTP.3.0', 'MSXML2.SERVERXMLHTTP'].find(function (xhr) {
+        try {
+            var test = new ActiveXObject(xhr);
+            return xhr;
+        } catch (ignore) {}
+    });
 
     function JSONWrapper(parent, json) {
         if (parent === undefined) {
             parent = {};
+        }
+        if (json === undefined) {
+            this._isChild = false;
+            this._json = parent._json || {};
+        } else {
+            this._isChild = true;
+            this._json = json;
         }
         this._state = parent._state || 'init';
         this._type = parent._type || 'text';
         this._parse = parent._parse === false ? false : true;
         this._error = parent._error || false;
         this._input = parent._input;
-        this._isChild = false;
         this._http = parent._http || {
             method: 'GET',
             url: '',
@@ -146,12 +157,6 @@
             data: null,
             timeout: 85000
         };
-        if (json === undefined) {
-            this._json = parent._json || {};
-        } else {
-            this._isChild = true;
-            this._json = json;
-        }
     }
 
     JSONWrapper.prototype = {
@@ -223,7 +228,7 @@
                 this._state = 'done';
                 if (this._type === 'http') {
                     try {
-                      var request = new ActiveXObject(JSONWrapper.HTTP);
+                      var request = new ActiveXObject(HTTPObject);
                       request.open(this._http.method, this._http.url, false);
                       this._http.headers.forEach(function (header) {
                           request.setRequestHeader(header[0], header[1]);
@@ -305,33 +310,29 @@
             throw new Error('REFERENCE_NOT_FOUND');
         },
 
-        forEach: function (walk, fuzzy) {
+        forEach: function () {
             var self = parsed(this),
                 args = Array.prototype.slice.call(arguments),
-                path = self._json.path.slice(0),
                 type = self.type(),
                 res = [],
                 maxDepth = args[0] ? Infinity : 1;
 
-            args.pop(0);
+            args.shift();
 
             function addResult(item, path) {
                 var ref = new JSONWrapper(self, {
                         path: path,
                         value: item
-                    }),
-                    params = args.slice(0);
+                    });
 
                 if (maxDepth !== Infinity && args.length > 1) {
-                    ref = ref.walk.apply(ref, params)
+                    ref = ref.walk.apply(ref, args.slice(0))
                 }
                 res.push(ref);
             }
 
             function walk(item, path, depth) {
                 var type = getType(item);
-
-                depth += 1;
                 path = path.slice(0);
 
                 if (depth > maxDepth) {
@@ -341,14 +342,14 @@
                     Object.keys(item).forEach(function (key) {
                         var kpath = path.slice(0);
                         kpath.push(key)
-                        walk(item[key], kpath, depth);
+                        walk(item[key], kpath, depth + 1);
                     });
 
                 } else if (type === 'array') {
                     item.forEach(function (value, index) {
                         var kpath = path.slice(0);
                         kpath.push(index);
-                        walk(value, kpath, depth);
+                        walk(value, kpath, depth +1);
                     });
 
                 } else {
@@ -359,7 +360,7 @@
             if (type !== 'object' && type !== 'array') {
                 throw new Error('ILLEGAL_REFERENCE');
             }
-            walk(self._json.value, path, 1);
+            walk(self._json.value, self._json.path.slice(0), 1);
             return res;
         },
 
@@ -441,13 +442,6 @@
             return JSON.stringify(result);
         }
     };
-
-    JSONWrapper.HTTP = ['MSXML2.SERVERXMLHTTP.6.0', 'MSXML2.SERVERXMLHTTP.3.0', 'MSXML2.SERVERXMLHTTP'].find(function (xhr) {
-        try {
-            var test = new ActiveXObject(xhr);
-            return xhr;
-        } catch (ignore) {}
-    });
 
     JSONCreate = function(type, source, noparse) {
         var self = new JSONWrapper();

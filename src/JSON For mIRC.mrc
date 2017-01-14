@@ -19,6 +19,7 @@ on *:LOAD:{
   if ($~adiircexe) {
     if ($version < 2.6) {
       echo -a [JSON For mIRC] AdiIRC v2.6 or later is required
+      .unload -rs $qt($script)
     }
   }
   elseif ($version < 7.44) {
@@ -220,7 +221,7 @@ alias JSONOpen {
   if (%Error) {
     set -eu0 %SReject/JSONForMirc/Error %Error
     if (%Com && $com(%Com)) {
-      $+(.timer, %com) 1 0 JSONClose $unsafe($1)
+      .timer $+ %Com -iom 1 0 JSONClose $unsafe($1)
     }
     jfm_log -EeD %Error
   }
@@ -229,7 +230,7 @@ alias JSONOpen {
   ;; and then log the successful handler creation
   else {
     if (d isincs %Switches) {
-      $+(.timer, %Com) -o 1 0 JSONClose $unsafe($1)
+      .timer $+ %Com -iom 1 0 JSONClose $unsafe($1)
     }
     jfm_log -EsD Created $1 (as com %Com $+ )
   }
@@ -486,7 +487,7 @@ alias JSONHttpFetch {
 
       ;; if the -f switch is specified, read the file's contents into the temp bvar
       elseif (f isincs %Switches) {
-        bread $qt($file($2-).longfn) 1 $file($2-).size %BVar
+        bread $qt($file($2-).longfn) 0 $file($2-).size %BVar
       }
 
       ;; if no switches were specified, store the @data in the temp bvar
@@ -596,7 +597,7 @@ alias JSONClose {
         ;; Close the com, turn off timers associated to the com and log the close
         .comclose %Com
         if ($timer(%Com)) {
-          $+(.timer, %Com) off
+          .timer $+ %Com off
         }
         jfm_log Closed %Com
       }
@@ -840,7 +841,7 @@ alias JSON {
     }
 
     ;; if the suffix is 'tofile', validate the 2nd parameter
-    if (%Suffix, == tofile) {
+    if (%Suffix == tofile) {
       if ($0 < 2) {
         %Error = INVALID_PARAMETERS
       }
@@ -930,7 +931,7 @@ alias JSON {
 
       ;; otherwise, close the child com after script execution, update the %Com variable to indicate the child com
       ;; and decrease the indent for log lines
-      $+(.timer, %ChildCom) -o 1 0 JSONClose %ChildCom
+      .timer $+ %ChildCom -iom 1 0 JSONClose %ChildCom
       %Com = %ChildCom
       jfm_log
     }
@@ -1120,7 +1121,7 @@ alias JSONForEach {
       else {
 
         ;; start a timer to close the com
-        .timer -m 1 0 JSONClose $unsafe(%com)
+        .timer $+ %Com -iom 1 0 JSONClose $unsafe(%Com)
 
         ;; check length
         if (!$com(%Com, length, 2) || $comerr) {
@@ -1152,7 +1153,7 @@ alias JSONForEach {
             ;; if successful, start a timer to close the com and then call the specified command
             else {
               jfm_log -I Calling $iif(/ $+ * !iswm $2, /) $+ $2 %Name
-              $+(.timer, %Name) -m 1 0 JSONClose $unsafe(%Name)
+              .timer $+ %Name -iom 1 0 JSONClose $unsafe(%Name)
               $2 %Name
               jfm_log -D
             }
