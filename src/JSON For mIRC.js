@@ -449,7 +449,7 @@
         self._type = (type || 'text').toLowerCase();
 
         if (self._type === 'http') {
-            if (!JSONWrapper.HTTP) {
+            if (!HTTPObject) {
                 self._error = 'HTTP_NOT_FOUND';
                 throw new Error('HTTP_NOT_FOUND');
             }
