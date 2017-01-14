@@ -231,9 +231,18 @@
                 // if the type is an http request
                 if (this._type === 'http') {
                     try {
-                        var setTypeHeader   = false,
+                        
+                        var setDefaults     = true,
+                            setTypeHeader   = false,
                             setLengthHeader = false,
                             request         = new ActiveXObject(HTTPObject);
+                            
+                        if (this._http.data == undefined) {
+                            setDefaults      = false;
+                            this._http.data  = null;
+                        }
+                            
+                        
 
                         // Create the request
                         request.setTimeouts(30000, 60000, 60000, 60000);
@@ -251,15 +260,16 @@
                         });
 
                         // if there's data to be sent, apply default headers as needed
-                        if (this._http.data !== undefined) {
+                        if (setDefaults) {
                             if (!setTypeHeader) {
                                 request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                             }
                             if (!setLengthHeader) {
                                 if (this._http.data == null) {
                                     request.setRequestHeader("Content-Length", 0);
+
                                 } else {
-                                    request.setRequestHeader("Content-Length", String(data).length);
+                                    request.setRequestHeader("Content-Length", String(this._http.data).length);
                                 }
                             }
                         }
