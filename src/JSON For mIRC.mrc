@@ -19,12 +19,12 @@ alias JSONUrlGet {
 on *:LOAD:{
   if ($~adiircexe) {
     if ($version < 2.6) {
-      echo -a [JSON For mIRC] AdiIRC v2.6 or later is required
+      echo -ag [JSON For mIRC] AdiIRC v2.6 or later is required
       .unload -rs $qt($script)
     }
   }
   elseif ($version < 7.44) {
-    echo -a [JSON For mIRC] mIRC v7.44 or later is required
+    echo -ag [JSON For mIRC] mIRC v7.44 or later is required
     .unload -rs $qt($script)
   }
 }
@@ -586,7 +586,7 @@ alias JSONClose {
     if (w isincs $1) {
       %Match = $replacecs(%Match, ?, \E[^:]\Q, *,\E[^:]*\Q)
     }
-    %Match = /^JSON:\Q $+ %Match $+ \E(?:$|:)/i
+    %Match = /^JSON:\Q $+ %Match $+ \E(?::\d+)*$/i
 
     ;; Loop over all comes
     while (%X <= $com(0)) {
@@ -1246,7 +1246,7 @@ alias JSONPath {
       }
 
       ;; if $2 is greater than the path length, %Result is nothing/null
-      elseif ($2 >= %Result) {
+      elseif ($2 > %Result) {
         unset %Result
       }
 
@@ -1501,7 +1501,7 @@ alias -l jfm_ComInit {
   elseif (!$com(SReject/JSONForMirc/JSONShell, language, 4, bstr, jscript) || $comerr) {
     %Error = Unable to set ScriptControl's language
   }
-  
+
   ;; attempt to set the com's AllowUI property
   elseif (!$com(SReject/JSONForMirc/JSONShell, AllowUI, 4, bool, $false) || $comerr) {
     %Error = Unable to set ScriptControl's AllowUI property
@@ -1780,7 +1780,6 @@ alias -l jfm_log {
 alias -l jfm_log noop
 
 
-
 ;; $jfm_SaveDebug
 ;;     Returns $true if the debug window is open and there is content in the buffer to save
 ;;
@@ -1802,10 +1801,9 @@ alias -l jfm_SaveDebug {
 
   var %File = $sfile($envvar(USERPROFILE) $+ \Documents\JFM.log, Save, Save)
 
-  ;; if no file was selected to store the log under
-  ;; halt processing
-  if (%File) && (!$isfile(%File) || !$input(Are you sure you want to overwrite $nopath(%File), ysa, @SReject/JSONForMirc/Log, Overwrite)) {
-    ;; save the debug buffer to file
+  ;; if a file was specified and it either doesn't exist or the user wants to overwrite the file
+  ;;    save the debug buffer to the specified file
+  if (%File) && (!$isfile(%File) || $input(Are you sure you want to overwrite $nopath(%File), ysa, @SReject/JSONForMirc/Log, Overwrite)) {
     savebuf @SReject/JSONForMirc/Log $qt(%File)
   }
 }
