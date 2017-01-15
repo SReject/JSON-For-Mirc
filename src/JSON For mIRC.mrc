@@ -1830,6 +1830,6 @@ alias -l jfm_badd {
 ;; /jfm_jscript @Bvar
 ;;     Fills the specified bvar with the required jscript
 alias -l jfm_jscript {
-  var %File = $qt($scriptdirJSON For Mirc.js)
+  var %File = $scriptdirJSON For Mirc.js
   bread $qt(%File) 0 $file(%File).size $1
 }
