@@ -27,6 +27,9 @@ on *:LOAD:{
     echo -ag [JSON For mIRC] mIRC v7.44 or later is required
     .unload -rs $qt($script)
   }
+  else {
+    JSONShutdown
+  }
 }
 
 
@@ -1091,7 +1094,7 @@ alias JSONForEach {
       }
     }
     else {
-      %JSON = $com($1)
+      %JSON = $com(JSON: $+ $1)
     }
 
 
@@ -1304,7 +1307,7 @@ alias JSONError {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %Ver = 1.0.1011
+    var %Ver = 1.0.1012
     if ($0) {
       return %Ver
     }
