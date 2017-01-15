@@ -760,7 +760,7 @@ alias JSON {
   }
 
   ;; If the @name parameter starts with JSON assume its the name of the JSON com
-  if (JSON:?* iswmcs $1) {
+  if ($regex(name, $1, /^JSON:[^:?*]+(?::\d+)?$/i)) {
     %Com = $1
   }
 
@@ -776,7 +776,7 @@ alias JSON {
     while ($com(%X)) {
 
       ;; if the com is a json handler and
-      ;;    The handler's index matches that of input
+      ;;    the handler's index matches that of input
       ;;    assume the handler is the one requested and make use of it for further operations
       if ($regex($v1, /^JSON:[^:]+$/)) {
         inc %I
@@ -790,7 +790,7 @@ alias JSON {
 
     ;; if @Name is 0 return the total number of JSON handlers
     if ($1 === 0) {
-      jfm_log -EsD
+      jfm_log -EsD %I
       return %I
     }
   }
@@ -910,12 +910,14 @@ alias JSON {
     ;; if members have been specified then the JSON handler's json needs to be walked
     if ($0 >= %Offset) {
 
+      %ChildCom = JSON: $+ $gettok(%Com, 2, 58) $+ :
+
       ;; get a unique com name for the handler
       %X = $ticks
-      while ($com(%Com $+ : $+ %X)) {
+      while ($com(%ChildCom $+ %X)) {
         inc %X
       }
-      %ChildCom = $+(%Com, :, %X)
+      %ChildCom = %ChildCom $+ %X
 
       ;; Build the call 'string' to be evaluated
       %Call = $!com( $+ %Com $+ ,walk,1,bool, $+ $iif(fuzzy == %Prefix, $true, $false) $+ %Params $+ ,dispatch* %ChildCom $+ )
@@ -1028,7 +1030,7 @@ alias JSONForEach {
   unset %SReject/JSONForMirc/Error
 
   ;; Local variable declarations
-  var %Error, %Log, %Call, %X = 0, %JSON, %Com, %Result = 0, %Name
+  var %Error, %Log, %Call, %X = 0, %JSON, %Com, %ChildCom, %Result = 0, %Name
 
   ;; build log message and call parameter portion:
   ;;   log: $JSONForEach(@Name, @Command, members...)[@Prop]
@@ -1099,13 +1101,14 @@ alias JSONForEach {
     else {
 
       ;; Get an available com name based on the input com's name
+      %Com = $gettok(%JSON, 1-2, 58) $+ :
       %X = $ticks
       :next2
-      if ($com(%JSON $+ : $+ %X)) {
+      if ($com(%Com $+ %X)) {
         inc %X
         goto next2
       }
-      %Com = %JSON $+ : $+ %X
+      %Com = %Com $+ %X
 
       ;; Build com call: $com(com_name,forEach,1,[call_parameters],dispatch* new_com)
       %Call = $!com( $+ %JSON $+ %Call $+ ,dispatch* %Com $+ )
@@ -1137,13 +1140,15 @@ alias JSONForEach {
           while (%X < %Result) {
 
             ;; get a name to use for the child com
+            %ChildCom = $gettok(%Com, 1-2, 58) $+ :
             %Name = $ticks
+
             :next3
-            if ($com(%Com $+ : $+ %Name)) {
+            if ($com(%ChildCom $+ %Name)) {
               inc %Name
               goto next3
             }
-            %Name = %Com $+ : $+ %Name
+            %Name = %ChildCom $+ %Name
 
             ;; Attempt to get a reference to the nTH item and then check for errors
             if (!$com(%Com, %X, 2, dispatch* %Name) || $comerr || !$com(%Name)) {
@@ -1299,7 +1304,7 @@ alias JSONError {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %Ver = 1.0.1009
+    var %Ver = 1.0.1010
     if ($0) {
       return %Ver
     }
