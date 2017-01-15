@@ -306,8 +306,8 @@ alias JSONHttpMethod {
   :error
   if ($error) {
     %Error = $v1
-    reseterror
   }
+  reseterror
 
   ;; if an error occured, store the error in a global variable then log the error
   if (%Error) {
@@ -359,7 +359,7 @@ alias JSONHttpHeader {
 
   ;; Validate @name parameter
   elseif ($regex($1, /(?:^\d+$)|[*:? ]/i)) {
-    %Error = Invalid Name
+    %Error = INVALID_NAME
   }
   elseif (!$com(JSON: $+ $1)) {
     %Error = HANDLE_DOES_NOT_EXIST
@@ -390,8 +390,8 @@ alias JSONHttpHeader {
   :error
   if ($error) {
     %Error = $v1
-    reseterror
   }
+  reseterror
 
   ;; if an error occured, store the error in a global variable then log the error
   if (%Error) {
@@ -513,8 +513,8 @@ alias JSONHttpFetch {
   :error
   if ($error) {
     %Error = $error
-    reseterror
   }
+  reseterror
 
   ;; clear the bvar if indicated it should be unset
   if (%BUnset) {
@@ -575,7 +575,7 @@ alias JSONClose {
   }
 
   ;; Validate @Name
-  elseif (: isin $1 && (w isincs %Switches || JSON:* !iswmcs $1)) {
+  elseif (: isin $1) && (w isincs %Switches || JSON:* !iswmcs $1) {
     %Error = PARAMETER_INVALID
   }
   else {
@@ -587,7 +587,7 @@ alias JSONClose {
     }
     %Match = $replacecs(%Match, \E, \E\\E\Q)
     if (w isincs $1) {
-      %Match = $replacecs(%Match, ?, \E[^:]\Q, *,\E[^:]*\Q)
+      %Match = $replacecs(%Match, ?, \E[^:]\Q, *, \E[^:]*\Q)
     }
     %Match = /^JSON:\Q $+ %Match $+ \E(?::\d+)*$/i
 
@@ -617,8 +617,8 @@ alias JSONClose {
   :error
   if ($error) {
     %Error = $error
-    reseterror
   }
+  reseterror
 
   ;; if an error occured, store the error in a global variable then log the error
   if (%Error) {
@@ -830,12 +830,12 @@ alias JSON {
     }
 
     ;; .data has been depreciated; use .input
-    if (%Prop == data)   {
+    if (%Prop == data) {
       %Prop = input
     }
 
     ;; .isRef has been depreciated; use .isChild
-    if (%Prop == isRef)  {
+    if (%Prop == isRef) {
       %Prop = isChild
     }
 
@@ -1007,13 +1007,13 @@ alias JSON {
   :error
   if ($error) {
     %Error = $error
-    reseterror
   }
+  reseterror
 
   ;; If an error occured, store and log the error
   if (%Error) {
     set -u1 %SReject/JSONForMirc/Error %Error
-    jfm_log -EeD $!JSON %Error
+    jfm_log -EeD %Error
   }
   else {
     jfm_log -EsD %Result
@@ -1178,8 +1178,8 @@ alias JSONForEach {
   :error
   if ($error) {
     %Error = $error
-    reseterror
   }
+  reseterror
 
   ;; if an error occured, close the items com if its open, then store and log the error
   if (%Error) {
@@ -1274,8 +1274,8 @@ alias JSONPath {
   :error
   if ($error) {
     %Error = $v1
-    reseterror
   }
+  reseterror
 
   ;; If an error occured, store it then log the error
   if (%Error) {
@@ -1307,7 +1307,7 @@ alias JSONError {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %Ver = 1.0.1012
+    var %Ver = 1.0.1013
     if ($0) {
       return %Ver
     }
@@ -1467,7 +1467,7 @@ alias -l jfm_ComInit {
   if (!$isid) return
 
   ;; Local variable declaration
-  var %Error, %Js = $jfm_tmpbvar, %S = jfm_badd %Js
+  var %Error, %Js = $jfm_tmpbvar
 
   ;; Log the alias call
   jfm_log -I $!jfm_ComInit
@@ -1577,13 +1577,9 @@ alias -l jfm_GetError {
     .comclose $v1
   }
 
-  ;; attempt to retrieve the shell com's last error
-  if ($com(SReject/JSONForMirc/JSONShell, Error, 2, dispatch* SReject/JSONForMirc/JSONShellError) && !$comerr && $com(SReject/JSONForMirc/JSONShellError) && $com(SReject/JSONForMirc/JSONShellError, Description, 2) && !$comerr) {
-
-    ;; retrieve the result and store it in %Error
-    if ($com(SReject/JSONForMirc/JSONShellError).result) {
-      %Error = $v1
-    }
+  ;; attempt to retrieve the shell com's last error and store the result in %Error
+  if ($com(SReject/JSONForMirc/JSONShell, Error, 2, dispatch* SReject/JSONForMirc/JSONShellError) && !$comerr && $com(SReject/JSONForMirc/JSONShellError) && $com(SReject/JSONForMirc/JSONShellError, Description, 2) && !$comerr && $com(SReject/JSONForMirc/JSONShellError).result !== $null) {
+    %Error = $v1
   }
 
   ;; close the ShellError com
@@ -1660,7 +1656,7 @@ alias -l jfm_Create {
 alias -l jfm_Exec {
 
   ;; local variable declaration
-  var %Args, %Index = 1, %Value, %Params, %Error
+  var %Args, %Index = 1, %Params, %Error
 
   ;; cleanup from previous call
   unset %SReject/JSONForMirc/Exec
@@ -1668,10 +1664,9 @@ alias -l jfm_Exec {
   ;; Loop over inputs, storing them in %Args(for logging), and %Params(for com calling)
   :args
   if (%Index <= $0) {
-    %Value = $($ $+ %Index, 2)
     %Args = %Args $+ $iif($len(%Args), $chr(44)) $+ $($ $+ %Index, 2)
     if (%Index >= 3) {
-      if ($prop == fromBvar && $regex(%Value, /^& (&\S+)$/)) {
+      if ($prop == fromBvar && $regex($($ $+ %Index, 2), /^& (&\S+)$/)) {
         %Params = %Params $+ ,&bstr, $+ $regml(1)
       }
       else {
