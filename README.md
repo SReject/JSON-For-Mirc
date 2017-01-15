@@ -79,7 +79,7 @@ Usage:
 >  
 > `[text|bvar|file]`: Data to send with the request.  
 >  
-> `$JSON().UrlResponse` can be used to access information about the response such as status code and recieved headers  
+> `$JSON().UrlStatus` and `$JSON().UrlStatusText` can be used to access information about the response such as status code and recieved headers  
 >  
 > `$JSONError` will be filled if parameters are invalid  
 > `$JSON().Error` will be filled if an error making the request results in an error  
