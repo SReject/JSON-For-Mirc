@@ -989,7 +989,7 @@ alias JSON {
 
     ;; if the tofile suffix was specified, write the result to file
     if (%Suffix == tofile) {
-      bwrite %Output -1 -1 %Result
+      bwrite $qt(%Output) -1 -1 %Result
       bunset %Result
       %Result = %Output
     }
