@@ -1,4 +1,4 @@
-;; v0.2.42 compatibility mode
+;; v0.2.41 compatibility mode
 #SReject/JSONForMirc/CompatMode off
 alias JSONUrlMethod {
   if ($isid) return
