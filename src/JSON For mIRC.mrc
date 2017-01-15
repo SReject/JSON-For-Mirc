@@ -1499,32 +1499,32 @@ alias -l jfm_ComInit {
 
   ;; Check to make sure the shell opened
   if (!$com(SReject/JSONForMirc/JSONShell) || $comerr) {
-    %Error = Unable to create ScriptControl
+    %Error = SCRIPTCONTROL_INIT_FAIL
   }
 
   ;; attempt to set the com's language property
   elseif (!$com(SReject/JSONForMirc/JSONShell, language, 4, bstr, jscript) || $comerr) {
-    %Error = Unable to set ScriptControl's language
+    %Error = LANGUAGE_SET_FAIL
   }
 
   ;; attempt to set the com's AllowUI property
   elseif (!$com(SReject/JSONForMirc/JSONShell, AllowUI, 4, bool, $false) || $comerr) {
-    %Error = Unable to set ScriptControl's AllowUI property
+    %Error = ALLOWIU_SET_FAIL
   }
 
   ;; attempt to set the com's timeout property
   elseif (!$com(SReject/JSONForMirc/JSONShell, timeout, 4, integer, -1) || $comerr) {
-    %Error = Unable to set ScriptControl's timeout to 90seconds
+    %Error = TIMEOUT_SET_FAIL
   }
 
   ;; Execute the jscript
   elseif (!$com(SReject/JSONForMirc/JSONShell, ExecuteStatement, 1, &bstr, %Js) || $comerr) {
-    %Error = Unable to execute required jScript
+    %Error = JSCRIPT_EXEC_FAIL
   }
 
   ;; Attempt to get the JS Engine instance
   elseif (!$com(SReject/JSONForMirc/JSONShell, Eval, 1, bstr, this, dispatch* SReject/JSONForMirc/JSONEngine) || $comerr || !$com(SReject/JSONForMirc/JSONEngine)) {
-    %Error = Unable to get jScript engine reference
+    %Error = ENGINE_GET_FAIL
   }
 
   ;; Handle errors
