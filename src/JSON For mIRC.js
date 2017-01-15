@@ -152,8 +152,7 @@
         this._http = parent._http || {
             method: 'GET',
             url: '',
-            headers: [],
-            timeout: 30000
+            headers: []
         };
     }
 
