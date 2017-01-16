@@ -3,8 +3,11 @@
 [![IRC](https://img.shields.io/badge/IRC-SwiftIRC-brightgreen.svg "Join us on IRC")](https://qwebirc.swiftirc.net/?channels=%23jsonformirc) 
 [![Twitch Chat](https://img.shields.io/badge/Chat-Twitch-brightgreen.svg "Join us on IRC")](https://twitch.tv/mirchelp)  
 
+[Downloads](https://github.com/SReject/JSON-For-Mirc/releases)  
+===
+
 JSON For mIRC
-======
+===
 > A script to parse and then access JSON from within mIRC.  
 >
 > "But Mr. Reject, there's plenty of these scripts! Why create another?" Well, little one, I find that most of those scripts trade in efficiency for simplicity. Generally speaking most JSON scripts for mIRC reparse the json data each time that data needs to be accessed.  
@@ -16,7 +19,7 @@ JSON For mIRC
 > The reason for a JSON parser vs. some other 'tool' is because of its overwhelming use around the web. Now-a-days, when you want data from a website they probably package it as an API that generally returns results in JSON format. Examples include: Google.com, Youtube.com, Pastebin.com, and Weather.com  
 
 Requirements:
-=============
+===
 > Mirc v7.44 or later, or AdiIRC v2.6 or later  
 >
 > Windows 2000 or later (This will not work under wine due to lack of COM support). This script may not be able to access certain https endpoints if it is ran under older supported operating systems  
@@ -24,7 +27,7 @@ Requirements:
 > If you are using AdiIRC 64bit, you will need to install the [tsc.dll](http://www.eonet.ne.jp/~gakana/tablacus/scriptcontrol_en.html) for this script to work  
   
 Contribution and Distributation:
-==============
+===
 > By submitting a pull request to this repository, you acknowledge that you own or have rights to distribute and sublicense the source code contained therein, and that your content does not infringe upon the intellectual property rights of a third party. By opening a pull request you understand that, while maintaining copyright, you grant all current and future maintainers of this repository a non-exclusive, transferable, sub-licensable, royalty-free, worldwide license to use the contents of your pull request as the maintainers of this repository deem fit.  
 >
 > You may not in part or whole for free or profit distribute any files contained with in this repository without prior written permission from the maintainers of this repository.
