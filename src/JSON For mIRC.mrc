@@ -941,13 +941,31 @@ alias JSON {
       jfm_log
     }
 
-    ;; v0.2.41 compatbility: if no prop is specified, return the value
-    if ($JSONCompat && %Prop == $null) {
-      %Prop = value
+    ;; v0.2.41 compatbility mode
+    if ($JSONCompat) && ($prop == $null) {
+    
+      ;; attempt to retrieve the reference type
+      if ($jfm_exec(%Com, type)) {
+        %Error = $v1
+      }
+      
+      ;; if an object or array the result is a reference to the com
+      elseif ($bvar(%SReject/JSONForMirc/Exec, 1-).text == object || $v1 == array) {
+        %Result = $jfm_TmpBvar
+        bset -t %Result 1 %Com
+      }
+      
+      ;; attempt to retrieve the reference's value
+      elseif ($jfm_Exec(%Com, value)) {
+        %Error = $v1
+      }
+      else {
+        %Result = %SReject/JSONForMirc/Exec
+      }
     }
-
+    
     ;; No Prop? then the result is the child com's name
-    if (!%Prop) {
+    else if (!%Prop) {
       %Result = $jfm_TmpBvar
       bset -t %Result 1 %Com
     }
