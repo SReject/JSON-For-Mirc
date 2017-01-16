@@ -1419,7 +1419,7 @@ alias JSONDebug {
     }
     %aline Debug now enabled
     if ($~adiircexe) {
-      %aline AdiIRC v $+ $version $iif($beta, beta $betabuild) $bits $+ bit
+      %aline AdiIRC v $+ $version $iif($beta, beta $betadate) $bits $+ bit
     }
     else {
       %aline mIRC v $+ $version $iif($beta, beta $v1) $bits $+ bit
