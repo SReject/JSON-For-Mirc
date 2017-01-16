@@ -941,21 +941,22 @@ alias JSON {
       jfm_log
     }
 
-    ;; v0.2.41 compatbility mode
+    ;; v0.2.41 compatbility mode - If no prop has been specified: 
+    ;;     if the referenced item is a container, return a reference to that item
+    ;;     if the reference is not a container, return the value
     if ($JSONCompat) && ($prop == $null) {
     
-      ;; attempt to retrieve the reference type
+      ;; attempt to retrieve the reference type and if its an object or an array, the result is
+      ;; a reference to that item.
       if ($jfm_exec(%Com, type)) {
         %Error = $v1
       }
-      
-      ;; if an object or array the result is a reference to the com
       elseif ($bvar(%SReject/JSONForMirc/Exec, 1-).text == object || $v1 == array) {
         %Result = $jfm_TmpBvar
         bset -t %Result 1 %Com
       }
       
-      ;; attempt to retrieve the reference's value
+      ;; Attempt to retrieve the reference's value
       elseif ($jfm_Exec(%Com, value)) {
         %Error = $v1
       }
