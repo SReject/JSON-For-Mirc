@@ -1408,7 +1408,7 @@ alias JSONDebug {
   ;; create the log window if need be and indicate that logging is enabled
   if (%State) {
     if (!$window(@SReject/JSONForMirc/Log)) {
-      window -zk0e @SReject/JSONForMirc/Log
+      window -zlk0e @SReject/JSONForMirc/Log
     }
     echo $color(info2) @SReject/JSONForMirc/Log Debug now enabled
     if ($~adiircexe) {
@@ -1769,6 +1769,7 @@ alias -l jfm_log {
 
       ;; Add the log message to the log window
       aline @SReject/JSONForMirc/Log %Indent $+ %Prefix $1-
+      window -b @SReject/JSONForMirc/Log
     }
 
     if (I isincs %Switches) {
