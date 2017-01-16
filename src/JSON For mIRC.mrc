@@ -1412,7 +1412,7 @@ alias JSONDebug {
     }
     echo $color(info2) @SReject/JSONForMirc/Log Debug now enabled
     if ($~adiircexe) {
-      echo $color(info2) @SReject/JSONForMirc/Log AdiIRC v $+ $version $iif($beta, beta) $bits $+ bit
+      echo $color(info2) @SReject/JSONForMirc/Log AdiIRC v $+ $version $iif($beta, beta $betabuild) $bits $+ bit
     }
     else {
       echo $color(info2) @SReject/JSONForMirc/Log mIRC v $+ $version $iif($beta, beta $v1) $bits $+ bit
