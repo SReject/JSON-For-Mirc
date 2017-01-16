@@ -1415,7 +1415,7 @@ alias JSONDebug {
   ;; create the log window if need be and indicate that logging is enabled
   if (%State) {
     if (!$window(@SReject/JSONForMirc/Log)) {
-      window -zlk0e @SReject/JSONForMirc/Log
+      window -zk0e @SReject/JSONForMirc/Log
     }
     %aline Debug now enabled
     if ($~adiircexe) {
