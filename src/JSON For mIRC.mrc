@@ -1345,9 +1345,8 @@ alias JSONDebug {
   ;; if the current debug state is on
   if ($group(#SReject/JSONForMirc/Log) == on) {
 
-    ;; if the window was closed, disable logging and stop the horizontal scrollbar update timer
+    ;; if the window was closed disable logging
     if (!$window(@SReject/JSONForMirc/Log)) {
-      .timerSRject/JSONForMirc/Log off
       .disable #SReject/JSONForMirc/log
     }
 
@@ -1399,9 +1398,8 @@ alias JSONDebug {
       return
     }
 
-    ;; otherwise disable logging and turn off the log window's horizontal scrollbar update timer
+    ;; otherwise disable logging
     .disable #SReject/JSONForMirc/Log
-    .timerSRject/JSONForMirc/Log off
     %State = $false
   }
 
@@ -1764,8 +1762,7 @@ alias -l jfm_log {
       %Indent = $str($chr(15) $+ $chr(32), $calc(%SReject/JSONForMirc/LogIndent *4))
 
       ;; Add the log message to the log window
-      aline @SReject/JSONForMirc/Log %Indent $+ %Prefix $1-
-      .timerSRject/JSONForMirc/Log -io 1 0 window -b @SReject/JSONForMirc/Log
+      echo -gi $+ $calc((%SReject/JSONForMirc/LogIndent + 1) * 4 -1) @SReject/JSONForMirc/Log %Indent %Prefix $1-
     }
 
     if (I isincs %Switches) {
