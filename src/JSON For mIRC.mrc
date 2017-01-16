@@ -1,4 +1,4 @@
-;; v0.2.41 compatibility mode
+;; v0.2.41 compatibility mode public commands
 #SReject/JSONForMirc/CompatMode off
 alias JSONUrlMethod {
   if ($isid) return
@@ -15,18 +15,24 @@ alias JSONUrlGet {
 #SReject/JSONForMirc/CompatMode end
 
 
-;; On load, check to make sure mIRC/AdiIRC is of an applicable version
+;; Check to make sure mIRC/AdiIRC is of an applicable version
 on *:LOAD:{
+
+  ;; adiirc check
   if ($~adiircexe) {
     if ($version < 2.6) {
       echo -ag [JSON For mIRC] AdiIRC v2.6 or later is required
       .unload -rs $qt($script)
     }
   }
+  
+  ;; mIRC check
   elseif ($version < 7.44) {
     echo -ag [JSON For mIRC] mIRC v7.44 or later is required
     .unload -rs $qt($script)
   }
+  
+  ;; if passed, call jsonshutdown so the JS engine from a previously loaded version gets shutdown
   else {
     JSONShutdown
   }
@@ -86,7 +92,7 @@ menu @SReject/JSONForMirc/Log {
 ;;     @Name - String - Required
 ;;         The name to use to reference the JSON handler
 ;;             Cannot be a numerical value
-;;             Disallowed Characters: ? * : and sapce
+;;             Disallowed Characters: ? * : and space
 ;;
 ;;    @Input - String - Required
 ;;        The input json to parse
@@ -144,23 +150,23 @@ alias JSONOpen {
   }
 
   ;; Validate URL where appropriate
-  elseif (u isin %Switches && $0 != 2) {
+  elseif (u isin %Switches) && ($0 != 2) {
     %Error = PARAMETER_INVALID:URL_SPACES
   }
 
   ;; Validate bvar where appropriate
-  elseif (b isincs %Switches && $0 != 2) {
+  elseif (b isincs %Switches) && ($0 != 2) {
     %Error = PARAMETER_INVALID:BVAR
   }
-  elseif (b isincs %Switches && &* !iswm $2) {
+  elseif (b isincs %Switches) && (&* !iswm $2) {
     %Error = PARAMETER_INVALID:NOT_BVAR
   }
-  elseif (b isincs %Switches && !$bvar($2, 0)) {
+  elseif (b isincs %Switches) && (!$bvar($2, 0)) {
     %Error = PARAMETER_INVALID:BVAR_EMPTY
   }
 
   ;; Validate file where appropriate
-  elseif (f isincs %Switches && !$isfile($2-)) {
+  elseif (f isincs %Switches) && (!$isfile($2-)) {
     %Error = PARAMETER_INVALID:FILE_DOESNOT_EXIST
   }
 
@@ -203,24 +209,21 @@ alias JSONOpen {
     %Error = $jfm_Create(%Com, %Type, %BVar, %HttpOptions)
   }
 
-  ;; error handling
+  ;; Error handling: if an mIRC error occured, store the error message then clear the error state
   :error
+  if ($error) {
+    %Error = $v1
+  }
+  reseterror
 
   ;; unset the bvar if it was temporary
   if (%BUnset) {
     bunset %BVar
   }
 
-  ;; if an internal/mIRC error occured, store the error message and clear the
-  ;; error state
-  if ($error) {
-    %Error = $v1
-    reseterror
-  }
-
   ;; if the error variable is filled:
   ;;     Store the error in a global variable
-  ;;     Start a timer to close the handler script-execution finishes
+  ;;     Start a timer to close the handle when script-execution finishes
   ;;     Log the error
   if (%Error) {
     set -u1 %SReject/JSONForMirc/Error %Error
@@ -285,24 +288,20 @@ alias JSONHttpMethod {
   }
   else {
 
-    ;; store the com name
+    ;; store the com name, trim excess whitespace from the method parameter then validate the method
     %Com = JSON: $+ $1
-
-    ;; trim excess whitespace from the method parameter
     %Method = $regsubex($2, /(^\s+)|(\s*)$/g, )
-
-    ;; validate the method parameter
     if (!$len(%Method)) {
       %Error = INVALID_METHOD
     }
 
-    ;; store the method
+    ;; if the method is valid attemp to store it with the handle
     elseif ($jfm_Exec(%Com, httpSetMethod, %Method)) {
       %Error = $v1
     }
   }
 
-  ;; Handle errors
+  ;; Error handling: if an mIRC error occured, store the error message then clear the error state
   :error
   if ($error) {
     %Error = $v1
@@ -366,13 +365,9 @@ alias JSONHttpHeader {
   }
   else {
 
-    ;; Store the json handler name
+    ;; Store the json handler name, trim whitespace from the header name, then validate the header
     %Com = JSON: $+ $1
-
-    ;; Trim whitespace from the header name
     %Header = $regsubex($2, /(^\s+)|(\s*:\s*$)/g, )
-
-    ;; Validate @Header
     if (!$len($2)) {
       %Error = HEADER_EMPTY
     }
@@ -380,13 +375,13 @@ alias JSONHttpHeader {
       %Error = HEADER_INVALID
     }
 
-    ;; Attempt to store the header
+    ;; If the header is valid, attempt to store the header with the handle
     elseif ($jfm_Exec(%Com, httpSetHeader, %Header, $3-)) {
       %Error = $v1
     }
   }
 
-  ;; Error Handling
+  ;; Error handling: if an mIRC error occured, store the error message then clear the error state
   :error
   if ($error) {
     %Error = $v1
@@ -461,12 +456,12 @@ alias JSONHttpFetch {
   }
 
   ;; Validate specified bvar when applicatable
-  elseif (b isincs %Switches && (&* !iswm $2 || $0 > 2)) {
+  elseif (b isincs %Switches) && (&* !iswm $2 || $0 > 2) {
     %Error = BVAR_INVALID
   }
 
   ;; validate specified file when applicatable
-  elseif (f isincs %Switches && !$isfile($2-)) {
+  elseif (f isincs %Switches) && (!$isfile($2-)) {
     %Error = FILE_DOESNOT_EXIST
   }
   else {
@@ -499,7 +494,7 @@ alias JSONHttpFetch {
         bset -t %BVar 1 $2-
       }
 
-      ;; attempt to store the data with the handler instance
+      ;; Attempt to store the data with the handler instance
       %Error = $jfm_Exec(%Com, httpSetData, & %BVar).fromBvar
     }
 
@@ -509,14 +504,14 @@ alias JSONHttpFetch {
     }
   }
 
-  ;; Handle errors
+  ;; Error handling: if an mIRC error occured, store the error message then clear the error state
   :error
   if ($error) {
     %Error = $error
   }
   reseterror
 
-  ;; clear the bvar if indicated it should be unset
+  ;; Clear the bvar if indicated it should be unset
   if (%BUnset) {
     bunset %BVar
   }
@@ -613,7 +608,7 @@ alias JSONClose {
     }
   }
 
-  ;; Handle Errors
+  ;; Error handling: if an mIRC error occured, store the error message then clear the error state
   :error
   if ($error) {
     %Error = $error
@@ -757,7 +752,7 @@ alias JSON {
   }
 
   ;; If the alias was called with the only parameter being 0 and a prop
-  if ($0 == 1 && $1 == 0 && $prop !== $null) {
+  if ($0 == 1) && ($1 == 0) && ($prop !== $null) {
     %Error = PROP_NOT_APPLICABLE
     goto error
   }
@@ -804,12 +799,12 @@ alias JSON {
   }
 
   ;; If the deduced com doesn't exist store the error
-  if (!%Error && !$com(%Com)) {
+  if (!%Error) && (!$com(%Com)) {
     %Error = HANDLER_NOT_FOUND
   }
 
   ;; basic property validation
-  elseif (* isin $prop || ? isin $prop) {
+  elseif (* isin $prop) || (? isin $prop) {
     %Error = INVALID_PROP
   }
   else {
@@ -823,25 +818,29 @@ alias JSON {
 
     ;; URL props have been depreciated, switch the prop to the HTTP equivulant
     %Prop = $regsubex(%Prop, /^url/i, http)
+    
+    ;; v0.2.41 compatibility mode props:
+    if ($JSONCompat) {
 
-    ;; .status has been depreciated; use .state
-    if (%Prop == status) {
-      %Prop = state
-    }
+      ;; .status has been depreciated; use .state
+      if (%Prop == status) {
+        %Prop = state
+      }
 
-    ;; .data has been depreciated; use .input
-    if (%Prop == data) {
-      %Prop = input
-    }
+      ;; .data has been depreciated; use .input
+      if (%Prop == data) {
+        %Prop = input
+      }
 
-    ;; .isRef has been depreciated; use .isChild
-    if (%Prop == isRef) {
-      %Prop = isChild
-    }
+      ;; .isRef has been depreciated; use .isChild
+      if (%Prop == isRef) {
+        %Prop = isChild
+      }
 
-    ;; .isParent is depreciated; use .isContainer
-    if (%Prop == isParent) {
-      %Prop = isContainer
+      ;; .isParent is depreciated; use .isContainer
+      if (%Prop == isParent) {
+        %Prop = isContainer
+      }
     }
 
     ;; if the suffix is 'tofile', validate the 2nd parameter
@@ -942,7 +941,7 @@ alias JSON {
       jfm_log
     }
 
-    ;; If in compatability mode, and a prop hasn't been specified, return the value
+    ;; v0.2.41 compatbility: if no prop is specified, return the value
     if ($JSONCompat && %Prop == $null) {
       %Prop = value
     }
@@ -1003,7 +1002,7 @@ alias JSON {
     }
   }
 
-  ;; Handle errors
+  ;; Error handling: if an mIRC error occured, store the error message then clear the error state
   :error
   if ($error) {
     %Error = $error
@@ -1053,20 +1052,24 @@ alias JSONForEach {
   ;; Log the alias call
   jfm_log -I $left(%Log, -1) $+ $chr(41) $+ $iif($prop !== $null, . $+ $v1)
 
-  ;; Validate inputs
+  ;; Basic input validation
   if ($0 < 2) {
     %Error = INVAID_PARAMETERS
   }
   elseif ($1 == 0) {
     %Error = INVALID_HANDLER
   }
-  elseif ($prop !== $null && $prop !== walk && $prop !== fuzzy) {
+  
+  ;; Validate prop
+  elseif ($prop !== $null) && ($prop !== walk) && ($prop !== fuzzy) {
     %Error = INVALID_PROPERTY
   }
-  elseif ($0 > 2 && $prop == walk) {
+  elseif ($0 > 2) && ($prop == walk) {
     %Error = PARAMETERS_NOT_APPLICABLE
   }
-  elseif (!$1 || $1 == 0 || !$regex($1, /^(?:(?:JSON:[^?:*]+(?::\d+)*)?|([^?:*]+))$/i)) {
+
+  ;; Validate @Handle|Ref|N
+  elseif (!$1) || ($1 == 0) || (!$regex($1, /^((?:[^?:*]+)|(?:JSON:[^?:*]+(?::\d+)))$/)) {
     %Error = NAME_INVALID
   }
   else {
@@ -1120,7 +1123,7 @@ alias JSONForEach {
       jfm_log %Call
 
       ;; Make the com call and check for errors
-      if (!$(%Call, 2) || $comerr || !$com(%Com)) {
+      if (!$(%Call, 2)) || ($comerr) || (!$com(%Com)) {
         %Error = $jfm_GetError
       }
 
@@ -1131,7 +1134,7 @@ alias JSONForEach {
         .timer $+ %Com -iom 1 0 JSONClose $unsafe(%Com)
 
         ;; check length
-        if (!$com(%Com, length, 2) || $comerr) {
+        if (!$com(%Com, length, 2)) || ($comerr) {
           %Error = $jfm_GetError
         }
 
@@ -1154,7 +1157,7 @@ alias JSONForEach {
             %Name = %ChildCom $+ %Name
 
             ;; Attempt to get a reference to the nTH item and then check for errors
-            if (!$com(%Com, %X, 2, dispatch* %Name) || $comerr || !$com(%Name)) {
+            if (!$com(%Com, %X, 2, dispatch* %Name)) || ($comerr) || (!$com(%Name)) {
               %Error = $jfm_GetError
               break
             }
@@ -1174,7 +1177,7 @@ alias JSONForEach {
     }
   }
 
-  ;; Handle Errors
+  ;; Error handling: if an mIRC error occured, store the error message then clear the error state
   :error
   if ($error) {
     %Error = $error
@@ -1201,7 +1204,9 @@ alias JSONForEach {
 ;; $JSONPath(@Name|ref|N, index)
 ;;    Returns information related to a handler's path
 alias JSONPath {
-  if (!$isid) return
+  if (!$isid) {
+    return
+  }
 
   ;; Unset the global error variable incase the last call ended in error
   unset %SReject/JSONForMirc/Error
@@ -1224,10 +1229,10 @@ alias JSONPath {
   elseif ($prop !== $null) {
     %Error = PROP_NOT_APPLICABLE
   }
-  elseif (!$1 || $1 == 0 || !$regex($1, /^(?:(?:JSON:[^?:*]+(?::\d+)*)?|([^?:*]+))$/i)) {
+  elseif (!$1) || ($1 == 0) || (!$regex($1, /^(?:(?:JSON:[^?:*]+(?::\d+)*)?|([^?:*]+))$/i)) {
     %Error = NAME_INVALID
   }
-  elseif ($2 !isnum 0- || . isin $2) {
+  elseif ($2 !isnum 0-) || (. isin $2) {
     %Error = INVALID_INDEX
   }
   else {
@@ -1259,7 +1264,7 @@ alias JSONPath {
       }
 
       ;; attempt to retrieve the path item at the specified index
-      elseif (!$com(%JSON, pathAtIndex, 1, bstr, $calc($2 -1)) || $comerr) {
+      elseif (!$com(%JSON, pathAtIndex, 1, bstr, $calc($2 -1))) || ($comerr) {
         %Error = $jfm_GetError
       }
 
@@ -1270,7 +1275,7 @@ alias JSONPath {
     }
   }
 
-  ;; Handle errors
+  ;; Error handling: if an mIRC error occured, store the error message then clear the error state
   :error
   if ($error) {
     %Error = $v1
@@ -1335,13 +1340,14 @@ alias JSONVersion {
 alias JSONDebug {
 
   ;; Local variable declartion
-  var %State = $false
+  var %State = $false, %aline = aline $color(info2) @SReject/JSONForMirc/Log
 
   ;; if the current debug state is on
   if ($group(#SReject/JSONForMirc/Log) == on) {
 
-    ;; if the window was closed, disable logging
+    ;; if the window was closed, disable logging and stop the horizontal scrollbar update timer
     if (!$window(@SReject/JSONForMirc/Log)) {
+      .timerSRject/JSONForMirc/Log off
       .disable #SReject/JSONForMirc/log
     }
 
@@ -1357,7 +1363,7 @@ alias JSONDebug {
   }
 
   ;; if no parameter was specified, or the parameter was "toggle"
-  elseif (!$0 || $1 == toggle) {
+  elseif (!$0) || ($1 == toggle) {
 
     ;; if the state is current disabled, update the parameter to disable debug logging
     if (%State) {
@@ -1371,7 +1377,7 @@ alias JSONDebug {
   }
 
   ;; if the input was on|enable
-  if ($1 == on || $1 == enable) {
+  if ($1 == on) || ($1 == enable) {
 
     ;; if logging is already enabled
     if (%State) {
@@ -1385,7 +1391,7 @@ alias JSONDebug {
   }
 
   ;; if the input was off|disable
-  elseif ($1 == off || $1 == disable) {
+  elseif ($1 == off) || ($1 == disable) {
 
     ;; if logging is already disabled
     if (!%State) {
@@ -1393,8 +1399,9 @@ alias JSONDebug {
       return
     }
 
-    ;; otherwise disable logging
+    ;; otherwise disable logging and turn off the log window's horizontal scrollbar update timer
     .disable #SReject/JSONForMirc/Log
+    .timerSRject/JSONForMirc/Log off
     %State = $false
   }
 
@@ -1410,21 +1417,22 @@ alias JSONDebug {
     if (!$window(@SReject/JSONForMirc/Log)) {
       window -zlk0e @SReject/JSONForMirc/Log
     }
-    echo $color(info2) @SReject/JSONForMirc/Log Debug now enabled
+    %aline Debug now enabled
     if ($~adiircexe) {
-      echo $color(info2) @SReject/JSONForMirc/Log AdiIRC v $+ $version $iif($beta, beta $betabuild) $bits $+ bit
+      %aline AdiIRC v $+ $version $iif($beta, beta $betabuild) $bits $+ bit
     }
     else {
-      echo $color(info2) @SReject/JSONForMirc/Log mIRC v $+ $version $iif($beta, beta $v1) $bits $+ bit
+      %aline mIRC v $+ $version $iif($beta, beta $v1) $bits $+ bit
     }
-    echo $color(info2) @SReject/JSONForMirc/Log $JSONVersion $iif($JSONCompat, [CompatMode], [NormalMode])
-    echo $color(info2) @SReject/JSONForMirc/Log -
+    %aline $JSONVersion $iif($JSONCompat, [CompatMode], [NormalMode])
+    %aline -
   }
 
   ;; if debug state is disabled and the debug window is open, indicate that debug logging is disabled
   elseif ($Window(@SReject/JSONForMirc/Log)) {
-    echo $color(info2) -q @SReject/JSONForMirc/Log [JSONDebug] Debug now disabled
+    %aline [JSONDebug] Debug now disabled
   }
+  window -b @SReject/JSONForMirc/Log
 }
 
 
@@ -1463,9 +1471,6 @@ alias -l jfm_TmpBVar {
 ;;         Returns any errors that occured while initializing the coms
 alias -l jfm_ComInit {
 
-  ;; Insure the alias was called as an identifier
-  if (!$isid) return
-
   ;; Local variable declaration
   var %Error, %Js = $jfm_tmpbvar
 
@@ -1491,7 +1496,7 @@ alias -l jfm_ComInit {
 
   ;; If the script is being ran under adiirc 64bit
   ;; attemppt to create a ScriptControl object instance
-  if ($~adiircexe !== $null && $appbits == 64) {
+  if ($~adiircexe !== $null) && ($bits == 64) {
     .comopen SReject/JSONForMirc/JSONShell ScriptControl
   }
 
@@ -1501,36 +1506,36 @@ alias -l jfm_ComInit {
   }
 
   ;; Check to make sure the shell opened
-  if (!$com(SReject/JSONForMirc/JSONShell) || $comerr) {
+  if (!$com(SReject/JSONForMirc/JSONShell)) || ($comerr) {
     %Error = SCRIPTCONTROL_INIT_FAIL
   }
 
   ;; attempt to set the com's language property
-  elseif (!$com(SReject/JSONForMirc/JSONShell, language, 4, bstr, jscript) || $comerr) {
+  elseif (!$com(SReject/JSONForMirc/JSONShell, language, 4, bstr, jscript)) || ($comerr) {
     %Error = LANGUAGE_SET_FAIL
   }
 
   ;; attempt to set the com's AllowUI property
-  elseif (!$com(SReject/JSONForMirc/JSONShell, AllowUI, 4, bool, $false) || $comerr) {
+  elseif (!$com(SReject/JSONForMirc/JSONShell, AllowUI, 4, bool, $false)) || ($comerr) {
     %Error = ALLOWIU_SET_FAIL
   }
 
   ;; attempt to set the com's timeout property
-  elseif (!$com(SReject/JSONForMirc/JSONShell, timeout, 4, integer, -1) || $comerr) {
+  elseif (!$com(SReject/JSONForMirc/JSONShell, timeout, 4, integer, -1)) || ($comerr) {
     %Error = TIMEOUT_SET_FAIL
   }
 
   ;; Execute the jscript
-  elseif (!$com(SReject/JSONForMirc/JSONShell, ExecuteStatement, 1, &bstr, %Js) || $comerr) {
+  elseif (!$com(SReject/JSONForMirc/JSONShell, ExecuteStatement, 1, &bstr, %Js)) || ($comerr) {
     %Error = JSCRIPT_EXEC_FAIL
   }
 
   ;; Attempt to get the JS Engine instance
-  elseif (!$com(SReject/JSONForMirc/JSONShell, Eval, 1, bstr, this, dispatch* SReject/JSONForMirc/JSONEngine) || $comerr || !$com(SReject/JSONForMirc/JSONEngine)) {
+  elseif (!$com(SReject/JSONForMirc/JSONShell, Eval, 1, bstr, this, dispatch* SReject/JSONForMirc/JSONEngine)) || ($comerr) || (!$com(SReject/JSONForMirc/JSONEngine)) {
     %Error = ENGINE_GET_FAIL
   }
 
-  ;; Handle errors
+  ;; Error handling: if an mIRC error occured, store the error message then clear the error state
   :error
   if ($error) {
     %Error = $v1
@@ -1558,9 +1563,6 @@ alias -l jfm_ComInit {
 ;;     Attempts to get the last error that occured in the JS handler
 alias -l jfm_GetError {
 
-  ;; Insure the alias is called as an identifier
-  if (!$isid) return
-
   ;; Local variable declaration
   var %Error = UNKNOWN
 
@@ -1578,7 +1580,7 @@ alias -l jfm_GetError {
   }
 
   ;; attempt to retrieve the shell com's last error and store the result in %Error
-  if ($com(SReject/JSONForMirc/JSONShell, Error, 2, dispatch* SReject/JSONForMirc/JSONShellError) && !$comerr && $com(SReject/JSONForMirc/JSONShellError) && $com(SReject/JSONForMirc/JSONShellError, Description, 2) && !$comerr && $com(SReject/JSONForMirc/JSONShellError).result !== $null) {
+  if ($com(SReject/JSONForMirc/JSONShell, Error, 2, dispatch* SReject/JSONForMirc/JSONShellError)) && (!$comerr) && ($com(SReject/JSONForMirc/JSONShellError)) && ($com(SReject/JSONForMirc/JSONShellError, Description, 2)) && (!$comerr) && ($com(SReject/JSONForMirc/JSONShellError).result !== $null) {
     %Error = $v1
   }
 
@@ -1612,9 +1614,6 @@ alias -l jfm_GetError {
 ;;          1: wait for /JSONHttpFetch to be called
 ;;          2: Do not parse the result of the HTTP request
 alias -l jfm_Create {
-
-  ;; Insure the alias is called as an identifier
-  if (!$isid) return
 
   ;; Local variable declaration
   var %Wait = $iif(1 & $4, $true, $false), %NoParse = $iif(2 & $4, $true, $false), %Error
@@ -1720,9 +1719,6 @@ alias -l jfm_Exec {
 #SReject/JSONForMirc/Log off
 alias -l jfm_log {
 
-  ;; Insure the alias was called as a command
-  if ($isid) return
-
   ;; Local variable declartion
   var %Switches, %Prefix ->, %Color = 03, %Indent
 
@@ -1769,7 +1765,7 @@ alias -l jfm_log {
 
       ;; Add the log message to the log window
       aline @SReject/JSONForMirc/Log %Indent $+ %Prefix $1-
-      window -b @SReject/JSONForMirc/Log
+      .timerSRject/JSONForMirc/Log -io 1 0 window -b @SReject/JSONForMirc/Log
     }
 
     if (I isincs %Switches) {
