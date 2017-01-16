@@ -308,59 +308,54 @@
             }
         },
 
-        walk: function() {
-            var self = parsed(this),
-                args = Array.prototype.slice.call(arguments),
-                type = getType(self._json.value),
-                fuzzy = false,
-                path = [],
-                keys,
+        walk: function () {
+            var self   = parsed(this),
+                result = self._json.value,
+                args   = Array.prototype.slice.call(arguments),
+                fuzzy  = args.shift(),
+                path   = self._json.path.slice(0),
+                type,
                 member,
-                doFuzzy,
-                result;
-            if (typeof args[0] === 'boolean') {
-                fuzzy = args.shift();
-            }
-            if (!args.length) {
-                return self;
-            }
-            if (type !== 'array' && type !== 'object') {
-                throw new Error('ILLEGAL_REFERENCE');
-            }
-            member = String(args.shift());
-            if (fuzzy && /^[~=]./.test(member)) {
-                doFuzzy = '~' === member.charAt(0);
-                member = member.replace(/^[~=]\x20*/, '');
-                if (doFuzzy && type === 'object') {
-                    keys = Object.keys(self._json.value);
-                    if (/^\d+$/.test(member)) {
-                        member = parseInt(member, 10);
-                        if (member >= keys.length) {
-                            throw new Error('FUZZY_INDEX_NOT_FOUND');
-                        }
-                        member = keys[member];
-                    } else if (!hasOwnProp(self._json.value, member)) {
-                        member = member.toLowerCase();
-                        member = keys.find(function (item) {
-                            return item.toLowerCase() === member;
-                        });
-                        if (member === undefined) {
-                            throw new Error('FUZZY_MEMBER_NOT_FOUND');
+                isFuzzy,
+                keys;
+            while (args.length) {
+                type = getType(result)
+                if (type !== 'array' && type !== 'object') {
+                    throw new Error('ILLEGAL_REFERENCE');
+                }
+                member = String(args.shift());
+                if (fuzzy && type == 'object' && /^[~=]./.test(member)) {
+                    isFuzzy = '~' === member.charAt(0);
+                    member = member.replace(/^[~=]\x20?/, '');
+                    if (isFuzzy) {
+                        keys = Object.keys(result);
+                        if (/^\d+$/.test(member)) {
+                            member = parseInt(member, 10);
+                            if (member >= keys.length) {
+                                throw new Error('FUZZY_INDEX_NOT_FOUND');
+                            }
+                            member = keys[member];
+                        } else if (!hasOwnProp(result, member)) {
+                            member = member.toLowerCase()
+                            member = keys.find(function (key) {
+                                return member === key.toLowerCase();
+                            });
+                            if (member == undefined) {
+                                throw new Error('FUZZY_MEMBER_NOT_FOUND');
+                            }
                         }
                     }
+                }       
+                if (!hasOwnProp(result, member)) {
+                    throw new Error('REFERENCE_NOT_FOUND');
                 }
-            }
-            if (hasOwnProp(self._json.value, member)) {
-                path = self._json.path.slice();
                 path.push(member);
-                result = new JSONWrapper(self, {
-                    path: path,
-                    value: self._json.value[member]
-                });
-                args.unshift(fuzzy);
-                return result.walk.apply(result, args);
+                result = result[member];
             }
-            throw new Error('REFERENCE_NOT_FOUND');
+            return new JSONWrapper(self, {
+                path: path,
+                value: result
+            });
         },
 
         forEach: function () {
