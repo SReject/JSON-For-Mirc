@@ -134,7 +134,7 @@ alias JSONOpen {
   elseif ($regex(%Switches, /([bfuU])/g) > 1) {
     %Error = SWITCH_CONFLICT: $+ $regml(1)
   }
-  elseif (u !isin %Switches && w isincs %Switches) {
+  elseif (u !isin %Switches) && (w isincs %Switches) {
     %Error = SWITCH_NOT_APPLICABLE:w
   }
 
@@ -227,7 +227,7 @@ alias JSONOpen {
   ;;     Log the error
   if (%Error) {
     set -u1 %SReject/JSONForMirc/Error %Error
-    if (%Com && $com(%Com)) {
+    if (%Com) && ($com(%Com)) {
       .timer $+ %Com -iom 1 0 JSONClose $unsafe($1)
     }
     jfm_log -EeD %Error
@@ -581,10 +581,11 @@ alias JSONClose {
       %Match = $gettok($1, 2-, 58)
     }
     %Match = $replacecs(%Match, \E, \E\\E\Q)
-    if (w isincs $1) {
+    if (w isincs %Switches) {
       %Match = $replacecs(%Match, ?, \E[^:]\Q, *, \E[^:]*\Q)
     }
-    %Match = /^JSON:\Q $+ %Match $+ \E(?::\d+)*$/i
+    %Match = /^JSON:\Q $+ %Match $+ \E(?::\d+)?$/i
+    %Match = $replacecs(%Match,\Q\E,)
 
     ;; Loop over all comes
     while (%X <= $com(0)) {
@@ -864,7 +865,7 @@ alias JSON {
 
   ;; If @Name is an index and no prop has been specified the result is the com name
   ;; So create a new bvar for the result and store the com name in it
-  elseif ($0 == 1 && !$prop) {
+  elseif ($0 == 1) && (!$prop) {
     %Result = $jfm_TmpBvar
     bset -t %Result 1 %Com
   }
@@ -906,7 +907,7 @@ alias JSON {
   }
 
   ;; These props require that the json handler be walked before processing the prop itself
-  elseif (%Prop == $null || $wildtok(path|pathLength|type|isContainer|length|value|string|debug, %Prop, 1, 124)) {
+  elseif (%Prop == $null) || ($wildtok(path|pathLength|type|isContainer|length|value|string|debug, %Prop, 1, 124)) {
     %Prop = $v1
 
     ;; if members have been specified then the JSON handler's json needs to be walked
@@ -929,7 +930,7 @@ alias JSON {
 
       ;; Attempt to call the js-side's walk function: walk(isFuzzy, member, ...)
       ;; if an error occurs, store the error and skip to error handling
-      if (!$eval(%Call, 2) || $comerr || !$com(%ChildCom)) {
+      if (!$eval(%Call, 2)) || ($comerr) || (!$com(%ChildCom)) {
         %Error = $jfm_GetError
         goto error
       }
@@ -951,7 +952,7 @@ alias JSON {
       if ($jfm_exec(%Com, type)) {
         %Error = $v1
       }
-      elseif ($bvar(%SReject/JSONForMirc/Exec, 1-).text == object || $v1 == array) {
+      elseif ($bvar(%SReject/JSONForMirc/Exec, 1-).text == object) || ($v1 == array) {
         %Result = $jfm_TmpBvar
         bset -t %Result 1 %Com
       }
@@ -966,7 +967,7 @@ alias JSON {
     }
     
     ;; No Prop? then the result is the child com's name
-    else if (!%Prop) {
+    elseif (!%Prop) {
       %Result = $jfm_TmpBvar
       bset -t %Result 1 %Com
     }
@@ -989,7 +990,7 @@ alias JSON {
     elseif ($jfm_Exec(%Com, type)) {
       %Error = $v1
     }
-    elseif ($bvar(%SReject/JSONForMirc/Exec, 1-).text == object || $v1 == array) {
+    elseif ($bvar(%SReject/JSONForMirc/Exec, 1-).text == object) || ($v1 == array) {
       %Error = INVALID_TYPE
     }
     elseif ($jfm_Exec(%Com, value)) {
@@ -1639,7 +1640,7 @@ alias -l jfm_Create {
   jfm_log -I $!jfm_create( $+ $1 $+ , $+ $2 $+ , $+ $3 $+ , $+ $4)
 
   ;; Attempt to create the json handler and if an error occurs retrieve the error, log it and return it
-  if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, $2, &bstr, $3, bool, %NoParse, dispatch* $1) || $comerr || !$com($1)) {
+  if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, $2, &bstr, $3, bool, %NoParse, dispatch* $1)) || ($comerr) || (!$com($1)) {
     %Error = $jfm_GetError
   }
 
@@ -1682,7 +1683,7 @@ alias -l jfm_Exec {
   if (%Index <= $0) {
     %Args = %Args $+ $iif($len(%Args), $chr(44)) $+ $($ $+ %Index, 2)
     if (%Index >= 3) {
-      if ($prop == fromBvar && $regex($($ $+ %Index, 2), /^& (&\S+)$/)) {
+      if ($prop == fromBvar) && ($regex($($ $+ %Index, 2), /^& (&\S+)$/)) {
         %Params = %Params $+ ,&bstr, $+ $regml(1)
       }
       else {
@@ -1699,7 +1700,7 @@ alias -l jfm_Exec {
 
   ;; Attempt the com call and if an error occurs
   ;;   retrieve the error, log the error, and return it
-  if (!$(%Params, 2) || $comerr) {
+  if (!$(%Params, 2)) || ($comerr) {
     %Error = $jfm_GetError
     jfm_log -EeD %Error
 
@@ -1787,7 +1788,7 @@ alias -l jfm_log {
     if (I isincs %Switches) {
       inc -u1 %SReject/JSONForMirc/LogIndent 1
     }
-    if (D isincs %Switches && %SReject/JSONForMirc/LogIndent > 0) {
+    if (D isincs %Switches) && (%SReject/JSONForMirc/LogIndent > 0) {
       dec -u1 %SReject/JSONForMirc/LogIndent 1
     }
   }
@@ -1807,7 +1808,7 @@ alias -l jfm_SaveDebug {
   if ($isid) {
 
     ;; if the debug window is open and has content to save return true
-    if ($window(@SReject/JSONForMirc/Log) && $line(@SReject/JSONForMirc/Log, 0)) {
+    if ($window(@SReject/JSONForMirc/Log)) && ($line(@SReject/JSONForMirc/Log, 0)) {
       return $true
     }
 
