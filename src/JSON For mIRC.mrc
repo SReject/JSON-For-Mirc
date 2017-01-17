@@ -438,7 +438,7 @@ alias JSONHttpFetch {
   }
 
   ;; Basic input validatition
-  if ($0 == 0) || (%Switches != $null && $0 < 2) {
+  if ($0 === 0) || (%Switches != $null) && ($0 < 2) {
     %Error = PARAMETER_MISSING
   }
 
@@ -456,7 +456,7 @@ alias JSONHttpFetch {
   }
 
   ;; Validate specified bvar when applicatable
-  elseif (b isincs %Switches) && (&* !iswm $2 || $0 > 2) {
+  elseif (b isincs %Switches) && (&* !iswm $2) || ($0 > 2) {
     %Error = BVAR_INVALID
   }
 
@@ -570,7 +570,7 @@ alias JSONClose {
   }
 
   ;; Validate @Name
-  elseif (: isin $1) && (w isincs %Switches || JSON:* !iswmcs $1) {
+  elseif (: isin $1) && (w isincs %Switches) || (JSON:* !iswmcs $1) {
     %Error = PARAMETER_INVALID
   }
   else {
@@ -747,7 +747,7 @@ alias JSON {
   jfm_log -I $!JSON( $+ %Args $+ ) $+ $iif($len($prop), . $+ $prop)
 
   ;; If the alias was called without any inputs
-  if (!$0) || ($0 == 1 && $1 == $null) {
+  if (!$0) || ($0 == 1) && ($1 == $null) {
     %Error = MISSING_PARAMETERS
     goto error
   }
@@ -764,7 +764,7 @@ alias JSON {
   }
 
   ;; Otherwise, do basic validation on the @Name parameter
-  elseif (: isin $1 || * isin $1 || ? isin $1) || ($1 == 0 && $0 !== 1) {
+  elseif (: isin $1) || (* isin $1) || (? isin $1) || ($1 === 0) && ($0 !== 1) {
     %Error = INVALID_NAME
   }
 
@@ -849,7 +849,7 @@ alias JSON {
       if ($0 < 2) {
         %Error = INVALID_PARAMETERS
       }
-      elseif (!$len($2) || $isfile($2) || (!$regex($2, /[\\\/]/) && " isin $2)) {
+      elseif (!$len($2)) || ($isfile($2)) || (!$regex($2, /[\\\/]/)) && (" isin $2) {
         %Error = INVALID_FILE
       }
       else {
@@ -1076,7 +1076,7 @@ alias JSONForEach {
   if ($0 < 2) {
     %Error = INVAID_PARAMETERS
   }
-  elseif ($1 == 0) {
+  elseif ($1 === 0) {
     %Error = INVALID_HANDLER
   }
   
@@ -1496,7 +1496,7 @@ alias -l jfm_ComInit {
   jfm_log -I $!jfm_ComInit
 
   ;; If the JS Shell and engine are already open, log that the com is initialized and return
-  if ($com(SReject/JSONForMirc/JSONShell) && $com(SReject/JSONForMirc/JSONEngine)) {
+  if ($com(SReject/JSONForMirc/JSONShell)) && ($com(SReject/JSONForMirc/JSONEngine)) {
     jfm_log -EsD Already Initialized
     return
   }
@@ -1645,7 +1645,7 @@ alias -l jfm_Create {
   }
 
   ;; Attempt to call the parse method if the handler should not wait for the http request
-  elseif ($2 !== http || ($2 == http && !%Wait)) && (!$com($1, parse, 1)) {
+  elseif ($2 !== http) || ($2 == http) && (!%Wait) && (!$com($1, parse, 1)) {
     %Error = $jfm_GetError
   }
 
@@ -1820,7 +1820,7 @@ alias -l jfm_SaveDebug {
 
   ;; if a file was specified and it either doesn't exist or the user wants to overwrite the file
   ;;    save the debug buffer to the specified file
-  if (%File) && (!$isfile(%File) || $input(Are you sure you want to overwrite $nopath(%File), qysa, @SReject/JSONForMirc/Log, Overwrite)) {
+  if (%File) && (!$isfile(%File)) || ($input(Are you sure you want to overwrite $nopath(%File), qysa, @SReject/JSONForMirc/Log, Overwrite)) {
     savebuf @SReject/JSONForMirc/Log $qt(%File)
   }
 }
