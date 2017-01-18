@@ -105,7 +105,7 @@ alias JSONOpen {
   if ($isid) return
 
   ;; Unset the global error variable incase the last call ended in error
-  unset %SReject/JSONForMirc/Error
+  if ($hget(SReject/JSONForMirc,Error)) { hdel SReject/JSONForMirc Error }
 
   ;; local variable declarations
   var %Switches, %Error, %Com = $false, %Type = text, %HttpOptions = 0, %BVar, %BUnset = $true
@@ -226,7 +226,7 @@ alias JSONOpen {
   ;;     Start a timer to close the handle when script-execution finishes
   ;;     Log the error
   if (%Error) {
-    set -u1 %SReject/JSONForMirc/Error %Error
+    hadd -mu1 SReject/JSONForMirc Error %Error
     if (%Com) && ($com(%Com)) {
       .timer $+ %Com -iom 1 0 JSONClose $unsafe($1)
     }
@@ -258,7 +258,7 @@ alias JSONHttpMethod {
   if ($isid) return
 
   ;; Unset the global error variable incase the last call ended in error
-  unset %SReject/JSONForMirc/Error
+  if ($hget(SReject/JSONForMirc,Error)) { hdel SReject/JSONForMirc Error }
 
   ;; local variable declarations
   var %Error, %Com, %Method
@@ -310,7 +310,7 @@ alias JSONHttpMethod {
 
   ;; if an error occured, store the error in a global variable then log the error
   if (%Error) {
-    set -u1 %SReject/JSONForMirc/Error %Error
+    hadd -mu1 SReject/JSONForMirc Error %Error
     jfm_log -EeD %Error
   }
 
@@ -338,7 +338,7 @@ alias JSONHttpHeader {
   if ($isid) return
 
   ;; Unset the global error variable incase the last call ended in error
-  unset %SReject/JSONForMirc/Error
+  if ($hget(SReject/JSONForMirc,Error)) { hdel SReject/JSONForMirc Error }
 
   ;; local variable declarations
   var %Error, %Com, %Header
@@ -390,7 +390,7 @@ alias JSONHttpHeader {
 
   ;; if an error occured, store the error in a global variable then log the error
   if (%Error) {
-    set -u1 %SReject/JSONForMirc/Error %Error
+    hadd -mu1 SReject/JSONForMirc Error %Error
     jfm_log -EeD %Error
   }
 
@@ -418,7 +418,7 @@ alias JSONHttpFetch {
   if ($isid) return
 
   ;; Unset the global error variable incase the last call ended in error
-  unset %SReject/JSONForMirc/Error
+  if ($hget(SReject/JSONForMirc,Error)) { hdel SReject/JSONForMirc Error }
 
   ;; Local variable declarations
   var %Switches, %Error, %Com, %BVar, %BUnset
@@ -518,7 +518,7 @@ alias JSONHttpFetch {
 
   ;; if an error occured, store the error in a global variable then log the error
   if (%Error) {
-    set -u1 %SReject/JSONForMirc/Error %Error
+    hadd -mu1 SReject/JSONForMirc Error %Error
     jfm_log -EeD %Error
   }
 
@@ -542,7 +542,7 @@ alias JSONClose {
   if ($isid) return
 
   ;; Unset the global error variable incase the last call ended in error
-  unset %SReject/JSONForMirc/Error
+  if ($hget(SReject/JSONForMirc,Error)) { hdel SReject/JSONForMirc Error }
 
   ;; Local variable declarations
   var %Switches, %Error, %Match, %Com, %X = 1
@@ -618,7 +618,7 @@ alias JSONClose {
 
   ;; if an error occured, store the error in a global variable then log the error
   if (%Error) {
-    set -u1 %SReject/JSONForMirc/Error %Error
+    hadd -mu1 SReject/JSONForMirc Error %Error
     jfm_log -EeD /JSONClose %Error
   }
 
@@ -687,7 +687,7 @@ alias JSONShutDown {
   }
 
   ;; unset all related global variables
-  unset %SReject/JSONForMirc/?*
+  if ($hget(SReject/JSONForMirc)) { hfree $v1 }
 }
 
 
@@ -724,7 +724,7 @@ alias JSON {
   }
 
   ;; Unset the global error variable incase the last call ended in error
-  unset %SReject/JSONForMirc/Error
+  if ($hget(SReject/JSONForMirc,Error)) { hdel SReject/JSONForMirc Error }
 
   ;; Local variable declartions
   var %X = 1, %Args, %Params, %Error, %Com, %I = 0, %Prefix, %Prop, %Suffix, %Offset = $iif(*toFile iswm $prop,3,2), %Type, %Output, %Result, %ChildCom, %Call
@@ -886,7 +886,7 @@ alias JSON {
       %Error = $v1
     }
     else {
-      %Result = %SReject/JSONForMirc/Exec
+      %Result = $hget(SReject/JSONForMirc,Exec)
     }
   }
 
@@ -902,7 +902,7 @@ alias JSON {
       %Error = $v1
     }
     else {
-      %Result = %SReject/JSONForMirc/Exec
+      %Result = $hget(SReject/JSONForMirc,Exec)
     }
   }
 
@@ -952,7 +952,7 @@ alias JSON {
       if ($jfm_exec(%Com, type)) {
         %Error = $v1
       }
-      elseif ($bvar(%SReject/JSONForMirc/Exec, 1-).text == object) || ($v1 == array) {
+      elseif ($bvar($hget(SReject/JSONForMirc,Exec), 1-).text == object) || ($v1 == array) {
         %Result = $jfm_TmpBvar
         bset -t %Result 1 %Com
       }
@@ -962,7 +962,7 @@ alias JSON {
         %Error = $v1
       }
       else {
-        %Result = %SReject/JSONForMirc/Exec
+        %Result = $hget(SReject/JSONForMirc,Exec)
       }
     }
     
@@ -978,7 +978,7 @@ alias JSON {
         %Error = $v1
       }
       else {
-        %Result = %SReject/JSONForMirc/Exec
+        %Result = $hget(SReject/JSONForMirc,Exec)
       }
     }
 
@@ -990,14 +990,14 @@ alias JSON {
     elseif ($jfm_Exec(%Com, type)) {
       %Error = $v1
     }
-    elseif ($bvar(%SReject/JSONForMirc/Exec, 1-).text == object) || ($v1 == array) {
+    elseif ($bvar($hget(SReject/JSONForMirc,Exec), 1-).text == object) || ($v1 == array) {
       %Error = INVALID_TYPE
     }
     elseif ($jfm_Exec(%Com, value)) {
       %Error = $v1
     }
     else {
-      %Result = %SReject/JSONForMirc/Exec
+      %Result = $hget(SReject/JSONForMirc,Exec)
     }
   }
 
@@ -1031,7 +1031,7 @@ alias JSON {
 
   ;; If an error occured, store and log the error
   if (%Error) {
-    set -u1 %SReject/JSONForMirc/Error %Error
+    hadd -mu1 SReject/JSONForMirc Error %Error
     jfm_log -EeD %Error
   }
   else {
@@ -1049,7 +1049,7 @@ alias JSONForEach {
   if (!$isid) return
 
   ;; Unset the global error variable incase the last call ended in error
-  unset %SReject/JSONForMirc/Error
+  if ($hget(SReject/JSONForMirc,Error)) { hdel SReject/JSONForMirc Error }
 
   ;; Local variable declarations
   var %Error, %Log, %Call, %X = 0, %JSON, %Com, %ChildCom, %Result = 0, %Name
@@ -1209,7 +1209,7 @@ alias JSONForEach {
     if ($com(%Com)) {
       .comclose $v1
     }
-    set -u1 %SReject/JSONForMirc/Error %Error
+    hadd -mu1 SReject/JSONForMirc Error %Error
     jfm_log -EeD %Error
   }
 
@@ -1229,7 +1229,7 @@ alias JSONPath {
   }
 
   ;; Unset the global error variable incase the last call ended in error
-  unset %SReject/JSONForMirc/Error
+  if ($hget(SReject/JSONForMirc,Error)) { hdel SReject/JSONForMirc Error }
 
   ;; Local variable declarations
   var %Error, %Param, %X = 0, %JSON, %Result
@@ -1304,7 +1304,7 @@ alias JSONPath {
 
   ;; If an error occured, store it then log the error
   if (%Error) {
-    set -u1 %SReject/JSONForMirc/Error %Error
+    hadd -mu1 SReject/JSONForMirc Error %Error
     jfm_log -EeD %Error
   }
 
@@ -1320,7 +1320,7 @@ alias JSONPath {
 ;;     Returns any error the last call to /JSON* or $JSON() raised
 alias JSONError {
   if ($isid) {
-    return %SReject/JSONForMirc/Error
+    return $hget(SReject/JSONForMirc,Error)
   }
 }
 
@@ -1332,7 +1332,7 @@ alias JSONError {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %Ver = 1.0.3002
+    var %Ver = 1.0.3003
     if ($0) {
       return %Ver
     }
@@ -1659,7 +1659,7 @@ alias -l jfm_Create {
 
 ;; $jfm_Exec(@Name, @Method, [@Args])
 ;;     Executes the js method of the specified name
-;;         Stores the result in a tmp bvar and stores the name in %SReject/JSONForMirc/Exec
+;;         Stores the result in a tmp bvar and stores the name in 'SReject/JSONForMirc Exec' hash
 ;;         If an error occurs, returns the error
 ;;
 ;;     @Name - string - Required
@@ -1676,7 +1676,7 @@ alias -l jfm_Exec {
   var %Args, %Index = 1, %Params, %Error
 
   ;; cleanup from previous call
-  unset %SReject/JSONForMirc/Exec
+  if ($hget(SReject/JSONForMirc,Exec)) { hdel SReject/JSONForMirc Exec }
 
   ;; Loop over inputs, storing them in %Args(for logging), and %Params(for com calling)
   :args
@@ -1707,9 +1707,9 @@ alias -l jfm_Exec {
   }
   ;; otherwise create a temp bvar, store the result in the the bvar
   else {
-    set -u1 %SReject/JSONForMirc/Exec $jfm_tmpbvar
-    noop $com($1, %SReject/JSONForMirc/Exec).result
-    jfm_log -EsD Result stored in %SReject/JSONForMirc/Exec
+    hadd -mu1 SReject/JSONForMirc Exec $jfm_tmpbvar
+    noop $com($1, $hget(SReject/JSONForMirc,Exec)).result
+    jfm_log -EsD Result stored in $hget(SReject/JSONForMirc,Exec)
   }
 }
 
@@ -1743,7 +1743,7 @@ alias -l jfm_log {
   ;; if the debug window is not open, disable logging and unset the log indent variable
   if (!$window(@SReject/JSONForMirc/Log)) {
     .JSONDebug off
-    unset %SReject/JSONForMirc/LogIndent
+    if ($hget(SReject/JSONForMirc,LogIndent)) { hdel SReject/JSONForMirc LogIndent }
   }
   else {
 
@@ -1754,7 +1754,7 @@ alias -l jfm_log {
     }
 
     if (i isincs %Switches) {
-      inc -u1 %SReject/JSONForMirc/LogIndent
+      hinc -mu1 SReject/JSONForMirc LogIndent
     }
 
     if ($0) {
@@ -1779,17 +1779,17 @@ alias -l jfm_log {
       %Prefix = $chr(3) $+ %Color $+ %Prefix $+ $chr(15)
 
       ;; Compile the indent
-      %Indent = $str($chr(15) $+ $chr(32), $calc(%SReject/JSONForMirc/LogIndent *4))
+      %Indent = $str($chr(15) $+ $chr(32), $calc($hget(SReject/JSONForMirc,LogIndent) *4))
 
       ;; Add the log message to the log window
-      echo -gi $+ $calc((%SReject/JSONForMirc/LogIndent + 1) * 4 -1) @SReject/JSONForMirc/Log %Indent %Prefix $1-
+      echo -gi $+ $calc(($hget(SReject/JSONForMirc,LogIndent) + 1) * 4 -1) @SReject/JSONForMirc/Log %Indent %Prefix $1-
     }
 
     if (I isincs %Switches) {
-      inc -u1 %SReject/JSONForMirc/LogIndent 1
+      hinc -mu1 SReject/JSONForMirc LogIndent 1
     }
-    if (D isincs %Switches) && (%SReject/JSONForMirc/LogIndent > 0) {
-      dec -u1 %SReject/JSONForMirc/LogIndent 1
+    if (D isincs %Switches) && ($hget(SReject/JSONForMirc,LogIndent) > 0) {
+      hdec -mu1 SReject/JSONForMirc LogIndent 1
     }
   }
 }
