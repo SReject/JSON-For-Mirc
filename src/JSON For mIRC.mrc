@@ -886,7 +886,7 @@ alias JSON {
       %Error = $v1
     }
     else {
-      %Result = %SReject/JSONForMirc/Exec
+      %Result = $hget(SReject/JSONForMirc,Exec)
     }
   }
 
@@ -902,7 +902,7 @@ alias JSON {
       %Error = $v1
     }
     else {
-      %Result = %SReject/JSONForMirc/Exec
+      %Result = $hget(SReject/JSONForMirc,Exec)
     }
   }
 
@@ -952,7 +952,7 @@ alias JSON {
       if ($jfm_exec(%Com, type)) {
         %Error = $v1
       }
-      elseif ($bvar(%SReject/JSONForMirc/Exec, 1-).text == object) || ($v1 == array) {
+      elseif ($bvar($hget(SReject/JSONForMirc,Exec), 1-).text == object) || ($v1 == array) {
         %Result = $jfm_TmpBvar
         bset -t %Result 1 %Com
       }
@@ -962,7 +962,7 @@ alias JSON {
         %Error = $v1
       }
       else {
-        %Result = %SReject/JSONForMirc/Exec
+        %Result = $hget(SReject/JSONForMirc,Exec)
       }
     }
     
@@ -978,7 +978,7 @@ alias JSON {
         %Error = $v1
       }
       else {
-        %Result = %SReject/JSONForMirc/Exec
+        %Result = $hget(SReject/JSONForMirc,Exec)
       }
     }
 
@@ -990,14 +990,14 @@ alias JSON {
     elseif ($jfm_Exec(%Com, type)) {
       %Error = $v1
     }
-    elseif ($bvar(%SReject/JSONForMirc/Exec, 1-).text == object) || ($v1 == array) {
+    elseif ($bvar($hget(SReject/JSONForMirc,Exec), 1-).text == object) || ($v1 == array) {
       %Error = INVALID_TYPE
     }
     elseif ($jfm_Exec(%Com, value)) {
       %Error = $v1
     }
     else {
-      %Result = %SReject/JSONForMirc/Exec
+      %Result = $hget(SReject/JSONForMirc,Exec)
     }
   }
 
@@ -1659,7 +1659,7 @@ alias -l jfm_Create {
 
 ;; $jfm_Exec(@Name, @Method, [@Args])
 ;;     Executes the js method of the specified name
-;;         Stores the result in a tmp bvar and stores the name in %SReject/JSONForMirc/Exec
+;;         Stores the result in a tmp bvar and stores the name in 'SReject/JSONForMirc Exec' hash
 ;;         If an error occurs, returns the error
 ;;
 ;;     @Name - string - Required
@@ -1676,7 +1676,7 @@ alias -l jfm_Exec {
   var %Args, %Index = 1, %Params, %Error
 
   ;; cleanup from previous call
-  unset %SReject/JSONForMirc/Exec
+  if ($hget(SReject/JSONForMirc,Exec)) { hdel SReject/JSONForMirc Exec }
 
   ;; Loop over inputs, storing them in %Args(for logging), and %Params(for com calling)
   :args
@@ -1707,9 +1707,9 @@ alias -l jfm_Exec {
   }
   ;; otherwise create a temp bvar, store the result in the the bvar
   else {
-    set -u1 %SReject/JSONForMirc/Exec $jfm_tmpbvar
-    noop $com($1, %SReject/JSONForMirc/Exec).result
-    jfm_log -EsD Result stored in %SReject/JSONForMirc/Exec
+    hadd -mu1 SReject/JSONForMirc Exec $jfm_tmpbvar
+    noop $com($1, $hget(SReject/JSONForMirc,Exec)).result
+    jfm_log -EsD Result stored in $hget(SReject/JSONForMirc,Exec)
   }
 }
 
@@ -1743,7 +1743,7 @@ alias -l jfm_log {
   ;; if the debug window is not open, disable logging and unset the log indent variable
   if (!$window(@SReject/JSONForMirc/Log)) {
     .JSONDebug off
-    unset %SReject/JSONForMirc/LogIndent
+    if ($hget(SReject/JSONForMirc,LogIndent)) { hdel SReject/JSONForMirc LogIndent }
   }
   else {
 
@@ -1754,7 +1754,7 @@ alias -l jfm_log {
     }
 
     if (i isincs %Switches) {
-      inc -u1 %SReject/JSONForMirc/LogIndent
+      hinc -mu1 SReject/JSONForMirc LogIndent
     }
 
     if ($0) {
@@ -1779,17 +1779,17 @@ alias -l jfm_log {
       %Prefix = $chr(3) $+ %Color $+ %Prefix $+ $chr(15)
 
       ;; Compile the indent
-      %Indent = $str($chr(15) $+ $chr(32), $calc(%SReject/JSONForMirc/LogIndent *4))
+      %Indent = $str($chr(15) $+ $chr(32), $calc($hget(SReject/JSONForMirc,LogIndent) *4))
 
       ;; Add the log message to the log window
-      echo -gi $+ $calc((%SReject/JSONForMirc/LogIndent + 1) * 4 -1) @SReject/JSONForMirc/Log %Indent %Prefix $1-
+      echo -gi $+ $calc(($hget(SReject/JSONForMirc,LogIndent) + 1) * 4 -1) @SReject/JSONForMirc/Log %Indent %Prefix $1-
     }
 
     if (I isincs %Switches) {
-      inc -u1 %SReject/JSONForMirc/LogIndent 1
+      hinc -mu1 SReject/JSONForMirc LogIndent 1
     }
-    if (D isincs %Switches) && (%SReject/JSONForMirc/LogIndent > 0) {
-      dec -u1 %SReject/JSONForMirc/LogIndent 1
+    if (D isincs %Switches) && ($hget(SReject/JSONForMirc,LogIndent) > 0) {
+      hdec -mu1 SReject/JSONForMirc/LogIndent 1
     }
   }
 }
