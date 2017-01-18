@@ -105,7 +105,7 @@ alias JSONOpen {
   if ($isid) return
 
   ;; Unset the global error variable incase the last call ended in error
-  unset %SReject/JSONForMirc/Error
+  if ($hget(SReject/JSONForMirc,Error)) { hdel SReject/JSONForMirc Error }
 
   ;; local variable declarations
   var %Switches, %Error, %Com = $false, %Type = text, %HttpOptions = 0, %BVar, %BUnset = $true
@@ -226,7 +226,7 @@ alias JSONOpen {
   ;;     Start a timer to close the handle when script-execution finishes
   ;;     Log the error
   if (%Error) {
-    set -u1 %SReject/JSONForMirc/Error %Error
+    hadd -mu1 SReject/JSONForMirc Error %Error
     if (%Com) && ($com(%Com)) {
       .timer $+ %Com -iom 1 0 JSONClose $unsafe($1)
     }
@@ -258,7 +258,7 @@ alias JSONHttpMethod {
   if ($isid) return
 
   ;; Unset the global error variable incase the last call ended in error
-  unset %SReject/JSONForMirc/Error
+  if ($hget(SReject/JSONForMirc,Error)) { hdel SReject/JSONForMirc Error }
 
   ;; local variable declarations
   var %Error, %Com, %Method
@@ -310,7 +310,7 @@ alias JSONHttpMethod {
 
   ;; if an error occured, store the error in a global variable then log the error
   if (%Error) {
-    set -u1 %SReject/JSONForMirc/Error %Error
+    hadd -mu1 SReject/JSONForMirc Error %Error
     jfm_log -EeD %Error
   }
 
@@ -338,7 +338,7 @@ alias JSONHttpHeader {
   if ($isid) return
 
   ;; Unset the global error variable incase the last call ended in error
-  unset %SReject/JSONForMirc/Error
+  if ($hget(SReject/JSONForMirc,Error)) { hdel SReject/JSONForMirc Error }
 
   ;; local variable declarations
   var %Error, %Com, %Header
@@ -390,7 +390,7 @@ alias JSONHttpHeader {
 
   ;; if an error occured, store the error in a global variable then log the error
   if (%Error) {
-    set -u1 %SReject/JSONForMirc/Error %Error
+    hadd -mu1 SReject/JSONForMirc Error %Error
     jfm_log -EeD %Error
   }
 
@@ -418,7 +418,7 @@ alias JSONHttpFetch {
   if ($isid) return
 
   ;; Unset the global error variable incase the last call ended in error
-  unset %SReject/JSONForMirc/Error
+  if ($hget(SReject/JSONForMirc,Error)) { hdel SReject/JSONForMirc Error }
 
   ;; Local variable declarations
   var %Switches, %Error, %Com, %BVar, %BUnset
@@ -518,7 +518,7 @@ alias JSONHttpFetch {
 
   ;; if an error occured, store the error in a global variable then log the error
   if (%Error) {
-    set -u1 %SReject/JSONForMirc/Error %Error
+    hadd -mu1 SReject/JSONForMirc Error %Error
     jfm_log -EeD %Error
   }
 
@@ -542,7 +542,7 @@ alias JSONClose {
   if ($isid) return
 
   ;; Unset the global error variable incase the last call ended in error
-  unset %SReject/JSONForMirc/Error
+  if ($hget(SReject/JSONForMirc,Error)) { hdel SReject/JSONForMirc Error }
 
   ;; Local variable declarations
   var %Switches, %Error, %Match, %Com, %X = 1
@@ -618,7 +618,7 @@ alias JSONClose {
 
   ;; if an error occured, store the error in a global variable then log the error
   if (%Error) {
-    set -u1 %SReject/JSONForMirc/Error %Error
+    hadd -mu1 SReject/JSONForMirc Error %Error
     jfm_log -EeD /JSONClose %Error
   }
 
@@ -687,7 +687,7 @@ alias JSONShutDown {
   }
 
   ;; unset all related global variables
-  unset %SReject/JSONForMirc/?*
+  if ($hget(SReject/JSONForMirc)) { hfree $v1 }
 }
 
 
@@ -724,7 +724,7 @@ alias JSON {
   }
 
   ;; Unset the global error variable incase the last call ended in error
-  unset %SReject/JSONForMirc/Error
+  if ($hget(SReject/JSONForMirc,Error)) { hdel SReject/JSONForMirc Error }
 
   ;; Local variable declartions
   var %X = 1, %Args, %Params, %Error, %Com, %I = 0, %Prefix, %Prop, %Suffix, %Offset = $iif(*toFile iswm $prop,3,2), %Type, %Output, %Result, %ChildCom, %Call
@@ -1031,7 +1031,7 @@ alias JSON {
 
   ;; If an error occured, store and log the error
   if (%Error) {
-    set -u1 %SReject/JSONForMirc/Error %Error
+    hadd -mu1 SReject/JSONForMirc Error %Error
     jfm_log -EeD %Error
   }
   else {
@@ -1049,7 +1049,7 @@ alias JSONForEach {
   if (!$isid) return
 
   ;; Unset the global error variable incase the last call ended in error
-  unset %SReject/JSONForMirc/Error
+  if ($hget(SReject/JSONForMirc,Error)) { hdel SReject/JSONForMirc Error }
 
   ;; Local variable declarations
   var %Error, %Log, %Call, %X = 0, %JSON, %Com, %ChildCom, %Result = 0, %Name
@@ -1209,7 +1209,7 @@ alias JSONForEach {
     if ($com(%Com)) {
       .comclose $v1
     }
-    set -u1 %SReject/JSONForMirc/Error %Error
+    hadd -mu1 SReject/JSONForMirc Error %Error
     jfm_log -EeD %Error
   }
 
@@ -1229,7 +1229,7 @@ alias JSONPath {
   }
 
   ;; Unset the global error variable incase the last call ended in error
-  unset %SReject/JSONForMirc/Error
+  if ($hget(SReject/JSONForMirc,Error)) { hdel SReject/JSONForMirc Error }
 
   ;; Local variable declarations
   var %Error, %Param, %X = 0, %JSON, %Result
@@ -1304,7 +1304,7 @@ alias JSONPath {
 
   ;; If an error occured, store it then log the error
   if (%Error) {
-    set -u1 %SReject/JSONForMirc/Error %Error
+    hadd -mu1 SReject/JSONForMirc Error %Error
     jfm_log -EeD %Error
   }
 
@@ -1320,7 +1320,7 @@ alias JSONPath {
 ;;     Returns any error the last call to /JSON* or $JSON() raised
 alias JSONError {
   if ($isid) {
-    return %SReject/JSONForMirc/Error
+    return $hget(SReject/JSONForMirc,Error)
   }
 }
 
@@ -1332,7 +1332,7 @@ alias JSONError {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %Ver = 1.0.3002
+    var %Ver = 1.0.3003
     if ($0) {
       return %Ver
     }
