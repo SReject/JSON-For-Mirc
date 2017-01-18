@@ -1789,7 +1789,7 @@ alias -l jfm_log {
       hinc -mu1 SReject/JSONForMirc LogIndent 1
     }
     if (D isincs %Switches) && ($hget(SReject/JSONForMirc,LogIndent) > 0) {
-      hdec -mu1 SReject/JSONForMirc/LogIndent 1
+      hdec -mu1 SReject/JSONForMirc LogIndent 1
     }
   }
 }
