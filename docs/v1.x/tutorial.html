@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="./styles/style.css" />
+    </head>
+    <body>
+        <div class="page">
+            <div class="pagehead">
+                <div>
+                    <div>
+                        <div class="title"><a href="./index.html">JSONForMirc</a></div>
+                        <div class="subtitle">
+                            <div><a href="https://github.com/SReject/JSON-For-Mirc" target="_blank">Source</a></div>
+                            <div><a href="https://github.com/SReject/JSON-For-Mirc/issues" target="_blank">Bugs</a></div>
+                            <div><a href="https://streamjar.tv/tip/SReject" target="_blank">Donate</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pagewrapper">
+                <div class="pagemenu">
+                    <ul>
+                        <li>
+                            <a href="./">Home</a>
+                        </li>
+
+                        <li>
+                            <a href="./license">License &amp; Warranty</a>
+                        </li>
+
+                        <li data-type="list">
+                            <a href="./downloads">Downloads</a>
+                            <ul>
+                                <li><a href="./downloads#stable">Stable</a></li>
+                                <li><a href="./downloads#prerelease">Pre-Release</a></li>
+                                <li><a href="https://github.com/SReject/JSON-For-Mirc/releases" target="_blank">All</a></li>
+                            </ul>
+                        </li>
+
+                        <li data-type="list">
+                            <a href="./json">JSON Explained</a>
+                            <ul>
+                                <li><a href="./json#whitespace">Whitespace</a></li>
+                                <li class="sep"></li>
+
+                                <li><a href="./json#datatype/primitive">Primitives</a></li>
+                                <li class="indent"><a href="./json#datatype/primitive/null">Null</a></li>
+                                <li class="indent"><a href="./json#datatype/primitive/boolean">Boolean</a></li>
+                                <li class="indent"><a href="./json#datatype/primitive/number">Number</a></li>
+                                <li class="indent"><a href="./json#datatype/primitive/string">String</a></li>
+                                <li class="sep"></li>
+
+                                <li><a href="./json#datatype/containers">Containers</a></li>
+                                <li class="indent"><a href="./json#datatype/containers/array">Array</a></li>
+                                <li class="indent"><a href="./json#datatype/containers/object">Object</a></li>
+                                <li class="sep"></li>
+
+                                <li><a href="./json#reference">Referencing</a></li>
+                                <li class="indent"><a href="./json#reference/primitives">Primitives</a></li>
+                                <li class="indent"><a href="./json#reference/containers">Containers</a></li>
+                                <li class="indent"><a href="./json#reference/nests">Nests</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="active" data-type="list">
+                            <a href="./tutorial">Tutorial</a>
+                            <ul>
+                                <li><a href="./tutorial#create">Creation</a></li>
+                                <li><a href="./tutorial#http">HTTP/URLs</a></li>
+                                <li><a href="./tutorial#state">State Info</a></li>
+                                <li><a href="./tutorial#access">Accessing</a></li>
+                                <li><a href="./tutorial#loop">Looping</a></li>
+                                <li><a href="./tutorial#close">Closing</a></li>
+                                <li><a href="./tutorial#errors">Error Handling</a></li>
+                                <li><a href="./tutorial#misc">Misc</a></li>
+                            </ul>
+                        </li>
+
+                        <li data-type="list">
+                            <a href="./reference">Reference</a>
+                            <ul>
+                                <li><a href="./reference#cmd/jsonlist">/JSONList</a></li>
+                                <li><a href="./reference#cmd/jsonopen">/JSONOpen</a></li>
+                                <li><a href="./reference#cmd/jsonhttpmethod">/JSONHttpMethod</a></li>
+                                <li><a href="./reference#cmd/jsonhttpheader">/JSONHttpHeader</a></li>
+                                <li><a href="./reference#cmd/jsonhttpfetch">/JSONHttpFetch</a></li>
+                                <li><a href="./reference#cmd/jsonclose">/JSONClose</a></li>
+                                <li><a href="./reference#cmd/jsonshutdown">/JSONShutdown</a></li>
+                                <li class="sep"></li>
+
+                                <li><a href="./reference#id/json">$JSON(name)</a></li>
+                                <li class="indent"><a href="./reference#id/json/tobvar">ToBvar Prop Suffix</a></li>
+                                <li class="indent"><a href="./reference#id/json/tofile">ToFile Prop Suffix</a></li>
+                                <li class="indent"><a href="./reference#id/json/state">.State</a></li>
+                                <li class="indent"><a href="./reference#id/json/inputtype">.InputType</a></li>
+                                <li class="indent"><a href="./reference#id/json/input">.Input</a></li>
+                                <li class="indent"><a href="./reference#id/json/ischild">.IsChild</a></li>
+                                <li class="indent"><a href="./reference#id/json/httpparse">.HttpParse</a></li>
+                                <li class="indent"><a href="./reference#id/json/httpstatus">.HttpStatus</a></li>
+                                <li class="indent"><a href="./reference#id/json/statustext">.HttpStatusText</a></li>
+                                <li class="indent"><a href="./reference#id/json/httpheader">.HttpHeader</a></li>
+                                <li class="indent"><a href="./reference#id/json/httpheaders">.HttpHeaders</a></li>
+                                <li class="indent"><a href="./reference#id/json/httphead">.HttpHead</a></li>
+                                <li class="indent"><a href="./reference#id/json/httpbody">.HttpBody</a></li>
+                                <li class="indent"><a href="./reference#id/json/httpresponse">.HttpResponse</a></li>
+                                <li class="indent"><a href="./reference#id/json/error">.Error</a></li>
+                                <li class="indent"><a href="./reference#id/json/debug">.Debug</a></li>
+                                <li class="sep"></li>
+
+                                <li><a href="./reference#id/json(lookup)">$JSON(name, members...)</a></li>
+                                <li class="indent"><a href="./reference#id/json(lookup)/fuzzy">Fuzzy Prop Prefix</a></li>
+                                <li class="indent"><a href="./reference#id/json(lookup)/path">.Path</a></li>
+                                <li class="indent"><a href="./reference#id/json(lookup)/type">.Type</a></li>
+                                <li class="indent"><a href="./reference#id/json(lookup)/iscontainer">.IsContainer</a></li>
+                                <li class="indent"><a href="./reference#id/json(lookup)/length">.Length</a></li>
+                                <li class="indent"><a href="./reference#id/json(lookup)/value">.Value</a></li>
+                                <li class="indent"><a href="./reference#id/json(lookup)/string">.String</a></li>
+                                <li class="sep"></li>
+
+                                <li><a href="./reference#id/jsonforeach">$JSONForEach()</a></li>
+                                <li class="indent"><a href="./reference#id/jsonforeach/fuzzy">.Fuzzy</a></li>
+                                <li class="indent"><a href="./reference#id/jsonforeach/walk">.Walk</a></li>
+                                <li class="sep"></li>
+
+                                <li><a href="./reference#id/jsonpath">$JSONPath</a></li>
+                                <li class="sep"></li>
+
+                                <li><a href="./reference#id/jsonerror">$JSONError</a></li>
+                                <li class="sep"></li>
+
+                                <li><a href="./reference#cmd/jsondebug">/JSONDebug</a></li>
+                                <li><a href="./reference#id/jsondebug">$JSONDebug</a></li>
+                                <li class="sep"></li>
+
+                                <li><a href="./reference#cmd/jsoncompact">/JSONCompact</a></li>
+                                <li><a href="./reference#id/jsoncompact">$JSONCompact</a></li>
+                                <li class="sep"></li>
+
+                                <li><a href="./reference#id/jsonversion">$JSONVersion</a></li>
+                            </ul>
+                        </li>
+
+                        <li data-type="list">
+                            <a href="./community">Community</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="pagebody">
+                    <p>To Do</p>
+                </div>
+            </div>
+            <div class="pagefoot">SReject &copy; 2016-2017</div>
+        </div>
+    </body>
+</html>

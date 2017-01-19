@@ -1,0 +1,213 @@
+@import 'https://fonts.googleapis.com/css?family=Cutive+Mono|Open+Sans:400,600,800|Sarpanch:800,900';
+html, body {
+    margin: 0px;
+    padding: 0px;
+    min-width: 1000px;
+    min-height: 600px;
+    height: 100%;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 18px;
+}
+a,
+a:hover,
+a:visited {
+    text-decoration: none;
+    color: rgb(128, 174, 189);
+    text-shadow: 1px 1px 1px black;
+}
+a:hover {
+    color: rgb(160, 218, 236);
+    
+}
+
+
+
+/*=====================**
+**                     **
+**     PAGE LAYOUT     **
+**                     **
+**=====================*/
+.page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+.pagehead {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 2;
+}
+.pagewrapper {
+    flex-grow: 1;
+    display: flex;
+}
+.pagewrapper > * {
+    margin-top: 106px;
+    padding-bottom: 2em;
+}
+.pagefoot {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    z-index: 2;
+}
+
+
+
+/*================**
+**                **
+**     HEADER     **
+**                **
+**================*/
+.pagehead {
+    display: flex;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background:rgb(42,42,43) url('../media/banner.png') no-repeat center;
+    border-bottom: 1px solid black;
+    
+    box-shadow: 0px 2px 10px black;
+    font-weight: bold;
+}
+.pagehead > div {
+    flex-grow: 1;
+}
+.pagehead > div > div {
+    width: 325px;
+    margin: 0 auto;
+    padding: .5em 0em;
+    text-align: center;
+}
+.pagehead .title {
+    font-family: Sarpanch, monospace;
+    font-size: 2.5em;
+    text-shadow: 2px 2px black;
+}
+.pagehead .title a {
+    color: white;
+}
+.pagehead .subtitle {
+    display: flex;
+}
+.pagehead .subtitle > div {
+    flex-grow: 1;
+    flex-basis: 0;
+    text-align: center;
+}
+
+
+
+/*==================**
+**                  **
+**     NAV LIST     **
+**                  **
+**==================*/
+.pagemenu {
+    flex-grow: 0;
+    flex-shrink: 0;
+    position: relative;
+    box-shadow: 1px 0px 10px black;
+    width: 320px;
+    background-color: rgb(40,40,40);
+    font-family: Sarpanch;
+    font-weight: 800;
+    font-size: 1.1em;
+    color: rgb(64, 130, 150);
+    padding-top: 30px;
+}
+.pagemenu ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+.pagemenu a,
+.pagemenu a:hover,
+.pagemenu a:visited {
+    color: rgb(64, 130, 150);
+    padding-left: 30px;
+    padding-right: 30px;
+    display: block;
+}
+.pagemenu a:hover {
+    background-color: black;
+    color: rgb(96, 162, 182);
+}
+.pagemenu li.active {
+    background-color: rgb(20,20,20);
+}
+.pagemenu li.active > a {
+    color: rgb(96, 162, 182);
+}
+.pagemenu li[data-type=list].active {
+    padding-bottom: .5em;
+}
+.pagemenu li[data-type=list] > ul > li {
+    font-family: 'Cutive Mono', monospace;
+    font-size: .9em;
+}
+.pagemenu li:not(.active) > ul {
+    display: none;
+}
+.pagemenu li.sep {
+    display: block;
+    height: .75em;
+}
+.pagemenu li[data-type=list] > ul > li > a {
+    padding-left: 40px;
+    text-shadow: none;
+}
+.pagemenu li[data-type=list] > ul > li.indent > a {
+    padding-left: 50px;
+    font-size: .9em;
+}
+
+
+
+/*=================**
+**                 **
+**     CONTENT     **
+**                 **
+**=================*/
+.pagebody {
+    flex-grow: 1;
+    padding: 30px;
+    font-size: 22px;
+    text-shadow: 0px 0px 2px black;
+    color: rgb(92,92,92);
+    background-color: rgb(10,10,10);
+}
+
+.pagebody a,
+.pagebody a:hover,
+.pagebody a:visited {
+    font-weight: 600;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*================**
+**                **
+**     FOOTER     **
+**                **
+**================*/
+.pagefoot {
+    padding: .25em;
+    text-align: center;
+    color: rgb(64,64,64);
+    font-size: .85em;
+}

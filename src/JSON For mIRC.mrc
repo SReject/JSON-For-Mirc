@@ -25,13 +25,13 @@ on *:LOAD:{
       .unload -rs $qt($script)
     }
   }
-  
+
   ;; mIRC check
   elseif ($version < 7.44) {
     echo -ag [JSON For mIRC] mIRC v7.44 or later is required
     .unload -rs $qt($script)
   }
-  
+
   ;; if passed, call jsonshutdown so the JS engine from a previously loaded version gets shutdown
   else {
     JSONShutdown
@@ -424,7 +424,7 @@ alias JSONHttpFetch {
   if ($isid) return
 
   ;; Unset the global error variable incase the last call ended in error
-  if ($hget(SReject/JSONForMirc,Error)) {
+  if ($hget(SReject/JSONForMirc, Error)) {
     hdel SReject/JSONForMirc Error
   }
 
@@ -833,7 +833,7 @@ alias JSON {
 
     ;; URL props have been depreciated, switch the prop to the HTTP equivulant
     %Prop = $regsubex(%Prop, /^url/i, http)
-    
+
     ;; v0.2.41 compatibility mode props:
     if ($JSONCompat) {
 
@@ -960,7 +960,7 @@ alias JSON {
     ;;     if the referenced item is a container, return a reference to that item
     ;;     if the reference is not a container, return the value
     if ($JSONCompat) && ($prop == $null) {
-    
+
       ;; attempt to retrieve the reference type and if its an object or an array, the result is
       ;; a reference to that item.
       if ($jfm_exec(%Com, type)) {
@@ -970,7 +970,7 @@ alias JSON {
         %Result = $jfm_TmpBvar
         bset -t %Result 1 %Com
       }
-      
+
       ;; Attempt to retrieve the reference's value
       elseif ($jfm_Exec(%Com, value)) {
         %Error = $v1
@@ -979,7 +979,7 @@ alias JSON {
         %Result = $hget(SReject/JSONForMirc, Exec)
       }
     }
-    
+
     ;; No Prop? then the result is the child com's name
     elseif (!%Prop) {
       %Result = $jfm_TmpBvar
@@ -1095,7 +1095,7 @@ alias JSONForEach {
   elseif ($1 == 0) {
     %Error = INVALID_HANDLER
   }
-  
+
   ;; Validate prop
   elseif ($prop !== $null) && ($prop !== walk) && ($prop !== fuzzy) {
     %Error = INVALID_PROPERTY
