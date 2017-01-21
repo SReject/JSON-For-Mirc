@@ -658,14 +658,14 @@ alias JSONList {
     ;; If the com is a json handler, output the name
     if (JSON:?* iswm $v1) {
       inc %I
-      echo $color(info) -ag * $chr(35) $+ %I : $v2
+      echo $color(info) -age * $chr(35) $+ %I $+ : $v2
     }
     inc %X
   }
 
   ;; If no json handlers were found, output such
   if (!%I) {
-    echo $color(info) -ag * No active JSON handlers
+    echo $color(info) -age * No active JSON handlers
   }
 }
 
