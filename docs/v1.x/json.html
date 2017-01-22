@@ -349,12 +349,36 @@
                                         <br>
                                         jsondata = parse_json(input)<br>
                                         <br>
-                                        <div class="comment">; I need to do some explaining!</div>
+
+                                        <div class="comment">; Results in 'myvar' being set to the text: value</div>
+                                        myvar = jsondata &#8594; key1<br>
+                                        <br>
+
+                                        <div class="comment">; Looks up 'key2' in the json data</div>
+                                        <div class="comment">; then within key2's value the item at index-0 is looked up</div>
+                                        <div class="comment">; resulting in 'myvar' being set to the text: index0</div>
+                                        myvar = jsondata &#8594; key2 &#8594; 0<br>
+                                        <br>
+
+                                        <div class="comment">; Same as above but the item's value at index-1 is returned</div>
+                                        <div class="comment">; resulting in 'myvar' being set to the text: index1</div>
+                                        myvar = jsondata &#8594; key2 &#8594; 1<br>
+                                        <br>
+
+                                        <div class="comment">; Looks up 'key3' in the json data</div>
+                                        <div class="comment">; then within key3's value looks up 'key3.1'</div>
+                                        <div class="comment">; resulting in 'myvar' being set to the text: value2</div>
+                                        myvar = jsondata &#8594; key3 &#8594; key3.1<br>
+                                        <br>
+
+                                        <div class="comment">; Looks up 'key4' in the json data</div>
+                                        <div class="comment">; then within key4's value looks up 'key4.1'</div>
+                                        <div class="comment">; then within key4.1's value, looks up the item at index-0</div>
+                                        <div class="comment">; resulting in 'myvar' being set to the text: value3</div>
+                                        myvar = jsondata &#8594; key4 &#8594; key4.1 &#8594; 0
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
