@@ -1840,7 +1840,7 @@ alias -l jfm_SaveDebug {
 
   ;; if a file was specified and it either doesn't exist or the user wants to overwrite the file
   ;;    save the debug buffer to the specified file
-  if (%File) && (!$isfile(%File) || $input(Are you sure you want to overwrite $nopath(%File), qysa, @SReject/JSONForMirc/Log, Overwrite)) {
+  if (%File) && (!$isfile(%File) || $input(Are you sure you want to overwrite $nopath(%File) $+ ?, qysa, @SReject/JSONForMirc/Log, Overwrite)) {
     savebuf @SReject/JSONForMirc/Log $qt(%File)
   }
 }
