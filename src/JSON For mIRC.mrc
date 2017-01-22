@@ -1652,13 +1652,13 @@ alias -l jfm_GetError {
 alias -l jfm_Create {
 
   ;; Local variable declaration
-  var %Wait = $iif(1 & $4, $true, $false), %NoParse = $iif(2 & $4, $true, $false), %Error
+  var %Wait = $iif(1 & $4, $true, $false), %Parse = $iif(2 & $4, $false, $true), %Error
 
   ;; Log the alias call
   jfm_log -I $!jfm_create( $+ $1 $+ , $+ $2 $+ , $+ $3 $+ , $+ $4)
 
   ;; Attempt to create the json handler and if an error occurs retrieve the error, log it and return it
-  if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, $2, &bstr, $3, bool, %NoParse, dispatch* $1)) || ($comerr) || (!$com($1)) {
+  if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, $2, &bstr, $3, bool, %Parse, dispatch* $1)) || ($comerr) || (!$com($1)) {
     %Error = $jfm_GetError
   }
 
@@ -1799,16 +1799,16 @@ alias -l jfm_log {
       %Prefix = $chr(3) $+ %Color $+ %Prefix $+ $chr(15)
 
       ;; Compile the indent
-      %Indent = $str($chr(15) $+ $chr(32), $calc($hget(SReject/JSONForMirc,LogIndent) *4))
+      %Indent = $str($chr(15) $+ $chr(32), $calc($hget(SReject/JSONForMirc, LogIndent) *4))
 
       ;; Add the log message to the log window
-      echo -gi $+ $calc(($hget(SReject/JSONForMirc,LogIndent) + 1) * 4 -1) @SReject/JSONForMirc/Log %Indent %Prefix $1-
+      echo -gi $+ $calc(($hget(SReject/JSONForMirc, LogIndent) + 1) * 4 -1) @SReject/JSONForMirc/Log %Indent %Prefix $1-
     }
 
     if (I isincs %Switches) {
       hinc -mu1 SReject/JSONForMirc LogIndent 1
     }
-    if (D isincs %Switches) && ($hget(SReject/JSONForMirc,LogIndent) > 0) {
+    if (D isincs %Switches) && ($hget(SReject/JSONForMirc, LogIndent) > 0) {
       hdec -mu1 SReject/JSONForMirc LogIndent 1
     }
   }

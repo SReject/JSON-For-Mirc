@@ -280,7 +280,7 @@
                         this._http.response = request;
 
                         // if the response isn't to be parsed, return the handle instance
-                        if (!this._parse) {
+                        if (this._parse === false) {
                             return this;
                         }
 
@@ -490,18 +490,16 @@
         }
     };
 
-    JSONCreate = function(type, source, noparse) {
+    JSONCreate = function(type, source, parse) {
         var self = new JSONWrapper();
         self._state = 'init';
         self._type = (type || 'text').toLowerCase();
+        self._parse = parse === false ? false : true
 
         if (self._type === 'http') {
             if (!HTTPObject) {
                 self._error = 'HTTP_NOT_FOUND';
                 throw new Error('HTTP_NOT_FOUND');
-            }
-            if (noparse) {
-                self._parse = false;
             }
             self._state = 'http_pending';
             self._http.url = source;
