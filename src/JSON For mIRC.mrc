@@ -68,7 +68,7 @@ menu @SReject/JSONForMirc/Log {
   .-
   .Toggle Debug: jsondebug
   .-
-  .Close: close -@ $window
+  .Close: jsondebug off | close -@ $window
 }
 
 
