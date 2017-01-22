@@ -1836,7 +1836,7 @@ alias -l jfm_SaveDebug {
     return $false
   }
 
-  var %File = $sfile($envvar(USERPROFILE) $+ \Documents\JSONForMirc.log, Save, Save)
+  var %File = $sfile($envvar(USERPROFILE) $+ \Documents\JSONForMirc.log, JSONForMirc - Debug window, Save)
 
   ;; if a file was specified and it either doesn't exist or the user wants to overwrite the file
   ;;    save the debug buffer to the specified file
