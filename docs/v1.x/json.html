@@ -49,7 +49,7 @@
                                 <li><a href="./json#whitespace">Whitespace</a></li>
                                 <li class="sep"></li>
 
-                                <li><a href="./json#datatype/primitive">Primitives</a></li>
+                                <li><a href="./json#datatype/primitives">Primitives</a></li>
                                 <li class="indent"><a href="./json#datatype/primitive/null">Null</a></li>
                                 <li class="indent"><a href="./json#datatype/primitive/boolean">Boolean</a></li>
                                 <li class="indent"><a href="./json#datatype/primitive/number">Number</a></li>
@@ -57,8 +57,8 @@
                                 <li class="sep"></li>
 
                                 <li><a href="./json#datatype/containers">Containers</a></li>
-                                <li class="indent"><a href="./json#datatype/containers/array">Array</a></li>
-                                <li class="indent"><a href="./json#datatype/containers/object">Object</a></li>
+                                <li class="indent"><a href="./json#datatype/container/array">Array</a></li>
+                                <li class="indent"><a href="./json#datatype/container/object">Object</a></li>
                                 <li class="sep"></li>
 
                                 <li><a href="./json#reference">Referencing</a></li>
@@ -152,7 +152,104 @@
                     </ul>
                 </div>
                 <div class="pagebody">
-                    <p>To Do</p>
+
+                    <div class="section">
+                        <div class="head">What is JSON?</div>
+                        <div class="content">
+                            <p>JSON is short for "JavaScript Object Notation"; originally meant for web applications, it has become the go-to data format for many enviornments and platforms. Its structuring makes for small, text-based, outputs that are easily parsable programmatically while still being human legiable.</p>
+                            <p>JSON is NOT a functional data notation. JSON data does not have a means to specify directives(commands) a program must do when attempting to understand the JSON data; the JSON standard strictly prohibits such as a means of ensuring security.</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div id="whitespace" class="head">Whitespace</div>
+                        <div class="content">
+                            <p>Previously it was mentioned that JSON is human readable yet most web api's return it as a jumbled mess. This is because JSON intrepreters are required to ignore whitespace so it can be removed without costing data integrity; this is what those APIs do with the intent of reducing network traffic.</p>
+                            <p>There are <a href="http://jsonviewer.stack.hu/" target="_blank">online tools</a> that will re-add whitespace to make the output human readable</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div id="datatype/primitives" class="head">Primitives</div>
+                        <div class="content">
+                            <p>JSON has four primitive data types to represent simple values. These data types do not have the complexity or structuring to contain multiple values the way Container Types do.</p>
+
+                            <div class="sub">
+                                <div id="datatype/primitive/null">
+                                    <span class="head">Null</span> - <span class="denote">Denoted by the keyword <span class="code">null</span></span>
+                                </div>
+                                <div class="content">
+                                    <p>Null is used when there is absolutely no value to reference. That is, the value isn't empty text or 0 or false; there is absolutely nothing to reference.</p>
+                                </div>
+                            </div>
+
+                            <div class="sub">
+                                <div id="datatype/primitive/boolean">
+                                    <span class="head">Boolean</span> - <span class="denote">Denoted by the keywords <span class="code">true</span> and <span class="code">false</span></span>
+                                </div>
+                                <div class="content">
+                                    <p>Boolean is used when a value is meant to only have two states. Its used to say "yes", "true", "on", "no", "false", "off"</p>
+                                </div>
+                            </div>
+
+                            <div class="sub">
+                                <div id="datatype/primitive/number">
+                                    <span class="head">Number</span> - <span class="denote">Denoted by a typical numerical sequence</span>
+                                </div>
+                                <div class="content">
+                                    <p>Number is used when a value should be intrepreted as a number; Positive numbers, negitive numbers and decimals are all Number data types.</p>
+                                </div>
+                            </div>
+
+                            <div class="sub">
+                                <div id="datatype/primitive/string">
+                                    <span class="head">String</span> - <span class="denote">Denoted by text wrapped in double quotes(<span class="code">&quot;&quot;</span>)</span>
+                                </div>
+                                <div class="content">
+                                    <p>String is used when a value, regardless of its contents should be intrepreted as text.</p>
+                                    <p>Due to strings being able to contain any text, including double quotes, there are special character sequences that have alternative meanings within the context of a string:</p>
+                                    <div class="indent">
+                                        <p class="nomargin"><span class="code">\&quot;</span> - Represents a double quote</p>
+                                        <p class="nomargin"><span class="code">\/</span> - Represents a forward slash</p>
+                                        <p class="nomargin"><span class="code">\\</span> - Represents a back slash</p>
+                                        <p class="nomargin"><span class="code">\f</span> - Represents a form-feed character</p>
+                                        <p class="nomargin"><span class="code">\b</span> - Represents a back-space character</p>
+                                        <p class="nomargin"><span class="code">\r</span> - Represents a carriage return character</p>
+                                        <p class="nomargin"><span class="code">\n</span> - Represents a line-feed character</p>
+                                        <p class="nomargin"><span class="code">\t</span> - Represents a tab character</p>
+                                        <p class="nomargin"><span class="code">\uNNNN</span> - Represents a unicode character where <span class="code">NNNN</span> is the hexidecimal code point.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div id="datatype/container" class="head">Containers</div>
+                        <div class="content">
+                            <p>Containers, as their name implies, are used to contain multiple values and can consist of both primitive and container datatypes.</p>
+
+                            <div class="sub">
+                                <div id="datatype/container/array">
+                                    <span class="head">Array</span> - <span class="denote">Denoted by a comma seperated list of values wrapped in brackets(<span class="code">[]</span>)</span>
+                                </div>
+                                <div class="content">
+                                    <p>Arrays are ordered lists of values where each value is automatically given an index for referencing.</p>
+                                    <p>Indexes start at zero and increase by one for each value; the first value uses an index of 0, the second an index of 1, the third an index of 2 and so on for each value in the array.</p>
+                                </div>
+                            </div>
+
+                            <div class="sub">
+                                <div id="datatype/container/object">
+                                    <span class="head">Object</span> - <span class="denote">Donated by a comma seperated list of key-value pairs wrapped in braces(<span class="code">{}</span>)</span>
+                                </div>
+                                <div class="content">
+                                    <p>Objects are unordered lists where each value contained within is referenced by a given key.</p>
+                                    <p>All keys are represented as a string and are seperated from their value via the use of a colon(<span class="code">:</span>). Keys are case sensitive so attempting to reference "KEY" will not point to the data contained under "key"</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="pagefoot">SReject &copy; 2016-2017</div>
