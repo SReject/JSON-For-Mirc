@@ -156,68 +156,68 @@
                     <div class="section">
                         <div class="head">What is JSON?</div>
                         <div class="content">
-                            <p>JSON is short for "JavaScript Object Notation"; originally meant for web applications, it has become the go-to data format for many enviornments and platforms. Its structuring makes for small, text-based, outputs that are easily parsable programmatically while still being human legiable.</p>
-                            <p>JSON is NOT a functional data notation. JSON data does not have a means to specify directives(commands) a program must do when attempting to understand the JSON data; the JSON standard strictly prohibits such as a means of ensuring security.</p>
+                            <div>JSON is short for "JavaScript Object Notation"; originally meant for web applications, it has become the go-to data format for many enviornments and platforms. Its structuring makes for small, text-based, outputs that are easily parsable programmatically while still being human legiable.</div>
+                            <div>JSON is NOT a functional data notation. JSON data does not have a means to specify directives(commands) a program must do when attempting to understand the JSON data; the JSON standard strictly prohibits such as a means of ensuring security.</div>
                         </div>
                     </div>
 
                     <div class="section">
                         <div id="whitespace" class="head">Whitespace</div>
                         <div class="content">
-                            <p>Previously it was mentioned that JSON is human readable yet most web api's return it as a jumbled mess. This is because JSON intrepreters are required to ignore whitespace so it can be removed without costing data integrity; this is what those APIs do with the intent of reducing network traffic.</p>
-                            <p>There are <a href="http://jsonviewer.stack.hu/" target="_blank">online tools</a> that will re-add whitespace to make the output human readable</p>
+                            <div>Previously it was mentioned that JSON is human readable yet most web api's return it as a jumbled mess. This is because JSON intrepreters are required to ignore whitespace so it can be removed without costing data integrity; this is what those APIs do with the intent of reducing network traffic.</div>
+                            <div>There are <a href="http://jsonviewer.stack.hu/" target="_blank">online tools</a> that will re-add whitespace to make the output human readable.</div>
                         </div>
                     </div>
 
                     <div class="section">
                         <div id="datatype/primitives" class="head">Primitives</div>
                         <div class="content">
-                            <p>JSON has four primitive data types to represent simple values. These data types do not have the complexity or structuring to contain multiple values the way Container Types do.</p>
+                            <div>JSON has four primitive data types to represent simple values. These data types do not have the complexity or structuring to contain multiple values the way Container Types do.</div>
 
-                            <div class="sub">
+                            <div>
                                 <div id="datatype/primitive/null">
                                     <span class="head">Null</span> - <span class="denote">Denoted by the keyword <span class="code">null</span></span>
                                 </div>
                                 <div class="content">
-                                    <p>Null is used when there is absolutely no value to reference. That is, the value isn't empty text or 0 or false; there is absolutely nothing to reference.</p>
+                                    <div>Null is used when there is absolutely no value to reference. That is, the value isn't empty text or 0 or false; there is absolutely nothing to reference.</div>
                                 </div>
                             </div>
 
-                            <div class="sub">
+                            <div>
                                 <div id="datatype/primitive/boolean">
                                     <span class="head">Boolean</span> - <span class="denote">Denoted by the keywords <span class="code">true</span> and <span class="code">false</span></span>
                                 </div>
                                 <div class="content">
-                                    <p>Boolean is used when a value is meant to only have two states. Its used to say "yes", "true", "on", "no", "false", "off"</p>
+                                    <div>Boolean is used when a value is meant to only have two states. Its used to say "yes", "true", "on", "no", "false", "off"</div>
                                 </div>
                             </div>
 
-                            <div class="sub">
+                            <div>
                                 <div id="datatype/primitive/number">
                                     <span class="head">Number</span> - <span class="denote">Denoted by a typical numerical sequence</span>
                                 </div>
                                 <div class="content">
-                                    <p>Number is used when a value should be intrepreted as a number; Positive numbers, negitive numbers and decimals are all Number data types.</p>
+                                    <div>Number is used when a value should be intrepreted as a number; Positive numbers, negitive numbers and decimals are all Number data types.</div>
                                 </div>
                             </div>
 
-                            <div class="sub">
+                            <div>
                                 <div id="datatype/primitive/string">
                                     <span class="head">String</span> - <span class="denote">Denoted by text wrapped in double quotes(<span class="code">&quot;&quot;</span>)</span>
                                 </div>
                                 <div class="content">
-                                    <p>String is used when a value, regardless of its contents should be intrepreted as text.</p>
-                                    <p>Due to strings being able to contain any text, including double quotes, there are special character sequences that have alternative meanings within the context of a string:</p>
+                                    <div>String is used when a value, regardless of its contents should be intrepreted as text.</div>
+                                    <div>Due to strings being able to contain any text, including double quotes, there are special character sequences that have alternative meanings within the context of a string:</div>
                                     <div class="indent">
-                                        <p class="nomargin"><span class="code">\&quot;</span> - Represents a double quote</p>
-                                        <p class="nomargin"><span class="code">\/</span> - Represents a forward slash</p>
-                                        <p class="nomargin"><span class="code">\\</span> - Represents a back slash</p>
-                                        <p class="nomargin"><span class="code">\f</span> - Represents a form-feed character</p>
-                                        <p class="nomargin"><span class="code">\b</span> - Represents a back-space character</p>
-                                        <p class="nomargin"><span class="code">\r</span> - Represents a carriage return character</p>
-                                        <p class="nomargin"><span class="code">\n</span> - Represents a line-feed character</p>
-                                        <p class="nomargin"><span class="code">\t</span> - Represents a tab character</p>
-                                        <p class="nomargin"><span class="code">\uNNNN</span> - Represents a unicode character where <span class="code">NNNN</span> is the hexidecimal code point.</p>
+                                        <div><span class="code">\&quot;</span> - Represents a double quote</div>
+                                        <div><span class="code">\/</span> - Represents a forward slash</div>
+                                        <div><span class="code">\\</span> - Represents a back slash</div>
+                                        <div><span class="code">\f</span> - Represents a form-feed character</div>
+                                        <div><span class="code">\b</span> - Represents a back-space character</div>
+                                        <div><span class="code">\r</span> - Represents a carriage return character</div>
+                                        <div><span class="code">\n</span> - Represents a line-feed character</div>
+                                        <div><span class="code">\t</span> - Represents a tab character</div>
+                                        <div><span class="code">\uNNNN</span> - Represents a unicode character where <span class="code">NNNN</span> is the hexidecimal code point.</div>
                                     </div>
                                 </div>
                             </div>
@@ -227,27 +227,134 @@
                     <div class="section">
                         <div id="datatype/container" class="head">Containers</div>
                         <div class="content">
-                            <p>Containers, as their name implies, are used to contain multiple values and can consist of both primitive and container datatypes.</p>
+                            <div>Containers, as their name implies, are used to contain multiple values and can consist of both primitive and container datatypes.</div>
 
-                            <div class="sub">
+                            <div>
                                 <div id="datatype/container/array">
                                     <span class="head">Array</span> - <span class="denote">Denoted by a comma seperated list of values wrapped in brackets(<span class="code">[]</span>)</span>
                                 </div>
                                 <div class="content">
-                                    <p>Arrays are ordered lists of values where each value is automatically given an index for referencing.</p>
-                                    <p>Indexes start at zero and increase by one for each value; the first value uses an index of 0, the second an index of 1, the third an index of 2 and so on for each value in the array.</p>
+                                    <div>Arrays are ordered lists of values where each value is automatically given an index for referencing.</div>
+                                    <div>Indexes start at zero and increase by one for each value; the first value uses an index of 0, the second an index of 1, the third an index of 2 and so on for each value in the array.</div>
                                 </div>
                             </div>
 
-                            <div class="sub">
+                            <div>
                                 <div id="datatype/container/object">
                                     <span class="head">Object</span> - <span class="denote">Donated by a comma seperated list of key-value pairs wrapped in braces(<span class="code">{}</span>)</span>
                                 </div>
                                 <div class="content">
-                                    <p>Objects are unordered lists where each value contained within is referenced by a given key.</p>
-                                    <p>All keys are represented as a string and are seperated from their value via the use of a colon(<span class="code">:</span>). Keys are case sensitive so attempting to reference "KEY" will not point to the data contained under "key"</p>
+                                    <div>Objects are unordered lists where each value contained within is referenced by a given key.</div>
+                                    <div>All keys are represented as a string and are seperated from their value via the use of a colon(<span class="code">:</span>). Keys are case sensitive so attempting to reference "KEY" will not point to the data contained under "key"</div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div id="reference" class="head">Referencing</div>
+
+                        <div class="content">
+                            <div>Referencing specific values within JSON data is fairly straight forward once the various data types are understood</div>
+                            <div>In the following examples lines prefixed with <span class="code comment">;</span> are comments, and <span class="code">&#8594;</span> represents referencing an item of a container.</div>
+                            <div class="content">
+                                <div class="code">
+                                    <div class="comment">; This is a comment</div>
+                                    <br>
+                                    <div class="comment">; Below is an example of referencing the member "b" contained within "a"</div>
+                                    a &#8594; b
+                                </div>
+                            </div>
+
+                            <div>
+                                <div id="reference/primitives" class="head">Primitives</div>
+                                <div class="content">
+                                    <div>If the referenced JSON member's value is a primitive the value is simply returned by the intrepreter.</div>
+                                    <div class="code">
+                                        <div class="comment">; Parse the input json</div>
+                                        jsondata = parse_json("value")<br>
+                                        <br>
+                                        <div class="comment">; This would output the text: value</div>
+                                        output(jsondata)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div id="reference/containers" class="head">Containers</div>
+                                <div class="content">
+                                    <div>If the JSON data is a container, there's a bit more work involved to access values. A key or index must be specified when accessing the container.</div>
+                                    <div class="code">
+                                        <div class="comment">; Parse the input json; notice that its an array</div>
+                                        jsondata = parse_json(["item0", "item1"])<br>
+                                        <br>
+                                        <div class="comment">; Retrieves the 1st item item(at index 0) of the parsed array</div>
+                                        <div class="comment">; and outputs the text: item0</div>
+                                        result = jsondata &#8594; 0<br>
+                                        output(result)<br>
+                                        <br>
+                                        <div class="comment">; Retrieves the 2nd item item(at index 1) of the parsed array</div>
+                                        <div class="comment">; and outputs the text: item1</div>
+                                        result = jsondata &#8594; 1<br>
+                                        output(result)<br>
+                                        <br>
+                                        <div class="comment">; This would result in an error because there isn't an item at index 2</div>
+                                        <div class="comment">; since indexes start at 0</div>
+                                        result = jsondata &#8594; 2<br>
+                                    </div>
+                                    <div class="code">
+                                        <div class="comment">; Parse the input json; notice that its an object</div>
+                                        jsondata = parse_json({"key0": "value0", "key1": "value1"})<br>
+                                        <br>
+                                        <div class="comment">; Retrieves the value at key0</div>
+                                        <div class="comment">; and outputs the text: value0</div>
+                                        result = jsondata &#8594; key0<br>
+                                        output(result)<br>
+                                        <br>
+                                        <div class="comment">; Retrieves the value at key1</div>
+                                        <div class="comment">; and outputs the text: value1</div>
+                                        result = jsondata &#8594; key1<br>
+                                        output(result)<br>
+                                        <br>
+                                        <div class="comment">; This would result in an error because the key doesn't exist</div>
+                                        result = jsondata &#8594; key2<br>
+                                        <br>
+                                        <div class="comment">; This would result in an error because keys are case sensitive</div>
+                                        result = jsondata &#8594; KEY0<br>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div id="reference/nests" class="head">Nested Containers</div>
+                                <div class="content">
+                                    <div>If the JSON data has nested containers, each index/key must be specified to get to the data you wish to access.</div>
+                                    <div class="code">
+                                        input = {<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;"key1": "value",<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;"key2": [<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"index0",<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"index1"<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;],<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;"key3": {<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"key3.1": "value2"<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;},<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;"key4": {<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"key4.1": [<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value3"<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                                        }<br>
+                                        <br>
+                                        jsondata = parse_json(input)<br>
+                                        <br>
+                                        <div class="comment">; I need to do some explaining!</div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
                     </div>
                 </div>

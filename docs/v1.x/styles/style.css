@@ -189,48 +189,47 @@ a:hover {
 .pagebody a:visited {
     font-weight: 600;
 }
-.pagebody .code {
-  background-color: black;
-  font-family: 'Cutive Mono', monospace;
-  font-weight: bold;
-  color: rgb(128,128,128);
-}
-.pagebody span.code {
-  display: inline-block;
-  padding: .1em .2em;
-  border-radius: .2em;
-}
 .pagebody > .section:not(:last-child) {
     margin-bottom: 2em;
 }
-.pagebody > .section .head {
-    color: rgb(64, 130, 150);
+.pagebody .head {
+    font-size: 1.25em;
     font-family: serif;
     font-weight: bold;
-    font-size: 1.25em;
-    margin-bottom: .25em;
+    color: rgb(64, 130, 150);
 }
-.pagebody > .section > .content p,
-.pagebody > .section > .content > .sub {
-    padding: 0px;
-    margin: 0px 2em;
+.pagebody .content {
+    font-size: .9em;
+    padding: 0 2em;
 }
-.pagebody > .section > .content > .sub {
-    font-size: .85em;
-}
-.pagebody > .section > .content p:not(:last-child):not(.nomargin),
-.pagebody > .section > .content > .sub:not(:last-child) {
+.pagebody .content > div:not(:last-child) {
     margin-bottom: 1em;
 }
-.pagebody > .section > .content .indent > p {
-  padding-left: 1em;
+.pagebody .indent > div {
+    padding: 0 2em;
 }
-.pagebody > .section > .content > .sub .denote {
-  font-size: .9em;
+.pagebody .code {
+    font-family: 'Cutive Mono', monospace;
+    font-weight: bold;
+    color: rgb(128,128,128);
 }
-
-
-
+.pagebody span.code {
+    background-color: black;
+    padding: .25em;
+    border-radius: .1em;
+    margin: auto .1em;
+}
+.pagebody div.code {
+    background-color: rgb(5,5,5);
+    padding: 1em;
+    border-radius: .5em;
+    box-shadow: inset 0px 0px 5px black;
+}
+.pagebody .code.comment,
+.pagebody .code > .comment {
+    font-size: .9em;
+    color: rgb(32, 96, 32);
+}
 
 
 
