@@ -3,8 +3,7 @@
 [![IRC](https://img.shields.io/badge/IRC-SwiftIRC-brightgreen.svg "Join us on IRC")](https://qwebirc.swiftirc.net/?channels=%23jsonformirc) 
 [![Twitch Chat](https://img.shields.io/badge/Chat-Twitch-brightgreen.svg "Join us on IRC")](https://twitch.tv/mirchelp)  
 
-[Downloads](https://github.com/SReject/JSON-For-Mirc/releases)  
-===
+# [Downloads](https://github.com/SReject/JSON-For-Mirc/releases)  
 
 JSON For mIRC
 ===
