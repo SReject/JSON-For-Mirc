@@ -230,6 +230,9 @@ a:hover {
     font-size: .9em;
     color: rgb(32, 96, 32);
 }
+.pagebody .small {
+    font-size: .85em;
+}
 
 
 
