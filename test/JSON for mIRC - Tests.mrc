@@ -1,5 +1,3 @@
-;; TODO: HTTP request validation
-
 ;; /JSONTest
 alias JSONTest {
   var %x = 1, %fail
@@ -415,7 +413,6 @@ alias -l jfm_test75 {
   if ($true !== %res) return $false $!JSON(jfm_testvalues, ~ 1).fuzzyValue == $v2
   return $true $!JSON(jfm_testvalues, ~ 1).fuzzyValue
 }
-
 alias -l jfm_test76 {
   var %JSON = $json(jfm_testvalues, array), %res
   if ($JSONError) return $false $!JSON(jfm_testvalues, array) $+([,$v1,])
@@ -430,7 +427,6 @@ alias -l jfm_test77 {
   if (array !== %res) return $false $!JSONPath( $+ %JSON $+ ,1) ==  $v2
   return $true $!JSONPath( $+ %JSON $+ ,1)
 }
-
 alias -l jfm_test78 {
   set -u0 %_jfm_test78_forEachTest $false
   var %res = $JSONForEach($JSON(jfm_testvalues, array), _jfm_test78_forEachTest)
@@ -500,4 +496,98 @@ alias _jfm_test81_forEachTest {
       }
     }
   }
+}
+alias -l jfm_test82 {
+  JSONOpen -ud jfm_test82 http://echo.jsontest.com/key/jfm_test82
+  if ($JSONError) {
+    return $false /JSONOpen -u jfm_test82 http://echo.jsontest.com/key/jfm_test82
+  }
+  var %res = $JSON(jfm_test82, key).value
+  if ($JSONError) {
+    return $false $v1
+  }
+  if (%res !== jfm_test82) {
+    return $false $!JSON(jfm_test82, key).value == %res
+  }
+  return $true /JSONOpen -u jfm_test82 http://echo.jsontest.com/key/jfm_test82
+}
+alias -l jfm_test83 {
+  var %res = $JSON(jfm_test82).HttpStatus
+  if ($JSONError) {
+    return $false $!JSON(jfm_test82).HttpStatus $v1
+  }
+  if (%res == $null) {
+    return $false $!JSON(jfm_test82).HttpStatus == $!null
+  }
+  return $true $!JSON(jfm_test82).HttpStatus
+}
+alias -l jfm_test84 {
+  var %res = $JSON(jfm_test82).HttpStatusText
+  if ($JSONError) {
+    return $false $!JSON(jfm_test82).HttpStatusText $v1
+  }
+  if (%res == $null) {
+    return $false $!JSON(jfm_test82).HttpStatusText == $!null
+  }
+  return $true $!JSON(jfm_test82).HttpStatusText
+}
+alias -l jfm_test85 {
+  var %res = $JSON(jfm_test82, Content-Length).HttpHeader
+  if ($JSONError) {
+    return $false $!JSON(jfm_test82, Content-Length).HttpHeader : $v1
+  }
+  if (%res == $null) {
+    return $false $!JSON(jfm_test82, Content-Length).HttpHeader == $!null
+  }
+  return $true $!JSON(jfm_test82, Content-Length).HttpHeader
+}
+alias -l jfm_test86 {
+  var %res = $JSON(jfm_test82).HttpHeaders
+  if ($JSONError) {
+    return $false $!JSON(jfm_test82).HttpHeaders : $v1
+  }
+  if (%res == $null) {
+    return $false $!JSON(jfm_test82).HttpHeaders == $!null
+  }
+  return $true $!JSON(jfm_test82).HttpHeaders
+}
+alias -l jfm_test87 {
+  var %res = $JSON(jfm_test82).HttpHead
+  if ($JSONError) {
+    return $false $!JSON(jfm_test82).HttpHead : $v1
+  }
+  if (%res == $null) {
+    return $false $!JSON(jfm_test82).HttpHead == $!null
+  }
+  return $true $!JSON(jfm_test82).HttpHead
+}
+alias -l jfm_test88 {
+  var %res = $JSON(jfm_test82).HttpBody
+  if ($JSONError) {
+    return $false $!JSON(jfm_test82).HttpBody : $v1
+  }
+  if (%res == $null) {
+    return $false $!JSON(jfm_test82).HttpBody == $!null
+  }
+  return $true $!JSON(jfm_test82).HttpBody
+}
+alias -l jfm_test89 {
+  var %res = $JSON(jfm_test82).HttpResponse
+  if ($JSONError) {
+    return $false $!JSON(jfm_test82).HttpResponse : $v1
+  }
+  if (%res == $null) {
+    return $false $!JSON(jfm_test82).HttpResponse == $!null
+  }
+  return $true $!JSON(jfm_test82).HttpResponse
+}
+alias -l jfm_test90 {
+  var %res = $JSON(jfm_test82).HttpParse
+  if ($JSONError) {
+    return $false $!JSON(jfm_test82).HttpParse : $v1
+  }
+  if (%res != $true) {
+    return $false $!JSON(jfm_test82).HttpParse == $v1
+  }
+  return $true $!JSON(jfm_test82).HttpParse
 }

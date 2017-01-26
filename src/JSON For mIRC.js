@@ -206,7 +206,7 @@
         },
 
         httpBody: function () {
-            return httpDone(this).response.responseText;
+            return httpDone(this).response.responseBody;
         },
 
         httpHead: function () {
