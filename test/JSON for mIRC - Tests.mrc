@@ -5,7 +5,7 @@ alias JSONTest {
   JSONDebug on
   window -n @SReject/JSONForMirc/Log
   while ($isalias(jfm_test $+ %x)) {
-    tokenize 32 $jfm_test [ $+ [ %x ] ]
+    tokenize 32 $eval($+($, jfm_test, %x), 2)
     if (!$1) {
       %fail = $true
       echo 04 -si6 [# $+ $base(%x,10,10,2) $+ ] $2-
