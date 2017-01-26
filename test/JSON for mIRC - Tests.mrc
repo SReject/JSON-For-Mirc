@@ -1,9 +1,13 @@
 ;; /JSONTest
 alias JSONTest {
-  var %x = 1, %fail
+  var %x = 1, %fail, %debug = $JSONDebug, %active = $iif(@SReject/JSONForMirc/Log == $active, $true, $false)
   JSONShutDown
-  JSONDebug on
-  window -n @SReject/JSONForMirc/Log
+  if (%debug) {
+    JSONDebug on
+    if (!%active) {
+      window -n @SReject/JSONForMirc/Log
+    }
+  }
   while ($isalias(jfm_test $+ %x)) {
     tokenize 32 $eval($+($, jfm_test, %x), 2)
     if (!$1) {
@@ -182,17 +186,17 @@ alias -l jfm_test32 {
 alias -l jfm_test33 {
   bunset &jfm_test
   bset -t &jfm_test 1 "jfm_test"
-  JSONOpen -bd jfm_test74 &jfm_test
-  if ($JSONError) return $false /JSONOpen -bd jfm_test74 &jfm_test
-  return $true /JSONOpen -bd jfm_test74 &jfm_test
+  JSONOpen -bd jfm_test33 &jfm_test
+  if ($JSONError) return $false /JSONOpen -bd jfm_test33 &jfm_test
+  return $true /JSONOpen -bd jfm_test33 &jfm_test
 }
 alias -l jfm_test34 {
-  var %file = $scriptdirjfm_test75.json
+  var %file = $scriptdirjfm_test34.json
   write $qt(%file) "jfm_test"
-  JSONOpen -fd jfm_test75 %file
+  JSONOpen -fd jfm_test34 %file
   .remove $qt(%file)
-  if ($JSONError) return $false /JSONOpen -fd jfm_test75 %file -> $v1
-  return $true /JSONOpen -fd jfm_test75 %file
+  if ($JSONError) return $false /JSONOpen -fd jfm_test34 %file -> $v1
+  return $true /JSONOpen -fd jfm_test34 %file
 }
 alias -l jfm_test35 {
   noop $JSON
@@ -205,25 +209,25 @@ alias -l jfm_test36 {
   return $true $!JSON()
 }
 alias -l jfm_test37 {
-  noop $JSON(0, jfm_test35)
-  if (INVALID_NAME !== $JSONError) return $false $!JSON(0, jfm_test35)
-  return $true $!JSON(0, jfm_test35)
+  noop $JSON(0, jfm_test37)
+  if (INVALID_NAME !== $JSONError) return $false $!JSON(0, jfm_test37)
+  return $true $!JSON(0, jfm_test37)
 }
 alias -l jfm_test38 {
-  noop $JSON(0).jfm_test36
-  if (PROP_NOT_APPLICABLE !== $JSONError) return $false $!JSON(0).jfm_test36
-  return $true $!JSON(0).jfm_test36
+  noop $JSON(0).jfm_test38
+  if (PROP_NOT_APPLICABLE !== $JSONError) return $false $!JSON(0).jfm_test38
+  return $true $!JSON(0).jfm_test38
 }
 alias -l jfm_test39 {
-  var %jfm_test37 = $JSON(0)
+  var %jfm_test39 = $JSON(0)
   if ($JSONError) return $false $!JSON(0) $+([,$v1,])
-  if (%jfm_test37 !isnum) return $false $!JSON(0) $+([,no-numerical,])
+  if (%jfm_test39 !isnum) return $false $!JSON(0) $+([,no-numerical,])
   return $true $!JSON(0)
 }
 alias -l jfm_test40 {
-  noop $JSON(jfm_test38)
-  if (HANDLER_NOT_FOUND !== $JSONError) return $false $!JSON(jfm_test38)
-  return $true $!JSON(jfm_test38)
+  noop $JSON(jfm_test40)
+  if (HANDLER_NOT_FOUND !== $JSONError) return $false $!JSON(jfm_test40)
+  return $true $!JSON(jfm_test40)
 }
 alias -l jfm_test41 {
   JSONOpen -d jfm_testprops {"key":"value"}
@@ -232,31 +236,31 @@ alias -l jfm_test41 {
 }
 alias -l jfm_test42 {
   if (done !== $JSON(jfm_testprops).State) return $false $!JSON(jfm_testprops).State == $v2
-  return $true $!JSON(jfm_testprops).State
+  return $true $!JSON(jfm_testprops).State == $v2
 }
 alias -l jfm_test43 {
   if (text !== $JSON(jfm_testprops).InputType) return $false $!JSON(jfm_testprops).InputType == $v2
-  return $true $!JSON(jfm_testprops).InputType
+  return $true $!JSON(jfm_testprops).InputType == $v2
 }
 alias -l jfm_test44 {
   if ({"key":"value"} !== $JSON(jfm_testprops).Input) return $false $!JSON(jfm_testprops).Input == $v2
-  return $true $!JSON(jfm_testprops).Input
+  return $true $!JSON(jfm_testprops).Input == $v2
 }
 alias -l jfm_test45 {
   if ($false !== $JSON(jfm_testprops).IsChild) return $false $!JSON(jfm_testprops).IsChild == $v2
-  return $true $!JSON(jfm_testprops).IsChild
+  return $true $!JSON(jfm_testprops).IsChild == $v2
 }
 alias -l jfm_test46 {
   if ($null !== $JSON(jfm_testprops).Error) return $false $!JSON(jfm_testprops).Error == $v2
-  return $true $!JSON(jfm_testprops).Error
+  return $true $!JSON(jfm_testprops).Error == $!null
 }
 alias -l jfm_test47 {
-  if ($null !== $JSON(jfm_testprops).Path) return $false $!JSON(jfm_testprops).Path == $v2
-  return $true $!JSON(jfm_testprops).Path
+  if ($null != $JSON(jfm_testprops).Path) return $false $!JSON(jfm_testprops).Path == $v2
+  return $true $!JSON(jfm_testprops).Path == $!null
 }
 alias -l jfm_test48 {
   if (object !== $JSON(jfm_testprops).Type) return $false $!JSON(jfm_testprops).Type == $v2
-  return $true $!JSON(jfm_testprops).Type
+  return $true $!JSON(jfm_testprops).Type == $v2
 }
 alias -l jfm_test49 {
   if ($true !== $JSON(jfm_testprops).IsContainer) return $false $!JSON(jfm_testprops).IsContainer == $v2
