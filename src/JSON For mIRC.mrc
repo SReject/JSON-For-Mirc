@@ -764,7 +764,7 @@ alias JSON {
 
   ;; If the alias was called without any inputs
   if (!$0) || ($0 == 1 && $1 == $null) {
-    %Error = MISSING_PARAMETERS
+    %Error = PARAMETER_MISSING
     goto error
   }
 
