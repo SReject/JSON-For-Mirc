@@ -20,15 +20,15 @@ on *:LOAD:{
 
   ;; adiirc check
   if ($~adiircexe) {
-    if ($version < 2.6) {
-      echo -ag [JSON For mIRC] AdiIRC v2.6 or later is required
+    if ($version < 2.7) {
+      echo -ag [JSON For mIRC] AdiIRC v2.7 beta 01/28/2016 or later is required
       .unload -rs $qt($script)
     }
   }
 
   ;; mIRC check
-  elseif ($version < 7.44) {
-    echo -ag [JSON For mIRC] mIRC v7.44 or later is required
+  elseif ($version < 7.47) || ($version == 7.47 && (!$beta || $beta < 91)) {
+    echo -ag [JSON For mIRC] mIRC v7.47.91 beta or later is required
     .unload -rs $qt($script)
   }
 
@@ -234,7 +234,7 @@ alias JSONOpen {
     if (%Com) && ($com(%Com)) {
       .timer $+ %Com -iom 1 0 JSONClose $unsafe($1)
     }
-    jfm_log -EeD %Error
+    jfm_log -EeDF %Error
   }
 
   ;; Otherwise, if the -d switch was specified start a timer to close the com
@@ -243,7 +243,7 @@ alias JSONOpen {
     if (d isincs %Switches) {
       .timer $+ %Com -iom 1 0 JSONClose $unsafe($1)
     }
-    jfm_log -EsD Created $1 (as com %Com $+ )
+    jfm_log -EsDF Created $1 (as com %Com $+ )
   }
 }
 
@@ -317,12 +317,12 @@ alias JSONHttpMethod {
   ;; if an error occured, store the error in the hashtable then log the error
   if (%Error) {
     hadd -mu0 SReject/JSONForMirc Error %Error
-    jfm_log -EeD %Error
+    jfm_log -EeDF %Error
   }
 
   ;; if no errors, log the success
   else {
-    jfm_log -EsD Set Method to $+(', %Method, ')
+    jfm_log -EsDF Set Method to $+(', %Method, ')
   }
 }
 
@@ -399,12 +399,12 @@ alias JSONHttpHeader {
   ;; if an error occured, store the error in the hashtable then log the error
   if (%Error) {
     hadd -mu0 SReject/JSONForMirc Error %Error
-    jfm_log -EeD %Error
+    jfm_log -EeDF %Error
   }
 
   ;; If no error, log the success
   else {
-    jfm_log -EsD Stored Header $+(',%Header,: $3-,')
+    jfm_log -EsDF Stored Header $+(',%Header,: $3-,')
   }
 }
 
@@ -529,12 +529,12 @@ alias JSONHttpFetch {
   ;; if an error occured, store the error in the hashtable then log the error
   if (%Error) {
     hadd -mu0 SReject/JSONForMirc Error %Error
-    jfm_log -EeD %Error
+    jfm_log -EeDF %Error
   }
 
   ;; Otherwise log the success
   else {
-    jfm_log -EsD Http Data retrieved
+    jfm_log -EsDF Http Data retrieved
   }
 }
 
@@ -631,12 +631,12 @@ alias JSONClose {
   ;; if an error occured, store the error in the hashtable then log the error
   if (%Error) {
     hadd -mu0 SReject/JSONForMirc Error %Error
-    jfm_log -EeD /JSONClose %Error
+    jfm_log -EeDF /JSONClose %Error
   }
 
   ;; If no errors, decrease the indent for log lines
   else {
-    jfm_log -D
+    jfm_log -EsDF All matching handles closed
   }
 }
 
@@ -805,7 +805,7 @@ alias JSON {
 
     ;; if @Name is 0 return the total number of JSON handlers
     if ($1 === 0) {
-      jfm_log -EsD %I
+      jfm_log -EsDF %I
       return %I
     }
   }
@@ -1048,10 +1048,10 @@ alias JSON {
   ;; If an error occured, store and log the error
   if (%Error) {
     hadd -mu0 SReject/JSONForMirc Error %Error
-    jfm_log -EeD %Error
+    jfm_log -EeDF %Error
   }
   else {
-    jfm_log -EsD %Result
+    jfm_log -EsDF %Result
     return %Result
   }
 }
@@ -1228,12 +1228,12 @@ alias JSONForEach {
       .comclose $v1
     }
     hadd -mu0 SReject/JSONForMirc Error %Error
-    jfm_log -EeD %Error
+    jfm_log -EeDF %Error
   }
 
   ;; Successful, return the number of results looped over
   else {
-    jfm_log -EsD %Result
+    jfm_log -EsDF %Result
     return %Result
   }
 }
@@ -1325,12 +1325,12 @@ alias JSONPath {
   ;; If an error occured, store it then log the error
   if (%Error) {
     hadd -mu0 SReject/JSONForMirc Error %Error
-    jfm_log -EeD %Error
+    jfm_log -EeDF %Error
   }
 
   ;; otherwise, log the result and return it
   else {
-    jfm_log -EsD %Result
+    jfm_log -EsDF %Result
     return %Result
   }
 }
@@ -1797,8 +1797,12 @@ alias -l jfm_log {
         %Color = 13
       }
 
-      ;; Compile the prefix
-      %Prefix = $chr(3) $+ %Color $+ %Prefix $+ $chr(15)
+
+      ;; compile the prefix
+      %Prefix = $chr(3) $+ %Color $+ %Prefix
+      if (F !isincs %Switches) {
+        %Prefix = %Prefix $+ $chr(15)
+      }
 
       ;; Compile the indent
       %Indent = $str($chr(15) $+ $chr(32), $calc($hget(SReject/JSONForMirc, LogIndent) *4))
