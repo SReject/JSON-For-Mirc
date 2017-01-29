@@ -21,7 +21,7 @@ alias -l jfm_test {
   var %testnum = 0
   var %err
   var %res
-  var %echo = echo 03 -agi6 $!+([#,$base(%testNum,10,10,3),])
+  var %echo = echo 03 -sgi6 $!+([#,$base(%testNum,10,10,3),])
 
 
   ;;============================;;
