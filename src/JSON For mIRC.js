@@ -324,10 +324,10 @@
                 if (type !== 'array' && type !== 'object') {
                     throw new Error('ILLEGAL_REFERENCE');
                 }
-                if (fuzzy && type == 'object' && /^[~=]./.test(member)) {
+                if (fuzzy && /^[~=]./.test(member)) {
                     isFuzzy = '~' === member.charAt(0);
                     member = member.replace(/^[~=]\x20?/, '');
-                    if (isFuzzy) {
+                    if (type == 'object' && isFuzzy) {
                         keys = getProps(result);
                         if (/^\d+$/.test(member)) {
                             member = parseInt(member, 10);
