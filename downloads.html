@@ -2,44 +2,45 @@
 layout: default
 pagename: downloads
 ---
-{% assign stablerelease = false %}
-{% assign prerelease = false %}
+{% assign stable = false %}
+{% assign pre = false %}
 {% for release in site.github.releases %}
-    {% if release.prerelease == false and stablerelease != false %}
-        {% assign stablerelease = release %}
-    {% elsif release.prerelease == true and prerelease != false %}
-        {% assign prerelease = release %}
+
+    {% if release.prerelease == false and stable != false %}
+        {% assign stable = release %}
+
+    {% elsif release.prerelease == true and pre != false %}
+        {% assign pre = release %}
+
     {% endif %}
 {% endfor %}
 
-{% if stablerelease != false %}
-    <article id="stable" class="release">
-        <header>Stable</header>
-        <div>
-            JSONForMirc {{stablerelease.tag_name}}
-        </div>
-    </article>
-{% else %}
-    <article id="stable" class="release">
-        <header>Stable</header>
-        <div class="italic">
-            None at this time
-        </div>
-    </article>
-{% endif %}
+<article id="stable" class="release">
+    <header>Stable</header>
 
-{% if prerelease != false %}
-    <article id="prerelase" class="release">
-        <header>Pre-Release</header>
-        <div>
-            JSONForMirc {{prerelease.tag_name}}
-        </div>
-    </article>
+{% if stable != false %}
+    <div>
+        JSONForMirc {{stable.tag_name}}
+    </div>
+
 {% else %}
-    <article id="stable" class="release">
-        <header>Pre-Release</header>
-        <div class="italic">
-            None at this time
-        </div>
-    </article>
+    <div class="italic">
+        Not at this time
+    </div>
 {% endif %}
+</article>
+
+<article id="prerelease" class="release">
+    <header>Pre-Release</header>
+
+{% if pre != false %}
+    <div>
+        JSONForMirc {{pre.tag_name}}
+    </div>
+
+{% else %}
+    <div class="italic">
+        Not at this time
+    </div>
+{% endif %}
+</article>
