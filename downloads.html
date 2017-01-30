@@ -5,6 +5,7 @@ pagename: downloads
 {% assign stablerelease = false %}
 {% assign prerelease = false %}
 {% for release in site.github.releases %}
+    {% if release.prerelease == false and stablerelease != false %}
         {% assign stablerelease = release %}
     {% elsif release.prerelease == true and prerelease != false %}
         {% assign prerelease = release %}
