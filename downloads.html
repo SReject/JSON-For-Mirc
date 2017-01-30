@@ -4,6 +4,8 @@ pagename: downloads
 ---
 {% assign stable = false %}
 {% assign pre = false %}
+
+{{site.github.releases}}<br>
 {% for release in site.github.releases %}
 
     {% if release.prerelease == false and stable != false %}
