@@ -5,9 +5,8 @@ pagename: downloads
 {% assign stablerelease = false %}
 {% assign prerelease = false %}
 {% for release in site.github.releases %}
-    {% if release.draft == false and stablerelase != false %}
         {% assign stablerelease = release %}
-    {% elsif release.draft == true and prerelease != false %}
+    {% elsif release.prerelease == true and prerelease != false %}
         {% assign prerelease = release %}
     {% endif %}
 {% endfor %}
@@ -16,7 +15,7 @@ pagename: downloads
     <article id="stable" class="release">
         <header>Stable</header>
         <div>
-            JSONForMirc {{stablrelease.tag_name}}
+            JSONForMirc {{stablerelease.tag_name}}
         </div>
     </article>
 {% else %}
