@@ -1,0 +1,140 @@
+<div>
+    <div{% if page.pagename == "home" %} class="active"{% endif %}><a href="./">Home</a></div>
+    <div{% if page.pagename == "license" %} class="active"{% endif %}>
+        <a href="./license">License</a>
+        {% if page.pagename == "license" %}
+        <ul>
+            <li><a href="#warranty">Warranty</a></li>
+            <li><a href="#distribution">Distribution</a></li>
+            <li><a href="#usage">Usage</a></li>
+            <li><a href="#contributions">Contributions</a></li>
+        </ul>
+        {% endif %}
+    </div>
+    <div{% if page.pagename == "downloads" %} class="active"{% endif %}>
+        <a href="./downloads">Downloads</a>
+        {% if page.pagename == "downloads" %}
+        <ul>
+            <li><a href="#stable">Stable</a></li>
+            <li><a href="#prerelease">Pre-Release</a></li>
+            <li><a href="https://github.com/SReject/JSON-For-Mirc">All</a></li>
+        </ul>
+        {% endif %}
+    </div>
+    <div{% if page.pagename == "json" %} class="active"{% endif %}>
+        <a href="./json">JSON Explained</a>
+        {% if page.pagename == "json" %}
+        <ul>
+            <li class="sep"><a href="#whitespace">Whitespace</a></li>
+            <li class="sep">
+                <a href="#primitive">Primitives</a>
+                <ul>
+                    <li><a href="#primitive/null">Null</a></li>
+                    <li><a href="#primitive/boolean">Boolean</a></li>
+                    <li><a href="#primitive/number">Number</a></li>
+                    <li><a href="#primitive/string">String</a></li>
+                </ul>
+            </li>
+
+            <li class="sep">
+                <a href="#container">Containers</a>
+                <ul>
+                    <li><a href="#container/array">Array</a></li>
+                    <li><a href="#container/object">Object</a></li>
+                </ul>
+            </li>
+
+            <li class="sep">
+                <a href="#accessing">Accessing</a>
+                <ul>
+                    <li><a href="#accessing/primitive">Primitives</a></li>
+                    <li><a href="#accessing/container">Containers</a></li>
+                    <li><a href="#accessing/nest">Nested Data</a></li>
+                </ul>
+            </li>
+
+        </ul>
+        {% endif %}
+    </div>
+    <div{% if page.pagename == "tutorial" %} class="active"{% endif %}>
+        <a href="./tutorial">Tutorial</a>
+        {% if page.pagename == "tutorial" %}
+        <ul>
+            <li><a href="#creation">Creation</a></li>
+            <li><a href="#httprequests">HTTP/URLs</a></li>
+            <li><a href="#state">State Info</a></li>
+            <li><a href="#accessing">Accessing</a></li>
+            <li><a href="#looping">Loopoing</a></li>
+            <li><a href="#closing">Closing</a></li>
+            <li><a href="#errorhandling">Error Handling</a></li>
+            <li><a href="#misc">Misc</a></li>
+        </ul>
+        {% endif %}
+    </div>
+    <div{% if page.pagename == "reference" %} class="active"{% endif %}>
+        <a href="./reference">Reference</a>
+        {% if page.pagename == "reference" %}
+        <ul>
+            <li><a href="#cmd/jsonlist">/JSONList</a></li>
+            <li><a href="#cmd/jsonopen">/JSONOpen</a></li>
+            <li><a href="#cmd/jsonhttpmethod">/JSONHttpMethod</a></li>
+            <li><a href="#cmd/jsonhttpheader">/JSONHttpHeader</a></li>
+            <li><a href="#cmd/jsonhttpfetch">/JSONHttpFetch</a></li>
+            <li><a href="#cmd/jsonclose">/JSONClose</a></li>
+            <li><a href="#cmd/jsonshutdown">/JSONShutdown</a></li>
+
+            <li class="sep">
+                <a href="#id/json">$JSON()</a>
+                <ul>
+                    <li><a href="#id/json/fuzzy">Fuzzy Prop Prefix</a></li>
+                    <li><a href="#id/json/tobvar">ToBvar Prop Suffix</a></li>
+                    <li><a href="#id/json/tofile">ToFile Prop Suffix</a></li>
+                    <li><a href="#id/json/state">.State</a></li>
+                    <li><a href="#id/json/inputtype">.InputType</a></li>
+                    <li><a href="#id/json/input">.Input</a></li>
+                    <li><a href="#id/json/ischild">.IsChild</a></li>
+                    <li><a href="#id/json/httpparse">.HttpParse</a></li>
+                    <li><a href="#id/json/httpstatus">.HttpStatus</a></li>
+                    <li><a href="#id/json/httpstatustext">.HttpStatusText</a></li>
+                    <li><a href="#id/json/httpheader">.HttpHeader</a></li>
+                    <li><a href="#id/json/httpheaders">.HttpHeaders</a></li>
+                    <li><a href="#id/json/httphead">.HttpHead</a></li>
+                    <li><a href="#id/json/httpbody">.HttpBody</a></li>
+                    <li><a href="#id/json/httpresponse">.HttpResponse</a></li>
+                    <li><a href="#id/json/path">.Path</a></li>
+                    <li><a href="#id/json/type">.Type</a></li>
+                    <li><a href="#id/json/iscontainer">.IsContainer</a></li>
+                    <li><a href="#id/json/length">.Length</a></li>
+                    <li><a href="#id/json/value">.Value</a></li>
+                    <li><a href="#id/json/string">.String</a></li>
+                    <li><a href="#id/json/debug">.Debug</a></li>
+                    <li><a href="#id/json/error">.Error</a></li>
+                </ul>
+            </li>
+
+            <li class="sep"><a href="#id/jsonpath">$JSONPath()</a></li>
+
+            <li class="sep">
+                <a href="#id/jsonforeach">$JSONForEach()</a>
+                <ul>
+                    <li><a href="#id/jsonforeach/fuzzy">.Fuzzy</a></li>
+                    <li><a href="#id/jsonforeach/walk">.Walk</a></li>
+                </ul>
+            </li>
+
+            <li class="sep"><a href="#id/jsonerror">$JSONError</a></li>
+
+            <li class="sep"><a href="#cmd/jsondebug">/JSONDebug</a></li>
+            <li><a href="#id/jsondebug">$JSONDebug</a></li>
+
+            <li class="sep"><a href="#cmd/jsoncompact">/JSONCompact</a></li>
+            <li><a href="#id/jsoncompact">$JSONCompact</a></li>
+
+            <li class="sep"><a href="#id/jsonversion">$JSONVersion</a></li>
+        </ul>
+        {% endif %}
+    </div>
+    <div{% if page.pagename == "getinvolved" %} class="active"{% endif %}>
+        <a href="./getinvolved">Get Involved</a>
+    </div>
+</div>

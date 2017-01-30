@@ -1,0 +1,48 @@
+<link rel="stylesheet" href="./res/styles/base.css" />
+<style src="./res/styles/dark.css"></style>
+<script type="text/javascript">
+    window.onload = function () {
+        var body = document.body,
+            darkbutton,
+            lightbutton,
+            themechooser;
+
+        darkbutton = document.createElement("a");
+        darkbutton.appendChild(document.createTextNode('Darken'));
+        darkbutton.href = "#";
+        darkbutton.className = "darktheme";
+        darkbutton.addEventListener('click', function (e) {
+            e.preventDefault();
+            localStorage.setItem('darkTheme', "true");
+            if (!/(?:^| )dark(?: |$)/.test(body.className)) {
+                body.className += body.className ? ' dark' : 'dark';
+            }
+            console.log("clicked darkbutton: " + localStorage.getItem('darkTheme'));
+
+        });
+
+        lightbutton = document.createElement('a');
+        lightbutton.appendChild(document.createTextNode('Lighten'));
+        lightbutton.href = "#";
+        lightbutton.className = "lighttheme";
+        lightbutton.addEventListener('click', function (e) {
+            console.log("clicked lightbutton");
+            e.preventDefault();
+            localStorage.removeItem('darkTheme');
+            if (/(?:^| )dark(?: |$)/.test(body.className)) {
+                body.className = body.className.replace(/(?:^| )dark(?: |$)/, '');
+            }
+        });
+
+        themechooser = document.createElement("div");
+        themechooser.className = 'themechooser';
+        themechooser.appendChild(darkbutton);
+        themechooser.appendChild(lightbutton);
+        document.body.getElementsByClassName('pagehead')[0].appendChild(themechooser);
+
+
+        if (localStorage.getItem('darkTheme') === "true") {
+            body.className += (body.className ? ' dark' : 'dark');
+        }
+    };
+</script>

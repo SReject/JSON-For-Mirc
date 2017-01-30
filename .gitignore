@@ -1,1 +1,6 @@
-docs/v1.x/media/Thumbs.db
+thumbs.db
+_site
+.sass-cache
+.jekyll-metadata
+Gemfile
+Gemfile.lock

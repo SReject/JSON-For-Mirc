@@ -1,0 +1,338 @@
+@import 'https://fonts.googleapis.com/css?family=Cutive+Mono|Open+Sans:400,600,800|Sarpanch:800,900';
+html, body {
+    min-width: 800px;
+    min-height: 600px;
+    height: 100%;
+    font-family: 'Open Sans', Verdana, Geneva, sans-serif;
+    font-size: 20px;
+}
+html, body, li, a, a:hover, a:visited, p {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    color: inherit;
+}
+ul:not(.list) {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+a, a:visited {
+    color: rgb(41, 84, 153);
+}
+body.dark a,
+body.dark a:visited {
+  color: rgb(64,130,150);
+}
+a:hover {
+    color: rgb(12, 68, 158);
+}
+body.dark a:hover {
+  color: rgb(96, 162, 182);
+}
+
+
+
+
+
+
+/*
+Custom styles used throughout
+*/
+.mono {
+  font-family: 'Cutive Mono', monospace !important;
+}
+.italic {
+    font-style: italic;
+}
+.smaller {
+  font-size: .8em !important;
+}
+.children-smallvmargin > *:not(:first-child) {
+    margin-top: .25em !important;
+}
+.indent-padding {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
+.block {
+    display: block;
+}
+code {
+  background-color: rgb(225,225,225);
+  padding: .1em .25em;
+  margin: 0 .1em;
+  display: inline-block;
+}
+code.block {
+  padding: 1em;
+  border-radius: .5em;
+}
+code.block:last-child {
+  margin-bottom: 2em;
+}
+body.dark code {
+  background-color: rgb(5,5,5);
+  color: rgb(128,128,128);
+}
+code .comment {
+  color: rgb(0,128,0);
+  font-size: .8em;
+}
+body.dark code .comment {
+  color: rgb(0,92,0);
+}
+
+
+
+
+body > div {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+.pagehead {
+    flex: 0 0 auto;
+    position: relative;
+    padding: 1em 0 1.5em 0;
+    border-bottom: 1px solid rgb(128,128,128);
+    background-color: rgb(240,240,240);
+}
+body.dark .pagehead {
+    background-color: rgb(0,0,0);
+    border-color: black;
+    color: white;
+}
+.pagehead > .header {
+  width: 400px;
+  margin: 0 auto;
+  text-align: center;
+
+}
+.pagehead > .header .main {
+    font-family: Sarpanch;
+    font-size: 2.5em;
+    font-style: italic;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+.pagehead > .header .sub {
+  display: flex;
+  flex-basis: 0;
+}
+.pagehead > .header .sub > div {
+  flex-shrink: 0;
+  flex-grow: 1;
+}
+.pagehead a {
+    color: rgb(64, 130, 150);
+}
+.pagehead a:hover {
+    color: rgb(96, 162, 182);
+    text-decoration: underline;
+}
+.pagehead > .themechooser {
+  position: absolute;
+  right: 1em;
+  top: 1em;
+  font-size: .75em;
+  color: rgb(92,92,92);
+  cursor: pointer;
+}
+.pagehead > .themechooser:hover {
+  color: rgb(128,128,128);
+}
+body.dark .themechooser .darktheme {
+    display: none;
+}
+body:not(.dark) .themechooser .lighttheme {
+    display: none;
+}
+.pagewrapper {
+    display: flex;
+    flex: 1 0 auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.pagemenu {
+    flex: 0 0 auto;
+    width: 300px;
+    font-family: Sarpanch, monospace;
+    font-size: 1.1em;
+    background-color: rgb(188, 197, 211);
+}
+body.dark .pagemenu {
+    background-color: rgb(30,30,30);
+}
+.pagemenu .active {
+  padding: .5em 0;
+  background-color: rgb(213, 218, 226);
+}
+body.dark .pagemenu .active {
+  background-color: rgb(20,20,20);
+}
+.pagemenu > div {
+    padding: 1em 0;
+}
+.pagemenu a {
+  padding-left: 1em;
+  display: block;
+}
+.pagemenu a:hover {
+  background-color: white;
+}
+body.dark .pagemenu a:hover {
+  background-color: black;
+}
+.pagemenu ul {
+  font-size: .9em;
+  font-family: 'Cutive Mono';
+}
+.pagemenu div > ul > li > a {
+    padding-left: 2em;
+}
+.pagemenu div > ul ul > li > a {
+    padding-left: 3em;
+}
+.pagemenu .sep:not(:first-child) {
+  margin-top: .5em;
+}
+
+
+
+
+
+.pagecontent {
+    flex: 1 0 0;
+    color: rgb(64,64,64);
+    padding: 1.5em;
+    font-size: 1.25em;
+}
+body.dark .pagecontent {
+    background-color: rgb(10,10,10);
+    color: rgb(96,96,96);
+}
+.pagecontent article:not(:first-child) {
+  margin-top: 2em;
+}
+.pagecontent article > header {
+  font-size: 1.1em;
+  color: rgb(41, 84, 153);
+  font-weight: bold;
+  margin: 0;
+  font-family: 'Times New Roman', Times, serif;
+}
+.pagecontent article > *:not(header) {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+body.dark .pagecontent article > header {
+  color: rgb(64,130,150);
+}
+.pagecontent article > article {
+  font-size: .9em;
+}
+.pagecontent article > p {
+    font-size: .9em;
+}
+.pagecontent article > *:nth-child(n+3) {
+  margin-top: .75em;
+}
+.pagecontent article > ul.list {
+  margin-left: 1em;
+}
+.pagecontent article > ul.list > li {
+  font-size: .85em;
+}
+
+
+
+.pagecontent article.codedoc {
+  margin-top: 5em;
+}
+.pagecontent article.codedoc > header {
+    font-family: 'Cutive Mono', monospace;
+    font-weight: bold;
+}
+.pagecontent article.codedoc > div:not(:last-child) {
+    margin-bottom: 1em;
+}
+.pagecontent article.codedoc .hilight {
+    font-family: 'Cutive Mono', monospace;
+    color: rgb(64,130,150);
+    font-weight: bold;
+}
+.pagecontent article.codedoc > div.section > div.list {
+  margin: 0 1em;
+  font-size: .8em;
+}
+.pagecontent article.codedoc > div.section.switchlist > div.title,
+.pagecontent article.codedoc > div.section.paramlist > div.title {
+    color: rgb(128,128,128);
+    font-family: 'Times New Roman', 'Times', serif;
+    font-weight: bold;
+}
+.pagecontent article.codedoc > div.section.switchlist > div.list > div {
+  display: flex;
+  flex-basis: 0;
+}
+.pagecontent article.codedoc > div.section.switchlist > div.list > div:not(:last-child) {
+  margin-bottom: .5em;
+}
+.pagecontent article.codedoc > div.section.switchlist > div.list > div > div {
+  flex-grow: 1;
+}
+.pagecontent article.codedoc > div.section.switchlist > div.list > div > div:first-child {
+  flex-grow: 0;
+  flex-shrink: 0;
+  margin-right: 1em;
+  font-size: 1.25em;
+}
+.pagecontent article.codedoc > div.section.paramlist > div.list > div:not(:first-child) {
+  margin-top: 1em;
+}
+.pagecontent article.codedoc > div.section.paramlist > div.list > div > div.description {
+  margin: 0 1em;
+}
+
+
+
+
+
+
+
+.pagefoot {
+    flex: 0 0 auto;
+    background-color: rgb(240,240,240);
+    border-top: 1px solid rgb(128,128,128);
+    left: 0;
+    right: 0;
+}
+.pagefoot > div {
+    padding: .25em 0;
+    color: rgb(64,64,64);
+    font-size: .85em;
+    text-align: center;
+}
+body.dark .pagefoot {
+  background-color: black;
+  border-top: 1px solid black;
+  color: rgb(128,128,128);
+}

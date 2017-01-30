@@ -1,0 +1,226 @@
+---
+layout: default
+pagename: json
+---
+
+<article>
+    <header>What is JSON?</header>
+    <p>JSON is short for "JavaScript Object Notation"; originally meant for web
+    applications, it has become the go-to data format for many enviornments and
+    platforms. Its structuring makes for small, text-based, outputs that are
+    easily parsable programmatically while still being human legiable.</p>
+
+    <p>JSON is NOT a functional data notation. JSON data does not have a means
+    to specify directives(commands) a program must do when attempting to
+    understand the JSON data; the JSON standard strictly prohibits such as a
+    means of ensuring security.</p>
+</article>
+
+<article>
+    <header id="whitespace">White Space</header>
+    <p>Previously it was mentioned that JSON is human readable yet most web
+    api's return it as a jumbled mess. This is because JSON intrepreters are
+    required to ignore whitespace so it can be removed without costing data
+    integrity; this is what those APIs do with the intent of reducing network
+    traffic.</p>
+
+    <p>There are <a href="http://jsonviewer.stack.hu/">online tools</a> that
+    will re-add whitespace to make the output human readable.</p>
+</article>
+
+<article>
+    <header id="primitive">Primitives</header>
+    <p>JSON has four primitive data types to represent simple values. These data
+    types do not have the complexity or structuring to contain multiple values
+    the way Container Types do.</p>
+
+    <article>
+        <header id="primitive/null">Null</header>
+        <p class="smaller">Denoted by the keyword <code>null</code></p>
+        <p>Null is used when there is absolutely no value to reference. That is,
+        the value isn't empty text or 0 or false; there is absolutely nothing to
+        reference.</p>
+    </article>
+
+    <article>
+        <header id="primitive/boolean">Boolean</header>
+        <p class="smaller">Denoted by the keywords <code>true</code> and
+        <code>false</code></p>
+
+        <p>Boolean is used when a value is meant to only have two states. Its
+        used to say "yes", "true", "on", "no", "false", "off"</p>
+    </article>
+
+    <article>
+        <header id="primitive/number">Number</header>
+        <p class="smaller">Denoted by a typical numerical sequence</p>
+
+        <p>Number is used when a value should be intrepreted as a number.
+        Positive numbers, negitive numbers and decimals are all Number data
+        types.</p>
+    </article>
+
+    <article>
+        <header id="primitive/string">String</header>
+
+        <p class="smaller">Denoted by text wrapped in double quotes
+        (<code>""</code>)</p>
+
+        <p>String is used when a value, regardless of its contents should be
+        intrepreted as text.</p>
+
+        <p>Due to strings being able to contain any text, including double
+        quotes, there are special character sequences that have alternative
+        meanings within the context of a string:</p>
+        <div class="indent-padding smaller children-smallvmargin">
+            <p><code>\"</code> - Represents a double quote</p>
+            <p><code>\/</code> - Represents a forward slash</p>
+            <p><code>\\</code> - Represents a back slash</p>
+            <p><code>\f</code> - Represents a form-feed character</p>
+            <p><code>\b</code> - Represents a back-space character</p>
+            <p><code>\r</code> - Represents a carriage return character</p>
+            <p><code>\n</code> - Represents a line-feed character</p>
+            <p><code>\t</code> - Represents a tab character</p>
+            <p><code>\uNNNN</code> - Represents a unicode character where <code>NNNN</code> is the hexidecimal code point.</p>
+        </div>
+    </article>
+</article>
+
+<article>
+    <header id="container">Containers</header>
+    <p>Containers, as their name implies, are used to contain multiple values and can consist of both primitive and container datatypes.</p>
+
+    <article>
+        <header id="container/array">Array</header>
+        <p class="smaller">Denoted by a comma seperated list of values wrapped
+        in brackets (<code>[]</code>)</p>
+
+        <p>Arrays are ordered lists of values where each value is automatically
+        given an index for referencing.</p>
+
+        <p>Indexes start at zero and increase by one for each value; the first
+        value uses an index of 0, the second an index of 1, the third an index
+        of 2 and so on for each value in the array.</p>
+    </article>
+
+    <article>
+        <header id="container/object">Object</header>
+        <p class="smaller">Donated by a comma seperated list of key-value pairs
+        wrapped in braces (<code>{}</code>)</p>
+
+        <p>Objects are unordered lists where each value contained within is
+        referenced by a given key.</p>
+
+        <p>All keys are represented as a string and are seperated from their
+        value via the use of a colon (<code>:</code>). Keys are case sensitive
+        so attempting to reference "KEY" will not point to the data contained
+        under "key".</p>
+    </article>
+</article>
+
+<article>
+    <header id="accessing">Accessing Data</header>
+    <p>Referencing specific values within JSON data is fairly straight forward once the various data types are understood.</p>
+    <p>In the following examples <code><span class="comment">green</span></code> colored lines are comments, and <code>→</code> represents referencing an item of a container.</p>
+    <article>
+        <header id="accessing/primitive">Primitives</header>
+        <p>If the referenced JSON member's value is a primitive the value is simply returned by the intrepreter.</p>
+        <code class="block">
+            <div class="comment">Parse the input json</div>
+            jsondata = parse_json("value")<br><br>
+
+            <div class="comment">This would output the text: value</div>
+            output(jsondata)
+        </code>
+    </article>
+
+    <article>
+        <header id="accessing/container">Containers</header>
+        <p>If the JSON data is a container, there's a bit more work involved to access values. A key or index must be specified when accessing the container.</p>
+        <code class="block">
+            <div class="comment">Parse the input json; notice that its an array</div>
+            jsondata = parse_json([<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;"item0",<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;"item1"<br>
+            ])<br><br>
+
+            <div class="comment">Retrieves the 1st item item(at index 0) of the parsed array and outputs the text: item0</div>
+            result = jsondata → 0<br>
+            output(result)<br><br>
+
+            <div class="comment">Retrieves the 2nd item item(at index 1) of the parsed array and outputs the text: item1</div>
+            result = jsondata → 1<br>
+            output(result)<br><br>
+
+            <div class="comment">This would result in an error because there isn't an item at index 2 since indexes start at 0</div>
+            result = jsondata → 2
+        </code>
+        <code class="block">
+            <div class="comment">Parse the input json; notice that its an object</div>
+            jsondata = parse_json({<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;"key0": "value0",<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;"key1": "value1"<br>
+            })<br><br>
+
+            <div class="comment">Retrieves the value at key0 and outputs the text: value0</div>
+            result = jsondata → key0<br>
+            output(result)<br><br>
+
+            <div class="comment">Retrieves the value at key1 and outputs the text: value1</div>
+            result = jsondata → key1<br>
+            output(result)<br><br>
+
+            <div class="comment">This would result in an error because the key doesn't exist</div>
+            result = jsondata → key2<br><br>
+
+            <div class="comment">This would result in an error because keys are case sensitive</div>
+            result = jsondata → KEY0
+        </code>
+    </article>
+    <article>
+        <header id="accessing/nest">Nested Members</header>
+        <p>If the JSON data has nested containers, each index/key must be specified to get to the data you wish to access.</p>
+        <code class="block">
+            input = {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;"key1": "value",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;"key2": [<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"index0",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"index1"<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;],<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;"key3": {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"key3.1": "value2"<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;},<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;"key4": {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"key4.1": [<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value3"<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            }<br><br>
+
+            jsondata = parse_json(input)<br><br>
+
+            <div class="comment">Results in 'myvar' being set to the text: value</div>
+            myvar = jsondata → key1<br><br>
+
+            <div class="comment">Looks up 'key2' in the json data</div>
+            <div class="comment">then within key2's value the item at index-0 is looked up</div>
+            <div class="comment">resulting in 'myvar' being set to the text: index0</div>
+            myvar = jsondata → key2 → 0<br><br>
+
+            <div class="comment">Same as above but the item's value at index-1 is returned</div>
+            <div class="comment">resulting in 'myvar' being set to the text: index1</div>
+            myvar = jsondata → key2 → 1<br><br>
+
+            <div class="comment">Looks up 'key3' in the json data</div>
+            <div class="comment">then within key3's value looks up 'key3.1'</div>
+            <div class="comment">resulting in 'myvar' being set to the text: value2</div>
+            myvar = jsondata → key3 → key3.1<br><br>
+
+            <div class="comment">Looks up 'key4' in the json data</div>
+            <div class="comment">then within key4's value looks up 'key4.1'</div>
+            <div class="comment">then within key4.1's value, looks up the item at index-0</div>
+            <div class="comment">resulting in 'myvar' being set to the text: value3</div>
+            myvar = jsondata → key4 → key4.1 → 0
+        </code>
+    </article>
+</article>

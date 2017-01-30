@@ -1,1263 +1,652 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>JSON For mIRC</title>
-        <link rel="stylesheet" href="./res/layout.css">
-    </head>
-    <body>
-        <div class="wrapper">
-            <div class="helper">
+---
+layout: default
+pagename: reference
+---
+<article>
+    <header>Overview</header>
+    <p>The following is a reference to all commands and identifiers provided by JSON For mIRC. To understand this documentation you must first understand the following:</p>
 
-                <div class="menu">
-                    <div class="logo">
-                        <a href="./index.html"><img src="./res/logo.png" /></a>
-                    </div>
-                    <div>
-                        <a href="./index.html">Home</a>
-                    </div>
-                    <div>
-                        <a href="./downloads.html">Downloads</a>
-                    </div>
-                    <div>
-                        <a href="./whatisjson.html">What is JSON</a>
-                    </div>
-                    <div>
-                        <a href="./usage.html">Usage</a>
-                    </div>
-                    <div class="active">
-                        <a href="./reference.html#about">Referance</a>
-                        <div>
-                            <a href="./reference.html#cmd/jsonlist" class="mono">/JSONList</a>
-                        </div>
-                        <div>
-                            <a href="./reference.html#cmd/jsonopen" class="mono">/JSONOpen</a>
-                        </div>
-                        <div>
-                            <a href="./reference.html#cmd/jsonhttpmethod" class="mono">/JSONHttpMethod</a>
-                        </div>
-                        <div>
-                            <a href="./reference.html#cmd/jsonhttpheader" class="mono">/JSONHttpHeader</a>
-                        </div>
-                        <div>
-                            <a href="./reference.html#cmd/jsonhttpfetch" class="mono">/JSONHttpFetch</a>
-                        </div>
-                        <div>
-                            <a href="./reference.html#id/json" class="mono">$JSON()</a>
-                            <div>
-                                <a href="./reference.html#id/json/prefixes"><span class="mono">Fuzzy</span> Prop Prefix</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/tobvar"><span class="mono">ToBvar</span> Prop Suffix</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/tofile"><span class="mono">ToFile</span> Prop Suffix</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/state" class="mono">.State</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/inputtype" class="mono">.InputType</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/input" class="mono">.Input</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/ischild" class="mono">.IsChild</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/error" class="mono">.Error</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/httpresponse" class="mono">.HttpResponse</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/httphead" class="mono">.HttpHead</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/httpstatus" class="mono">.HttpStatus</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/httpstatustext" class="mono">.HttpStatusText</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/httpheaders" class="mono">.HttpHeaders</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/httpheader" class="mono">.HttpHeader</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/httpbody" class="mono">.HttpBody</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/type" class="mono">.Type</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/length" class="mono">.Length</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/path" class="mono">.Path</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/value" class="mono">.Value</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/string" class="mono">.String</a>
-                            </div>
-                            <div>
-                                <a href="./reference.html#id/json/debugstring" class="mono">.DebugString</a>
-                            </div>
-                        </div>
-                        <div>
-                            <a href="./reference.html#id/jsonerror" class="mono">$JSONError</a>
-                        </div>
-                        <div>
-                            <a href="./reference.html#id/jsonpath" class="mono">$JSONPath</a>
-                        </div>
-                        <div>
-                            <a href="./reference.html#cmd/jsondebug" class="mono">/JSONDebug</a>
-                        </div>
-                        <div>
-                            <a href="./reference.html#id/jsondebug" class="mono">$JSONDebug</a>
-                        </div>
-                        <div>
-                            <a href="./reference.html#cmd/jsonclose" class="mono">/JSONClose</a>
-                        </div>
-                        <div>
-                            <a href="./reference.html#cmd/jsonshutdown" class="mono">/JSONShutDown</a>
-                        </div>
-                        <div>
-                            <a href="./reference.html#id/jsonversion" class="mono">$JSONVersion</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- End of Menu -->
+    <article>
+        <header>Parameters</header>
+        <p>Most of the commands and identifiers require some form of input, that input is refered to as a parameter. All parameters in these documents begin with <code>@</code> and are explained in the command's or identifier's section that lists it.</p>
+        <p>Different commands or identifers may use the same name for a parameter but each parameter's meaning and requirements are unique to the command or identifier that specified it</p>
+    </article>
 
-                <div class="body">
+    <article>
+        <header>Switches</header>
+        <p>Switches alter how a command processes parameters or behaves after the parameters has been processed. If the first parameter of a command begins with <code>-</code> it is a switch.</p>
+        <p>Unless otherwise stated all switches are optional and should only be used to enact the alternative processing.</p>
+    </article>
 
-                    <div class="section" id="about">
-                        <div class="head">About</div>
-                        <div class="content">
-                            <p>The following is a reference to all commands and identifiers provided by JSON For mIRC. To understand this documentation you must first understand the following:</p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">
-                                    <p>Most of the commands and identifiers require some form of input, that input is refered to as a parameter. All parameters in these documents begin with <span class="code">@</span> and are explained in the command's or identifier's section that lists it.</p>
-                                    <p>Different commands or identifers may use the same name for a parameter but each parameter's meaning and requirements are unique to the command or identifier that specified it</p>
-                                </div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Switches</div>
-                                <div class="content">
-                                    <p>If the first parameter of a command begins with <span class="code">-</span> it is a switch. Switches alter how the command processes the input or behaves after the input has been processed.</p>
-                                    <p>Unless otherwise stated all switches are optional and should only be used to enact the alternative processing.</p>
-                                </div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Properties</div>
-                                <div class="content">
-                                    <p>Similar to command switches, identifier properties alter how the inputs are processed or how the identifier behaves. Properties are suffixed to the identifer via a <span class="code">.</span> and are completely optional.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <article>
+        <header>Props</header>
+        <p>Props alter how an identifer processes parameters or behaves after the parameters has been processed. <code>.</code> is used to suffix props to identifiers.</p>
+        <p>Props should only be specified to enact the alternative processing.</p>
+    </article>
+</article>
 
-                    <div class="section codedoc" id="cmd/jsonlist">
-                        <div class="head">/JSONList</div>
-                        <div class="subhead">Lists all open JSON handlers</div>
-                        <div class="content">
-                            <div class="subsection">
-                                <div class="head">Switches</div>
-                                <div class="content italic">None</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content italic">None</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">JSONList</div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="section codedoc" id="cmd/jsonopen">
-                        <div class="head">/JSONOpen -dbfuw @Name @Input</div>
-                        <div class="subhead">Attempts to create a JSON handler</div>
-                        <div class="content">
-                            <div class="subsection">
-                                <div class="head">Switches</div>
-                                <div class="content switches">
-                                    <div>
-                                        <div class="switch">d</div>
-                                        <div class="desc">Closes the JSON handler and all children when the script block exits</div>
-                                    </div>
-                                    <div>
-                                        <div class="switch">b</div>
-                                        <div class="desc">
-                                            <p><span class="parameter">@Input</span> is the name of a bvar containing the JSON to parse.</p>
-                                            <p>This switch cannot be used with the <span class="switch">f</span> or <span class="switch">u</span> switches</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="switch">f</div>
-                                        <div class="desc">
-                                            <p><span class="parameter">@Input</span> is a path to a file containing the JSON to parse.</p>
-                                            <p>This switch cannot be used with the <span class="switch">b</span> or <span class="switch">u</span> switches</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="switch">u</div>
-                                        <div class="desc">
-                                            <p><span class="parameter">@Input</span> is a URL from which the JSON to parse should be retrieved.</p>
-                                            <p>This switch cannot be used with the <span class="switch">f</span> or <span class="switch">b</span> switches</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="switch">w</div>
-                                        <div class="desc">
-                                            <p>The URL request should wait until <span class="command">/JSONHttpFetch</span> is called. This is to allow the request method and headers to be set.</p>
-                                            <p>This switch can only be used if the <span class="switch">u</span> switch is specified</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content parameters">
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Name</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The name in which the handler will be refered to</p>
-                                            <p>Cannot contain the characters: ? * : or space</p>
-                                            <p>Cannot be a numerical value</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Input</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The input JSON data to be parsed</p>
-                                            <p>if the <span class="switch">b</span> switch is specified the input will be considered a bvar</p>
-                                            <p>if the <span class="switch">f</span> switch is specified the input will be considered a file</p>
-                                            <p>if the <span class="switch">u</span> switch is specified the input will be considered a URL</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">Creates the JSON handler 'example' where the input data is "some data". The handler will be closed after the script finishes executing</div>
-                                    JSONOpen -d example "some data"<br>
-                                    <br>
-
-                                    <div class="comment">Creates the JSON handler 'example' where the input is stored in &amp;bvar</div>
-                                    JSONOpen -db example &amp;bvar<br>
-                                    <br>
-
-                                    <div class="comment">Creates the JSON handler 'example' where the input is stored in file.txt</div>
-                                    JSONOpen -df example file.txt<br>
-                                    <br>
-
-                                    <div class="comment">Creates the JSON handler 'example' where the input is to be retrieved from http://example.com/data.json</div>
-                                    JSONOpen -du example http://example.com/data.json<br>
-                                    <br>
-
-                                    <div class="comment">Creates the JSON handler 'example' where the input is to be retrieved from http://example.com/data.json. The connection is to wait for /JSONHttpFetch is called</div>
-                                    JSONOpen -duw example http://example.com/data.json<br>
-                                    <br>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="cmd/jsonhttpmethod">
-                        <div class="head">/JSONHttpMethod @Name @Method</div>
-                        <div class="subhead">Sets the method for a JSON handler's pending HTTP request</div>
-                        <div class="content">
-                            <p class="smaller">To use this command, the handler must have been created with the <span class="switch code">uw</span> switches and the HTTP request must be pending.</p>
-                            <div class="subsection">
-                                <div class="head">Switches</div>
-                                <div class="content italic">None</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content parameters">
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Name</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The name of an open JSON handler with a pending HTTP request</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Method</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The HTTP request method to use</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">Creates the JSON handler 'example' with a pending HTTP request</div>
-                                    JSONOpen -duw example http://example.com/data.json<br>
-                                    <br>
-                                    <div class="comment">Stores the method for when /JSONHttpFetch is called</div>
-                                    JSONHttpMethod example POST
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="cmd/jsonhttpheader">
-                        <div class="head">/JSONHttpHeader @Name @Header @Value</div>
-                        <div class="subhead">Stores the header for a JSON handler's pending HTTP request</div>
-                        <div class="content">
-                            <p class="smaller">To use this command, the handler must have been created with the <span class="switch code">uw</span> switches and the HTTP request must be pending.</p>
-                            <div class="subsection">
-                                <div class="head">Switches</div>
-                                <div class="content italic">None</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content parameters">
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Name</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The name of an open JSON handler with a pending HTTP request</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Header</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The name of the header to store a value for.</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Value</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The value of the header to store</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">Creates the JSON handler 'example' with a pending HTTP request</div>
-                                    JSONOpen -duw example http://example.com/data.json<br>
-                                    <br>
-                                    <div class="comment">Stores the header for when /JSONHttpFetch is called</div>
-                                    JSONHttpHeader example Authorization bearer some-bearer-token
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="cmd/jsonhttpfetch">
-                        <div class="head">/JSONHttpFetch -bf @Name @Data</div>
-                        <div class="subhead">Performs a JSON handler's pending HTTP request</div>
-                        <div class="content">
-                            <p class="smaller">To use this command, the handler must have been created with the <span class="switch code">uw</span> switches and the HTTP request must be pending.</p>
-                            <div class="subsection">
-                                <div class="head">Switches</div>
-                                <div class="content switches">
-                                    <div>
-                                        <div class="switch">b</div>
-                                        <div class="desc">
-                                            <p><span class="parameter">@Data</span> is the name of a bvar containing the data to send</p>
-                                            <p>This switch cannot be used with the <span class="switch">f</span> switch</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="switch">f</div>
-                                        <div class="desc">
-                                            <p><span class="parameter">@Data</span> is a path to a file of which to send</p>
-                                            <p>This switch cannot be used with the <span class="switch">b</span> switch</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content parameters">
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Name</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The name of an open JSON handler with a pending HTTP request</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Data</div>
-                                            <div class="italic">Optional</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The data to send with the HTTP request</p>
-                                            <p>If the <span class="switch">b</span> switch is specified, the data will be consider a bvar</p>
-                                            <p>If the <span class="switch">f</span> switch is specified, the data will be consider a file path</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">Performs the HTTP request and attempts to parse the result</div>
-                                    JSONHttpFetch example<br>
-                                    <br>
-
-                                    <div class="comment">Performs the HTTP request sending "some text" with the request and attempts to parse the result</div>
-                                    JSONHttpFetch example some text<br>
-                                    <br>
-
-                                    <div class="comment">Performs the HTTP request sending the data in &amp;bvar with the request and attempts to parse the result</div>
-                                    JSONHttpFetch -b example &amp;bvar<br>
-                                    <br>
-
-                                    <div class="comment">Performs the HTTP request sending the contents of file.txt with the request and attempts to parse the result</div>
-                                    JSONHttpFetch -f example file.txt<br>
-                                    <br>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json">
-                        <div class="head">$JSON(@Name|Ref|N)</div>
-                        <div class="subhead">Returns the name or reference name of the JSON handler if it exists</div>
-                        <div class="content">
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content parameters">
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Name|Ref|N</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The handler name, referenace name or numerical value in question</p>
-                                            <p>If <span class="code">0</span> is specified, the total number of open JSON handlers is returned</p>
-                                            <p>If a numerical value is specified the Nth JSON handler is returned</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json:withmembers">
-                        <div class="head">$JSON(@Name|Ref, @Members...)</div>
-                        <div class="subhead">Returns a reference to the indicated member in the JSON</div>
-                        <div class="content">
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content parameters">
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Name|Ref</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The handler name or handler-reference of which to access memebers</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Members...</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The members to access</p>
-                                            <p>Nested members are specified by passing subsequent arguments to the <span class="code">$JSON()</span> alias</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    JSONOpen example {"keyA":["index0", {"keyB": "some value"}]}<br>
-                                    <br>
-
-                                    <div class="comment">Returns a reference to the members of 'keyA'; in this case a reference to the array</div>
-                                    echo -a $JSON(example, keyA)<br>
-                                    <br>
-
-                                    <div class="comment">Returns a reference to 'some value'</div>
-                                    echo -a $JSON(example, keyA, 1, keyB)<br>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/fuzzy">
-                        <div class="head">$JSON(@Name|Ref, @Members...) 'Fuzzy' Property-Prefix</div>
-                        <div class="subhead">Uses Fuzzy lookup to reference members</div>
-                        <div class="content">
-                            <p class="smaller">All properties can be prefixed with <span class="code">fuzzy</span> to indicate fuzzy lookup should be used.</p>
-                            <p class="smaller">Fuzzy lookups take place on <a href="./whatisjson.html#datatypes" target="_blank">JSON Objects</a> where unsigned-integers within <span class="parameter">@Members...</span> are considered indexes instead of keys and case-sensitivity is ignored</p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content parameters">
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Name|Ref</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The handler name or handler-reference of which to access memebers</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Members...</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The members to access</p>
-                                            <p>Nested members are specified by passing subsequent arguments to the <span class="code">$JSON()</span> alias</p>
-                                            <p>To indicate a specific member should use fuzzy-lookup prefix it with <span class="code">~</span></p>
-                                            <p>Non-fuzzy member lookups can be forced by prefixing the member with <span class="code">=</span>. This only effects inputted members that would trigger fuzzy-lookups</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    JSONOpen -d example {"member0":{"member1": "value1", "~1": "value2"}}<br>
-                                    <br>
-
-                                    <div class="comment">Echos: value1</div>
-                                    echo -a > $JSON(example, ~0, member1).FuzzyValue<br>
-                                    echo -a > $JSON(example, ~MEMBER0, ~0).FuzzyValue<br>
-                                    <br>
-
-                                    <div class="comment">Echos: value2</div>
-                                    echo -a > $JSON(Example, member0, =~1).FuzzyValue
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/tobvar">
-                        <div class="head">$JSON(@Name|Ref, @BVar, ...) 'ToBvar' Property-Suffix</div>
-                        <div class="subhead">Stores the call output in a specified bvar</div>
-                        <div class="content">
-                            <p class="smaller">All $JSON() properties can be suffixed with <span class="code">ToBvar</span> to indicate the output should be stored in a specified bvar</p>
-                            <p class="smaller">This suffix is not compatible with the <span class="code">ToFile</span> suffix.</p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content parameters">
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Name|Ref</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The handler name or handler-reference of which to access memebers</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Bvar</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The bvar to fill with the result</p>
-                                            <p>If the bvar exists, all data within the bvar is overwrote</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div>
-                                            <div class="parameter">...</div>
-                                            <div class="italic">Circumstantial</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>Property-specific parameters.</p>
-                                            <p>When outputting to a bvar, the bvar name will always be the second parameter passed to the <span class="parameters">$JSON()</span> identifier</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    JSONOpen -d example "some data"<br>
-                                    <br>
-                                    <div class="comment">Fills &amp;bvar with: some data</div>
-                                    noop $JSON(example, &amp;bvar).ValueToBvar
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/tofile">
-                        <div class="head">$JSON(@Name|Ref, @File, ...) 'ToFile' Property-Suffix</div>
-                        <div class="subhead">Writes the call output to a specified file</div>
-                        <div class="content">
-                            <p class="smaller">All $JSON() properties can be suffix with <span class="code">ToFile</span> to indicate the output should be wrote to the specified file.</p>
-                            <p class="smaller">This suffix is not compatible with the <span class="code">ToBVar</span> suffix.</p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content parameters">
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Name|Ref</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The handler name or handler-reference of which to access memebers</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@File</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The file to output the result to</p>
-                                            <p>If the file exists its contents are overwrote</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div>
-                                            <div class="parameter">...</div>
-                                            <div class="italic">Circumstantial</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>Property-specific parameters.</p>
-                                            <p>When outputting to a file, the filepath will always be the second parameter passed to the <span class="parameters">$JSON()</span> identifier</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    JSONOpen -d example "some data"<br>
-                                    <br>
-                                    <div class="comment">Writes to file.txt: some data</div>
-                                    noop $JSON(example, file.txt).ValueToFile
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/state">
-                        <div class="head">
-                            $JSON(@Name|Ref).State
-                        </div>
-                        <div class="subhead">Returns the current state of the JSON handler</div>
-                        <div class="content">
-                            <p class="smaller">Valid states are: <span class="code">init</span> <span class="code">http_pending</span> <span class="code">parse_pending</span> and <span class="code">done</span></p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content parameters">
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Name|Ref</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The handler name or handler-reference of which to reference</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    echo $JSON(example).State
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/inputtype">
-                        <div class="head">
-                            $JSON(@Name|Ref|N).InputType
-                        </div>
-                        <div class="subhead">Returns the input type</div>
-                        <div class="content">
-                            <p class="smaller">Valid outputs are <span class="code">text</span> or <span class="code">http</span></p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">Echos: text</div>
-                                    JSONOpen ExampleText "a"<br>
-                                    echo $JSON(ExampleText).InputType
-                                    <br>
-                                    <br>
-                                    <div class="comment">Echos: http</div>
-                                    JSONOpen ExampleHttp http://example.com/data.json<br>
-                                    echo $JSON(ExampleText).InputType
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/input">
-                        <div class="head">
-                            $JSON(@Name|Ref|N).Input
-                        </div>
-                        <div class="subhead">
-                            Returns the input json data that was attempted to be parsed
-                        </div>
-                        <div class="content">
-                            <p class="smaller"></p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">Echos: {"key": "value"}</div>
-                                    JSONOpen example {"key": "value"}<br>
-                                    echo $JSON(example).input
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/ischild">
-                        <div class="head">
-                            $JSON(@Name|Ref|N).IsChild
-                        </div>
-                        <div class="subhead">Returns true if the reference is the child of another JSON handler</div>
-                        <div class="content">
-                            <p class="smaller"></p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">echos $false</div>
-                                    JSONOpen example "value"<br>
-                                    echo $JSON(example).IsChild<br>
-                                    <br>
-                                    <div class="comment">echos $true</div>
-                                    JSONOpen example {"key": "value"}<br>
-                                    echo $JSON(example, key).IsChild
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/error">
-                        <div class="head">
-                            $JSON(@Name|Ref|N).Error
-                        </div>
-                        <div class="subhead">Returns the error message if a parser error occured</div>
-                        <div class="content">
-                            <p class="smaller"></p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">Assuming the website returns invalid json<br>
-                                    Echos: INVALID_JSON</div>
-                                    JSONOpen -uw example https://example.com/data.json<br>
-                                    echo $JSON(example).Error
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/httpresponse">
-                        <div class="head">
-                            $JSON(@Name|Ref|N).HttpResponse
-                        </div>
-                        <div class="subhead">Returns the full HTTP response including status code, status text, headers and response body</div>
-                        <div class="content">
-                            <p class="smaller"></p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">echo $JSON(example).HttpResponse</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/httphead">
-                        <div class="head">
-                            $JSON(@Name|Ref|N).HttpHead
-                        </div>
-                        <div class="subhead">Returns the HTTP response head, including HTTP status code, status text and response headers</div>
-                        <div class="content">
-                            <p class="smaller"></p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">echo $JSON(example).HttpHead</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/httpstatus">
-                        <div class="head">
-                            $JSON(@Name|Ref|N).HttpStatus
-                        </div>
-                        <div class="subhead">Returns the HTTP response's status code</div>
-                        <div class="content">
-                            <p class="smaller"></p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">Assuming the request succeeded echos: 200</div>
-                                    echo $JSON(example).HttpStatus
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/httpstatustext">
-                        <div class="head">
-                            $JSON(@Name|Ref|N).HttpStatusText
-                        </div>
-                        <div class="subhead">Returns the HTTP response's status text</div>
-                        <div class="content">
-                            <p class="smaller"></p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">Assuming the request succeeded echos: OK</div>
-                                    echo $JSON(example).HttpStatusText
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/httpheaders">
-                        <div class="head">
-                            $JSON(@Name|Ref|N).HttpHeaders
-                        </div>
-                        <div class="subhead">Returns the HTTP response's header list. Headers are delimited by <span class="code">$crlf</span></div>
-                        <div class="content">
-                            <p class="smaller"></p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">echo $JSON(example).HttpHeaders</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/httpheader">
-                        <div class="head">
-                            $JSON(@Name|Ref|N, @Header, @N).HttpHeader
-                        </div>
-                        <div class="subhead">Returns the value of the specified header if it exists</div>
-                        <div class="content">
-                            <p class="smaller"></p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">Returns the total number of headers</div>
-                                    echo $JSON(example, 0).HttpHeader<br>
-                                    <br>
-                                    <div class="comment">Returns the header name of the first header</div>
-                                    echo $JSON(example, 1).HttpHeader<br>
-                                    <br>
-                                    <div class="comment">Returns the value of the first Set-Cookie header instance</div>
-                                    echo $JSON(example, Set-Cookie, 1).HttpHeader<br>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/httpbody">
-                        <div class="head">
-                            $JSON(@Name|Ref|N).HttpBody
-                        </div>
-                        <div class="subhead">Returns the HTTP response's body</div>
-                        <div class="content">
-                            <p class="smaller"></p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">Echos the body of the HTTP request</div>
-                                    echo $JSON(example).HttpBody
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/type">
-                        <div class="head">
-                            $JSON(@Name|Ref|N, @Members).Type
-                        </div>
-                        <div class="subhead">Returns the referenced member's data-type</div>
-                        <div class="content">
-                            <p class="smaller">
-
-                            </p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-
-                                <div class="code">
-                                    <div class="comment">echos: boolean</div>
-                                    JSONOpen example {"key": false}<br>
-                                    echo $JSON(example, key).type
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/length">
-                        <div class="head">
-                            $JSON(@Name|Ref|N, @Members).Length
-                        </div>
-                        <div class="subhead">Returns the length of the referenced member</div>
-                        <div class="content">
-                            <p class="smaller">This property is only applicable for members that are strings, arrays or objects</p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">Echos: 9</div>
-                                    JSONOpen example "some text"
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/path">
-                        <div class="head">
-                            $JSON(@Name|Ref|N, @Members).Path
-                        </div>
-                        <div class="subhead">Returns the path to the referenced member</div>
-                        <div class="content">
-                            <p class="smaller">Use <span class="code">$JSONPath</span> to access individual members of the result </p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">Echos: "key" "0"</div>
-                                    JSONOpen example {"key":["value"]}<br>
-                                    echo $JSON(example, key, 0).Path
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/value">
-                        <div class="head">
-                            $JSON(@Name|Ref|N, @Members).Value
-                        </div>
-                        <div class="subhead">Returns the value of the referenced member</div>
-                        <div class="content">
-                            <p class="smaller">If the referenced member's value is a primitive the value is returned, otherwise an error is raised</p>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">Echos: text</div>
-                                    JSONOpen example text<br>
-                                    echo $JSON(example).Value
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/string">
-                        <div class="head">
-                            $JSON(@Name|Ref|N, @Members).String
-                        </div>
-                        <div class="subhead">Returns the referenced member's value as a JSON string</div>
-                        <div class="content">
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">Echos: {"key": "value"}</div>
-                                    JSONOpen example {"key": "value"}<br>
-                                    echo $JSON(example).String
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/json/debugstring">
-                        <div class="head">
-                            $JSON(@Name|Ref|N, @Members).DebugString
-                        </div>
-                        <div class="subhead">Returns a json-parsable debug string containing all internally stored data related to the JSON handler and referenced member</div>
-                        <div class="content">
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">echo $JSON(example).DebugString</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/jsonerror">
-                        <div class="head">
-                            $JSONError
-                        </div>
-                        <div class="subhead">Returns the error message if the last JSON call resulted in an error</div>
-                        <div class="content">
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content italic">None</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">echo $JSONError</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="display:none" class="section codedoc" id="id/jsonpath">
-                        <div class="head">
-                            $JSONPath(@Path, @index)
-                        </div>
-                        <div class="subhead">Returns the nth item in the JSON path</div>
-                        <div class="content">
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content">To Do</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">Echos: key2</div>
-                                    JSONOpen example {"key":{"key2": "value"}}<br>
-                                    echo $JSONPath( $JSON(example, key, key2).Path, 1)
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="cmd/jsondebug">
-                        <div class="head">
-                            /JSONDebug @State
-                        </div>
-                        <div class="subhead">Enables/Disables debug logging</div>
-                        <div class="content">
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content parameters">
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@State</div>
-                                            <div class="italic">Optional</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The state of which to toggle debugging.</p>
-                                            <p>Acceptable inputs include <span class="code">on</span>, <span class="code">enable</span>, <span class="code">off</span>, and <span class="code">disable</span></p>
-                                            <p>If not specified, the current state will be toggled to the oppisite.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">Turns debugging on</div>
-                                    JSONDebug on<br>
-                                    <br>
-                                    <div class="comment">Turns debugging off</div>
-                                    JSONDebug off
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/jsondebug">
-                        <div class="head">
-                            $JSONDebug
-                        </div>
-                        <div class="subhead">Returns $true if debug logging is enabled</div>
-                        <div class="content">
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content italic">None</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">echo $JSONDebug</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="cmd/jsonclose">
-                        <div class="head">/JSONClose -w @Name</div>
-                        <div class="subhead">Lists a JSON handler</div>
-                        <div class="content">
-                            <div class="subsection">
-                                <div class="head">Switches</div>
-                                 <div class="content switches">
-                                    <div>
-                                        <div class="switch">w</div>
-                                        <div class="desc">
-                                            <p><span class="parameter">@Name</span> is a wildcard and all matching JSON handlers should be closed</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content parameters">
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Name</div>
-                                            <div class="italic">Required</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>The name of the JSON handler to close</p>
-                                            <p>If the <span class="switch">w</span> switch is specified, the name will be considered a wildcard pattern
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                  <div class="comment">Closes the JSON instance 'example'</div>
-                                  JSONClose example<br>
-                                  <br>
-                                  <div class="comment">Closes all JSON instances starting with exa</div>
-                                  JSONClose -w exa*
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="cmd/jsonshutdown">
-                        <div class="head">/JSONShutDown</div>
-                        <div class="subhead">Closes all open JSON handlers and frees all resources</div>
-                        <div class="content">
-                            <div class="subsection">
-                                <div class="head">Switches</div>
-                                <div class="content italic">None</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content italic">None</div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">JSONShutDown</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section codedoc" id="id/jsonversion">
-                        <div class="head">$JSONVersion(@Short)</div>
-                        <div class="subhead">Returns the JSON For mIRC script version</div>
-                        <div class="content">
-                            <div class="subsection">
-                                <div class="head">Parameters</div>
-                                <div class="content parameters">
-                                    <div>
-                                        <div>
-                                            <div class="parameter">@Short</div>
-                                            <div class="italic">Optional</div>
-                                        </div>
-                                        <div class="indent">
-                                            <p>If not null then a shorten version-string will be returned</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subsection">
-                                <div class="head">Example</div>
-                                <div class="code">
-                                    <div class="comment">Echos: JSON For mIRC v1.0.0</div>
-                                    echo $JSONVersion<br>
-                                    <br>
-                                    <div class="comment">Echos: 1.0.0</div>
-                                    echo $JSONVersion(short)
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+<article id="cmd/jsonlist" class="codedoc">
+    <header>/JSONList</header>
+    <div class="description">Lists all open JSON handles.</div>
+</article>
+<article id="cmd/jsonopen" class="codedoc">
+    <header>/JSONOpen -dbfuUw @Name @Input</header>
+    <div class="desciption">Creates a JSON handle and parsers the input when applicatable.</div>
+    <div class="section switchlist">
+        <div class="title">Switches</div>
+        <div class="list">
+            <div>
+                <div class="hilight">-d</div>
+                <div>Closes the JSON handle and all children when the calling script finishes processing.</div>
+            </div>
+            <div>
+                <div class="hilight">-b</div>
+                <div>
+                    <div><span class="hilight">@Input</span> is the name of a bvar containing the JSON to parse.</div>
+                    <div>This switch cannot be used with the <span class="hilight">f</span> <span class="hilight">u</span> or <span class="hilight">U</span> switches.</div>
                 </div>
             </div>
-            <div class="footer">SReject &copy; 2015-2016 - All Rights Reserved</div>
+            <div>
+                <div class="hilight">-f</div>
+                <div>
+                    <div><span class="hilight">@Input</span> is the path to a file containing the JSON to parse.</div>
+                    <div>This switch cannot be used with the <span class="hilight">b</span> <span class="hilight">u</span> or <span class="hilight">U</span> switches.</div>
+                </div>
+            </div>
+            <div>
+                <div class="hilight">-u</div>
+                <div>
+                    <div><span class="hilight">@Input</span> is a URL of which to retrieve the JSON data from.</div>
+                    <div>This switch cannot be used with the <span class="hilight">b</span> <span class="hilight">f</span> or <span class="hilight">U</span> switches.</div>
+                </div>
+            </div>
+            <div>
+                <div class="hilight">-U</div>
+                <div>
+                    <div><span class="hilight">@Input</span> is a URL of which to retrieve the JSON data from.</div>
+                    <div>The data will <em>NOT</em> be parsed; this switch is provided to allow non-JSON data to be downloaded using the methodology provided by the script.</div>
+                    <div>This switch cannot be used with the <span class="hilight">b</span> <span class="hilight">f</span> or <span class="hilight">u</span> switches.</div>
+                </div>
+            </div>
+            <div>
+                <div class="hilight">-w</div>
+                <div>
+                    <div>The URL request should wait until <a href="#cmd/jsonhttpfetch" class="hilight">/JSONHttpFetch</a> is called. This is to allow the request method and headers to be set.</div>
+                    <div>This switch can only be used if the <span class="hilight">u</span> or <span>U</span> switch is specified</div>
+                </div>
+            </div>
         </div>
-    </body>
-</html>
+    </div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name to be used to reference the JSON instance.</div>
+                    <div>Must not be an unsigned integer value or contain the characters <code>:</code>, <code>?</code>, <code>*</code></div>
+                </div>
+            </div>
+            <div>
+                <div class="title"><span class="hilight">@Input</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The input JSON data to be parsed</div>
+                    <div>If the <span class="hilight">b</span> switch is specified the input will be considered a bvar</div>
+                    <div>If the <span class="hilight">f</span> switch is specified the input will be considered a file</div>
+                    <div>If the <span class="hilight">u</span> or <span class="hilight">U</span> switch is specified the input will be considered a URL</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="cmd/jsonhttpmethod" class="codedoc">
+    <header>/JSONHttpMethod @Name @Method</header>
+    <div class="description">Sets the request method for a JSON handle's pending HTTP request.</div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The handle name of which to set the HTTP method for.</div>
+                    <div>The handle must have been created with the <span class="hilight">-w</span> switch and the HTTP request must be pending</div>
+                </div>
+            </div>
+            <div>
+                <div class="title"><span class="hilight">@Method</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The method of which to use when the HTTP request is made</div>
+                    <div>Examples include <code>GET</code>, <code>POST</code>, <code>DELETE</code></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="cmd/jsonhttpheader" class="codedoc">
+    <header>/JSONHttpHeader @Name @Header @Value</header>
+    <div class="description">Stores the header for a pending HTTP request.</div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The handle name of which to store the header for.</div>
+                    <div>The handle must have been created with the <span class="hilight">-w</span> switch and the HTTP request must be pending</div>
+                </div>
+            </div>
+            <div>
+                <div class="title"><span class="hilight">@Header</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name of the header to set</div>
+                    <div>Examples include <code>Content-Type</code>, <code>Content-Length</code>, <code>Cookie</code></div>
+                </div>
+            </div>
+            <div>
+                <div class="title"><span class="hilight">@Value</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The header value to store</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="cmd/jsonhttpfetch" class="codedoc">
+    <header>/JSONHttpFetch -bf @Name @Data</header>
+    <div class="desciption">Performs a pending HTTP request.</div>
+    <div class="section switchlist">
+        <div class="title">Switches</div>
+        <div class="list">
+            <div>
+                <div class="hilight">-b</div>
+                <div>
+                    <div><span class="hilight">@Data</span> is the name of a bvar of which contains the data to send with the request.</div>
+                    <div>This switch cannot be used with the <span class="hilight">-f</span> switch.</div>
+                </div>
+            </div>
+            <div>
+                <div class="hilight">-f</div>
+                <div>
+                    <div><span class="hilight">@Data</span> is the path to a file containing the data to send with the request.</div>
+                    <div>This switch cannot be used with the <span class="hilight">-b</span> switch.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The handle name of which to perform the HTTP request.</div>
+                    <div>The handle must have been created with the <span class="hilight">-w</span> switch and the HTTP request must be pending.</div>
+                </div>
+            </div>
+            <div>
+                <div class="title"><span class="hilight">@Data</span> - <span class="smaller">Optional</span></div>
+                <div class="description">
+                    <div>The data to send with the request</div>
+                    <div>If the <span class="hilight">-b</span> switch is specified <span class="hilight">@Data</span> will be considered a bvar.</div>
+                    <div>If the <span class="hilight">-f</span> switch is specified <span class="hilight">@Data</span> will be considered a file.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section paramlist">
+        <div class="title">Notes</div>
+        <div class="list">
+            <div>If certain headers have not been specified the following default values will be used:</div>
+            <code class="block">
+                Host: &lt;site_host&gt;<br>
+                User-Agent: Mozilla/4.0 (compatible; Win32; WinHttp.WinHttpRequest.5)<br>
+                Accept: */*<br>
+                Accept-Language: &lt;system_lang&gt;<br><br>
+                <div class="comment">Only applicable if data is being send:</div>
+                Content-Type: application/x-www-form-urlencoded<br>
+                Content-Length: &lt;data_length&gt;
+            </code>
+        </div>
+    </div>
+</article>
+<article id="cmd/jsonclose" class="codedoc">
+    <header>/JSONClose -w @Name</header>
+    <div class="description">Closes the specified handle freeing all resources associated with it.</div>
+    <div class="section switchlist">
+        <div class="title">Switches</div>
+        <div class="list">
+            <div>
+                <div class="hilight">-w</div>
+                <div>Indicates <span class="hilight">@Name</span> is a wildcard of which all matching handles are to be closed</div>
+            </div>
+        </div>
+    </div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name of the handle to close.</div>
+                    <div>If the <span class="hilight">-w</span> switch is used, all matching handles will be closed</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="cmd/jsonshutdown" class="codedoc">
+    <header>/JSONShutdown</header>
+    <div class="description">Closes all JSON handles and frees all resources related to the script.</div>
+</article>
+<article id="id/json" class="codedoc">
+    <header>$JSON(@Name|Ref|N, @Members...)</header>
+    <div class="description">
+        <div>Returns the COM name if the JSON handle exists.</div>
+    </div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name of the handle.</div>
+                    <div>If <span class="hilight">N</span> is an unsigned integer, the Nth open json handle is returned.</div>
+                    <div>If <span class="hilight">N</span> is 0 the total number of JSOn handles is returned.</div>
+                </div>
+            </div>
+            <div>
+                <div class="title"><span class="hilight">@Members</span> - <span class="smaller">Optional</span></div>
+                <div class="description">
+                    <div>A list of members within the handle's JSON data to sequentally walk prior to returning a reference.</div>
+                    <div>Each member is passed as an additional paramater to the <span class="hilight">$JSON()</span> identifer.</div>
+                    <div>If specified, a reference to the accessed item is returned.</div>
+                    <div>Not applicable if <span class="hilight">@Name|Ref|N</span> is <code>0</code>.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="id/json/fuzzy" class="codedoc">
+    <header>$JSON(@Name|Ref|N, @Members...) Fuzzy Prop Prefix</header>
+    <div class="description">
+        <div>Uses fuzzy-walking when accessing members and returns a reference to the accessed item.</div>
+        <div class="smaller">Fuzzy inputs ignore casing and numerical values will be treated soley as indexes instead of keys for the purposes of walking the JSON data.</div>
+    </div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name, result of calling <code>$JSON()</code>, or index of an open JSON handle.</div>
+                </div>
+            </div>
+            <div>
+                <div class="title"><span class="hilight">@Members</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>A list of members within the handle's JSON data to sequentally walk prior to returning a reference.</div>
+                    <div>If a member is prefixed with <code>~</code> it will be treated as a fuzzy input during lookup.</div>
+                    <div>if a member is prefixed with <code>=</code> it will be treated as a literal key.</div>
+                    <div>Fuzzy-lookups only take place on objects; All other data-types ignore fuzzy flags if they are walked</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="id/json/tobvar" class="codedoc">
+    <header>$JSON(@Name|Ref|N, ...) ToBvar Prop Suffix</header>
+    <div class="description">
+        <div>Outputs the result into a unique bvar and returns the bvar</div>
+        <div class="smaller">All <code>$JSON()</code> props support being suffixed with <span class="hilight">ToBvar</span></div>
+        <div class="smaller">This prop suffix cannot be used with the <span class="hilight">ToFile</span> prop suffix</div>
+    </div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name, result of calling <code>$JSON()</code>, or index of an open JSON handle.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="id/json/tofile" class="codedoc">
+    <header>$JSON(@Name|Ref|N, @File, ...) ToFile Prop Suffix</header>
+    <div class="description">
+        <div>Outputs the result into the specified file</div>
+        <div class="smaller">All <code>$JSON()</code> props support being suffixed with <span class="hilight">ToFile</span></div>
+        <div class="smaller">This prop suffix cannot be used with the <span class="hilight">ToBvar</span> prop suffix</div>
+    </div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name, result of calling <code>$JSON()</code>, or index of an open JSON handle.</div>
+                </div>
+            </div>
+            <div>
+                <div class="title"><span class="hilight">@File</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The path to the file to write the result to.</div>
+                    <div>The file must not exist prior to the the <span class="hilight">$JSON()</span> call</div>
+                    <div>The <span class="hilight">@File</span> parameter is required to be the 2nd parameter.</div>
+                    <div>All parameters that would normally follow directly after the <span class="hilight">@Name</span> parameter are to be shifted to the right one slot.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="id/json/state" class="codedoc">
+    <header>$JSON(@Name|Ref|N).State</header>
+    <div class="description">Returns the JSON handle's state: <code>init</code>, <code>http_pending</code>, <code>parse_pending</code>, <code>done</code></div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name, result of calling <code>$JSON()</code>, or index of an open JSON handle.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="id/json/inputtype" class="codedoc">
+    <header>$JSON(@Name|Ref|N).InputType</header>
+    <div class="description">Returns the JSON handle's input type: <code>text</code> or <code>http</code></div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name, result of calling <code>$JSON()</code>, or index of an open JSON handle.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="id/json/inputtype" class="codedoc">
+    <header>$JSON(@Name|Ref|N).Input</header>
+    <div class="description">Returns the JSON handle's input data prior to attempting to parse.</div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name, result of calling <code>$JSON()</code>, or index of an open JSON handle.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="id/json/ischild" class="codedoc">
+    <header>$JSON(@Name|Ref|N).IsChild</header>
+    <div class="description">Returns <code>$true</code> or <code>$false</code> dependant on if the JSON handle is a child reference to another JSON handle.</div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name, result of calling <code>$JSON()</code>, or index of an open JSON handle.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="id/json/httpparse" class="codedoc">
+    <header>$JSON(@Name|Ref|N).HttpParse</header>
+    <div class="description">Returns <code>$true</code> or <code>$false</code> dependant on if the JSON handle is supposed to parse the retrieved data from an HTTP request</div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name, result of calling <code>$JSON()</code>, or index of an open JSON handle.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="id/json/httpstatus" class="codedoc">
+    <header>$JSON(@Name|Ref|N).HttpStatus</header>
+    <div class="description">Returns the HTTP status code of a completed HTTP request for the JSON handle.</div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name, result of calling <code>$JSON()</code>, or index of an open JSON handle.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="id/json/httpstatustext" class="codedoc">
+    <header>$JSON(@Name|Ref|N).HttpStatusText</header>
+    <div class="description">Returns the HTTP statustext of a completed HTTP request for the JSON handle.</div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name, result of calling <code>$JSON()</code>, or index of an open JSON handle.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="id/json/httpheader" class="codedoc">
+    <header>$JSON(@Name|Ref|N, @Header).HttpHeader</header>
+    <div class="description">Returns the value for the first matching HTTP response header.</div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name, result of calling <code>$JSON()</code>, or index of an open JSON handle.</div>
+                </div>
+            </div>
+            <div>
+                <div class="title"><span class="hilight">@Header</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The response header to retrieve a value for</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="id/json/httpheaders" class="codedoc">
+    <header>$JSON(@Name|Ref|N).HttpHeaders</header>
+    <div class="description">Returns all of the HTTP response headers, seperated by <code>$crlf</code> as the were received from the server.</div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name, result of calling <code>$JSON()</code>, or index of an open JSON handle.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="id/json/httphead" class="codedoc">
+    <header>$JSON(@Name|Ref|N).HttpHead</header>
+    <div class="description">Returns the HTTP response status code, status text and headers as they were received from the server.</div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name, result of calling <code>$JSON()</code>, or index of an open JSON handle.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="id/json/httpbody" class="codedoc">
+    <header>$JSON(@Name|Ref|N).HttpBody</header>
+    <div class="description">Returns all of the HTTP response body as it was received from the server.</div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name, result of calling <code>$JSON()</code>, or index of an open JSON handle.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="id/json/httpResponse" class="codedoc">
+    <header>$JSON(@Name|Ref|N).HttpResponse</header>
+    <div class="description">Returns the full HTTP response as it was received from the server</div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name, result of calling <code>$JSON()</code>, or index of an open JSON handle.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="id/json/path" class="codedoc">
+    <header>$JSON(@Name|Ref|N, @Members...).Path</header>
+    <div class="description">Returns a string representation of the path followed to reach the accessed item.</div>
+</article>
+<article id="id/json/type" class="codedoc">
+    <header>$JSON(@Name|Ref|N, @Members...).Type</header>
+    <div class="description">Returns the data-type of the accessed item.</div>
+</article>
+<article id="id/json/iscontainer" class="codedoc">
+    <header>$JSON(@Name|Ref|N, @Members...).IsContainer</header>
+    <div class="description">Returns <code>$true</code> or <code>$false</code> if the accessed item is a container data-type.</div>
+</article>
+<article id="id/json/length" class="codedoc">
+    <header>$JSON(@Name|Ref|N, @Members...).Length</header>
+    <div class="description">
+        <div>Returns the length of the accessed item.</div>
+        <div class="smaller">Only applicable for <code>Strings</code>, <code>Arrays</code>, and <code>Objects</code>.</div>
+    </div>
+</article>
+<article id="id/json/value" class="codedoc">
+    <header>$JSON(@Name|Ref|N, @Members...).Value</header>
+    <div class="description">
+        <div>Returns the value of the accessed item.</div>
+        <div class="smaller">Only applicable for items of <code>null</code>, <code>boolean</code>, <code>number</code>. and <code>string</code> data-types.</div>
+    </div>
+</article>
+<article id="id/json/string" class="codedoc">
+    <header>$JSON(@Name|Ref|N, @Members...).String</header>
+    <div class="description">
+        <div>Returns the accessed item's value as a JSON parsable string.</div>
+    </div>
+</article>
+<article id="id/json/string" class="codedoc">
+    <header>$JSON(@Name|Ref|N, @Members...).Debug</header>
+    <div class="description">
+        <div>Returns a JSON parsable string containing debug information about the handle.</div>
+    </div>
+</article>
+<article id="id/json/error" class="codedoc">
+    <header>$JSON(@Name|Ref|N).Error</header>
+    <div class="description">Returns any errors that occured while attempting to retrieve and parse the input JSON.</div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name, result of calling <code>$JSON()</code>, or index of an open JSON handle.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="id/jsonpath" class="codedoc">
+    <header>$JSONPath(@Name|Ref|N, N).Error</header>
+    <div class="description">Returns the Nth key in the accessed item's path.</div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name, result of calling <code>$JSON()</code>, or index of an open JSON handle.</div>
+                </div>
+            </div>
+            <div>
+                <div class="title"><span class="hilight">@N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The index of the path item to return</div>
+                    <div>If <span class="hilight">N</span> is <code>0</code> the total number of items in the path are returned</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+
+<article id="id/jsonforeach" class="codedoc">
+    <header>$JSONForEach(@Name|Ref|N, @Alias, @Members...)</header>
+    <div class="description">Loops over all members in the accessed item returns the number of items looped over.</div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Name|Ref|N</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The name, result of calling <code>$JSON()</code>, or index of an open JSON handle.</div>
+                </div>
+            </div>
+            <div>
+                <div class="title"><span class="hilight">@Alias</span> - <span class="smaller">Required</span></div>
+                <div class="description">
+                    <div>The alias to call as a command for each item looped over</div>
+                    <div>The alias is passed a reference of which <code>$JSON()</code> can be used to retrieve information pretaining to the item.</div>
+                </div>
+            </div>
+            <div>
+                <div class="title"><span class="hilight">@Members...</span> - <span class="smaller">Optional</span></div>
+                <div class="description">
+                    <div>A list of members to sequentially walk within the looped item prior to calling <span class="hilight">@Alias</span></div>
+                    <div>No applicable if the <span class="hilight">.Walk</span> prop is specified</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section paramlist">
+        <div class="title">Props</div>
+        <div class="list">
+            <div>
+                <div id="id/jsonforeach/fuzzy"  class="title hilight">.Fuzzy</div>
+                <div class="description">
+                    <div>Indicates that <span class="hilight">@Members...</span> should use fuzzy walking as explained in <a href="#id/json/fuzzy">Fuzzy Prop Prefix</a>.</div>
+                </div>
+            </div>
+            <div>
+                <div id="id/jsonforeach/walk" class="title hilight">.Walk</div>
+                <div class="description">
+                    <div>Recursively walks all children(and their chilren and so on) of the item and calls <span class="hilight">@Alias</span> for all privitive items.</div>
+                    <div><span class="hilight">@Members...</span> should <em>NOT</em> be specified if this prop is used.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>

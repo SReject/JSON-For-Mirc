@@ -1,0 +1,14 @@
+# Build settings
+markdown: kramdown
+# theme: minima
+gems:
+  - jekyll-feed
+exclude:
+  - Gemfile
+  - Gemfile.lock
+
+# Custom stuff
+title: JSON For mIRC
+description: mIRC JSON parser
+# baseurl: /JSON-For-mIRC
+url: https://sreject.github.io
