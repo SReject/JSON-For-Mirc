@@ -2,6 +2,20 @@
 layout: default
 pagename: downloads
 ---
+<article>
+    <header>Installation</header>
+    <p>After uninstalling all previous version of JSONForMirc:</p>
+    <ol class="list">
+        <li>Download the desired version</li>
+        <li>Move the file to the directory of your choosing</li>
+        <li>Within mIRC enter the following: <code>//load -rs $qt($$sfile($mircdir, Load JSONForMirc, Load))</code></li>
+        <li>In the window that appears navigate to where you stored JSONForMirc.mrc</li>
+        <li>Select JSONForMirc.mrc</li>
+        <li>Click the <code>Load</code> Button</li>
+    </ol>
+</article>
+
+
 {% assign stable = false %}
 {% assign pre = false %}
 {% for release in site.github.releases %}
