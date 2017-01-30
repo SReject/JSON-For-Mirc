@@ -2,10 +2,12 @@
 layout: default
 pagename: downloads
 ---
+{% assign stablerelease = false %}
+{% assign prerelease = false %}
 {% for release in site.github.releases %}
-    {% if release.draft == false and stablerelase == null %}
+    {% if release.draft == false and stablerelase != false %}
         {% assign stablerelease = release %}
-    {% elsif release.draft == true and prerelease == null %}
+    {% elsif release.draft == true and prerelease != false %}
         {% assign prerelease = release %}
     {% endif %}
 {% endfor %}
