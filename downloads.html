@@ -2,4 +2,42 @@
 layout: default
 pagename: downloads
 ---
-downloads; to do
+{% for release in site.github.releases %}
+    {% if release.draft == false and stable_relase == null %}
+        {% assign stablerelease = release %}
+    {% elseif release.draft == true and pre_release == null %}
+        {% assign prerelease = release %}
+    {% endif %}
+{% endfor %}
+
+{% if stablerelease != null %}
+    <article id="stable" class="release">
+        <header>Stable</header>
+        <div>
+            JSONForMirc {release.tag_name}
+        </div>
+    </article>
+{% else %}
+    <article id="stable" class="release">
+        <header>Stable</header>
+        <div class="italic">
+            None at this time
+        </div>
+    </article>
+{% endif %}
+
+{% if stablerelease != null %}
+    <article id="prerelase" class="release">
+        <header>Pre-Release</header>
+        <div>
+            JSONForMirc {release.tag_name}
+        </div>
+    </article>
+{% else %}
+    <article id="stable" class="release">
+        <header>Pre-Release</header>
+        <div class="italic">
+            None at this time
+        </div>
+    </article>
+{% endif %}
