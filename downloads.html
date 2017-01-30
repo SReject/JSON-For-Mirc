@@ -4,14 +4,12 @@ pagename: downloads
 ---
 {% assign stable = false %}
 {% assign pre = false %}
-
-{{site.github.releases}}<br>
 {% for release in site.github.releases %}
 
-    {% if release.prerelease == false and stable != false %}
+    {% if release.prerelease == false and stable == false %}
         {% assign stable = release %}
 
-    {% elsif release.prerelease == true and pre != false %}
+    {% elsif release.prerelease == true and pre == false %}
         {% assign pre = release %}
 
     {% endif %}
@@ -32,7 +30,6 @@ pagename: downloads
         Not at this time
     </div>
 {% endif %}
-{{stable}}
 </article>
 
 <article id="prerelease" class="release">
@@ -48,6 +45,4 @@ pagename: downloads
         Not at this time
     </div>
 {% endif %}
-
-{{pre}}
 </article>
