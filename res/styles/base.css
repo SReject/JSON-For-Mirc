@@ -267,6 +267,9 @@ body.dark .pagecontent article > header {
 .pagecontent article.codedoc {
   margin-top: 5em;
 }
+.pagecontent article.codedoc:last-child {
+  margin-bottom: 5em;
+}
 .pagecontent article.codedoc > header {
     font-family: 'Cutive Mono', monospace;
     font-weight: bold;

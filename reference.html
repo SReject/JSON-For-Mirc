@@ -25,6 +25,13 @@ pagename: reference
     </article>
 </article>
 
+<article id="id/jsonerror" class="codedoc">
+    <header>$JSONError</header>
+    <div class="description">
+        <div>Returns the error message of the last call if it resulted in an error.</div>
+        <div class="smaller">The error flag is reset with each JSON call so this should be checked after each call to insure an error isn't masked by a subsequent call.</div>
+    </div>
+</article>
 
 <article id="cmd/jsonlist" class="codedoc">
     <header>/JSONList</header>
@@ -645,6 +652,44 @@ pagename: reference
                 <div class="description">
                     <div>Recursively walks all children(and their chilren and so on) of the item and calls <span class="hilight">@Alias</span> for all privitive items.</div>
                     <div><span class="hilight">@Members...</span> should <em>NOT</em> be specified if this prop is used.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article id="cmd/jsondebug" class="codedoc">
+    <header>/JSONDebug @State</header>
+    <div class="description">Toggle the JSON Debugger</div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@State</span> - <span class="smaller">Optional</span></div>
+                <div class="description">
+                    <div>The state of which to set the debug flag</div>
+                    <div>Applicable inputs include: <code>on</code>, <code>enable</code>, <code>off</code>, and <code>enable</code>.</div>
+                    <div>If not specified the debug state is toggled from its current state to the oppisite</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+
+<article id="cmd/jsondebug" class="codedoc">
+    <header>$JSONDebug</header>
+    <div class="description">Returns <code>$true</code> or <code>$false</code> dependant on the current debug state.</div>
+</article>
+
+<article id="id/jsonversion" class="codedoc">
+    <header>$JSONVersion(@Short)</header>
+    <div class="descript">Returns the scripts current version</div>
+    <div class="section paramlist">
+        <div class="title">Parameters</div>
+        <div class="list">
+            <div>
+                <div class="title"><span class="hilight">@Short</span> - <span class="smaller">Optional</span></div>
+                <div class="description">
+                    <div>If not-null, then a shortened version is returned formatted as: <code>x.y.z</code>
                 </div>
             </div>
         </div>
