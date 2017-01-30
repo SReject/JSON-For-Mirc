@@ -47,5 +47,8 @@ Temporary Items
 .apdisk
 
 # Repo Specifics
-gh-pages
-builds/*
+builds
+.sass-cache
+_site
+Gemfile
+Gemfile.lock
