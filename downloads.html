@@ -12,7 +12,7 @@ pagename: downloads
     {% endif %}
 {% endfor %}
 
-{% if stablerelease != null %}
+{% if stablerelease != false %}
     <article id="stable" class="release">
         <header>Stable</header>
         <div>
@@ -28,7 +28,7 @@ pagename: downloads
     </article>
 {% endif %}
 
-{% if prerelease != null %}
+{% if prerelease != false %}
     <article id="prerelase" class="release">
         <header>Pre-Release</header>
         <div>
