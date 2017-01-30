@@ -36,7 +36,7 @@ pagename: downloads
     <div class="title">
         <div class="name">JSONFormIRC {{stable.tag_name}}</div>
         <div class="smaller"><span class="hilight">By:</span> <a href="{{stable.author.html_url}}">{{stable.author.login}}</a></div>
-        <div class="smaller dim">{{ stable.published_at | date: :%H:%M %a, %e %b %Y (%z)" }}</div>
+        <div class="smaller dim">{{ stable.published_at | date: "%H:%M %a, %e %b %Y (%z)" }}</div>
     </div>
 
 {% else %}
@@ -53,7 +53,7 @@ pagename: downloads
     <div class="title">
         <div class="name">JSONFormIRC {{pre.tag_name}}</div>
         <div class="smaller"><span class="hilight">By:</span> <a href="{{pre.author.html_url}}">{{pre.author.login}}</a></div>
-        <div class="smaller dim">{{ pre.published_at | date: :%H:%M %a, %e %b %Y (%z)" }}</div>
+        <div class="smaller dim">{{ pre.published_at | date: "%H:%M %a, %e %b %Y (%z)" }}</div>
     </div>
 
 {% else %}
