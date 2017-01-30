@@ -20,7 +20,9 @@ pagename: downloads
 
 {% if stable != false %}
     <div>
-        JSONForMirc {{stable.tag_name}}
+        JSONForMirc
+
+
     </div>
 
 {% else %}
@@ -28,6 +30,7 @@ pagename: downloads
         Not at this time
     </div>
 {% endif %}
+{{stable}}
 </article>
 
 <article id="prerelease" class="release">
@@ -43,4 +46,6 @@ pagename: downloads
         Not at this time
     </div>
 {% endif %}
+
+{{pre}}
 </article>
