@@ -315,6 +315,12 @@ body.dark .pagecontent article > header {
   margin: 0 1em;
 }
 
+.release > .notes {
+  font-size: .65em;
+  margin: 0 2em;
+  background-color: rgba(0,0,0,.25);
+  padding: .25em;
+}
 
 
 
