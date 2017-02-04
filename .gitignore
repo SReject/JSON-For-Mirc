@@ -16,6 +16,3 @@ _site
 .jekyll-metadata
 
 # repo specific ignored files
-localstart.bat
-Gemfile
-Gemfile.lock
