@@ -48,7 +48,7 @@
             });
 
             addEvent(window, 'resize', function (e) {
-                if (showTest.test(list.className)) {
+                if (document.documentElement.clientWidth >= 960 && showTest.test(list.className)) {
                     list.className = list.className.replace(showTest, '');
                 }
             });
