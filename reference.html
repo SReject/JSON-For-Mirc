@@ -1,14 +1,14 @@
 ---
 layout: default
-catagory: reference
+category: reference
 ---
 <article>
     <header><h1>Overview</h1></header>
     <div class="body">
         <p>The following is a reference to all commands and identifiers provided by JSON For mIRC. To understand this documentation you must first understand the following.</p>
-        <p class="small"><span class="highlight">Parameters</span>: Most of the commands and identifiers provided by JSON For Mirc requires some form of input; that input is refered to as a parameter. Different commands or identifers may use the same name for a parameter but each parameter's meaning and requirements are unique to the command or identifier that specified it.</p>
+        <p class="small"><span class="highlight">Parameters</span>: Most of the commands and identifiers provided by JSON For Mirc requires some form of input; that input is referred to as a parameter. Different commands or identifiers may use the same name for a parameter but each parameter's meaning and requirements are unique to the command or identifier that specified it.</p>
         <p class="small"><span class="highlight">Switches</span>: Switches alter how a command processes parameters or behaves after the parameters has been processed. If the first parameter of a command begins with <code>-</code> it is a switch. Unless otherwise stated all switches are optional and should only be used to enact the alternative processing.</p>
-        <p class="small"><span class="highlight">Props</span>: Props alter how an identifer processes parameters or behaves after the parameters has been processed. <code>.</code> is used to suffix props to identifiers. Props should only be specified to enact the alternative processing.</p>
+        <p class="small"><span class="highlight">Props</span>: Props alter how an identifier processes parameters or behaves after the parameters has been processed. <code>.</code> is used to suffix props to identifiers. Props should only be specified to enact the alternative processing.</p>
     </div>
 </article>
 
@@ -58,7 +58,7 @@ catagory: reference
             <div>-U</div>
             <div>
                 <span class="highlight">Input</span> is a URL of which to retrieve the data from.<br>
-                Parsing the retreived data will not be attempted.<br>
+                Parsing the retrieved data will not be attempted.<br>
                 This switch is provided to allow non-JSON data to be downloaded using the methodology provided by the script.<br>
                 This switch cannot be used with the <span class="highlight">-b</span> <span class="highlight">-f</span> or <span class="highlight">-u</span> switches.
             </div>
@@ -299,7 +299,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
     </header>
     <div class="description">
         Uses fuzzy-walking when accessing members and returns a reference to the accessed item.<br>
-        Fuzzy inputs ignore casing and numerical values will be treated soley as indexes instead of keys for the purposes of walking the JSON data.
+        Fuzzy inputs ignore casing and numerical values will be treated solely as indexes instead of keys for the purposes of walking the JSON data.
     </div>
     <div class="parameters">
         <div class="head">Parameters</div>
@@ -317,7 +317,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
                 <div><span class="highlight">Members</span> <span class="smaller">- Required</span></div>
             </div>
             <div>
-                A list of members within the handle's JSON data to sequentally walk prior to returning a reference.<br>
+                A list of members within the handle's JSON data to sequentially walk prior to returning a reference.<br>
                 If a member is prefixed with <code>~</code> it will be treated as a fuzzy input during lookup.<br>
                 if a member is prefixed with <code>=</code> it will be treated as a literal key.<br>
                 Fuzzy-lookups only take place on objects; All other data-types ignore fuzzy flags if they are walked.
@@ -381,7 +381,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
             </div>
             <div>
                 The path to the file to write the result to.<br>
-                The file must not exist prior to the the $JSON() call.<br>
+                The file must not exist prior to the $JSON() call.<br>
                 The <span class="highlight">File</span> parameter is required to be the 2nd parameter.<br>
                 All parameters that would normally follow directly after the <span class="highlight">Name</span> parameter are to be shifted to the right one slot.
             </div>
@@ -461,7 +461,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         <a href="#id/json/ischild"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N).IsChild
     </header>
     <div class="description">
-        Returns <code>$true</code> or <code>$false</code> dependant on if the JSON handle is a child reference to another JSON handle.
+        Returns <code>$true</code> or <code>$false</code> dependent on if the JSON handle is a child reference to another JSON handle.
     </div>
     <div class="parameters">
         <div class="head">Parameters</div>
@@ -481,7 +481,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         <a href="#id/json/httpparse"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N).HttpParse
     </header>
     <div class="description">
-        Returns <code>$true</code> or <code>$false</code> dependant on if the JSON handle is supposed to parse the retrieved data from an HTTP request.
+        Returns <code>$true</code> or <code>$false</code> dependent on if the JSON handle is supposed to parse the retrieved data from an HTTP request.
     </div>
     <div class="parameters">
         <div class="head">Parameters</div>
@@ -521,7 +521,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         <a href="#id/json/httpstatustext"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N).HttpStatusText
     </header>
     <div class="description">
-        Returns the HTTP statustext of a completed HTTP request for the JSON handle.
+        Returns the HTTP status text of a completed HTTP request for the JSON handle.
     </div>
     <div class="parameters">
         <div class="head">Parameters</div>
@@ -569,7 +569,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         <a href="#id/json/httpheaders"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N).HttpHeaders
     </header>
     <div class="description">
-        Returns all of the HTTP response headers, seperated by <code>$crlf</code> as the were received from the server.
+        Returns all of the HTTP response headers, separated by <code>$crlf</code> as the were received from the server.
     </div>
     <div class="parameters">
         <div class="head">Parameters</div>
@@ -847,7 +847,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         <a href="#id/json/error"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N, Members...).Error
     </header>
     <div class="description">
-        Returns any errors that occured while attempting to retrieve and parse the input JSON.
+        Returns any errors that occurred while attempting to retrieve and parse the input JSON.
     </div>
     <div class="parameters">
         <div class="head">Parameters</div>
@@ -950,7 +950,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
                 <div><span class="highlight">.Walk</span></div>
             </div>
             <div>
-                Recursively walks all children(and their chilren and so on) of the reference and calls <span class="highlight">Command</span> for all primivitive items.<br>
+                Recursively walks all children(and their children and so on) of the reference and calls <span class="highlight">Command</span> for all primitive items.<br>
                 <span class="highlight">Members...</span> should NOT be specified if this prop is used.
             </div>
         </div>
@@ -970,7 +970,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         <a href="#id/jsoncompat"><i class="fa fa-link"></i></a>$JSONCompat
     </header>
     <div class="description">
-        Returns <code>$true</code> or <code>$false</code> dependant on the state of compatibility mode.
+        Returns <code>$true</code> or <code>$false</code> dependent on the state of compatibility mode.
     </div>
 </article>
 <article class="codedoc" id="cmd/jsondebug">
@@ -989,7 +989,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
             <div>
                 The state of which to set the debug flag.<br>
                 Applicable inputs include: <code>on</code>, <code>enable</code>, <code>off</code>, and <code>disable</code>.<br>
-                If not specified the debug state is toggled from its current state to the oppisite.
+                If not specified the debug state is toggled from its current state to the opposite.
             </div>
         </div>
     </div>
@@ -999,7 +999,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         <a href="#id/jsondebug"><i class="fa fa-link"></i></a>$JSONDebug
     </header>
     <div class="description">
-        Returns <code>$true</code> or <code>$false</code> dependant on the current debug state.
+        Returns <code>$true</code> or <code>$false</code> dependent on the current debug state.
     </div>
 </article>
 <article class="codedoc" id="id/jsonversion">
