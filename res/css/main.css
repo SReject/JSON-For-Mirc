@@ -321,6 +321,8 @@ body > div {
 .pagefoot {
     flex: 0 0 auto;
     background-color: black;
+    text-align: center;
+    color: rgb(15,15,15);
 }
 
 
