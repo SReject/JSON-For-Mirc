@@ -1352,7 +1352,7 @@ alias JSONError {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %Ver = 1.0.3006
+    var %Ver = 1.0.3007
     if ($0) {
       return %Ver
     }
@@ -1453,7 +1453,7 @@ alias JSONDebug {
   ;; create the log window if need be and indicate that logging is enabled
   if (%State) {
     if (!$window(@SReject/JSONForMirc/Log)) {
-      window -zk0e @SReject/JSONForMirc/Log
+      window -zk0ej100000 @SReject/JSONForMirc/Log
     }
     %aline Debug now enabled
     if ($~adiircexe) {
