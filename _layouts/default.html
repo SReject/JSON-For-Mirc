@@ -1,27 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-{% include head.html %}
-    </head>
-    <body>
-        <div>
-            <div class="pagehead">
-{% include pagehead.html %}
+<head>
+    {% include dochead.html %}
+</head>
+<body>
+    <div>
+        <div class="pagehead">
+            {% include pagehead.html %}
+        </div>
+        <div class="pagewrapper">
+            <div class="pagenav">
+                {% include pagenav.html %}
             </div>
-            <div class="pagewrapper">
-                <div class="pagemenu">
-{% include pagemenu.html %}
-                </div>
-                <div class="pagecontent">
-                    <div>
-{{ content }}
-                    </div>
-                </div>
-            </div>
-            <div class="pagefoot">
-{% include pagefoot.html %}
+            <div class="pagecontent">
+                {{content}}
             </div>
         </div>
-{% include foot.html %}
-    </body>
+        <div class="pagefoot">
+            {% include pagefoot.html %}
+        </div>
+    </div>
+</body>
 </html>

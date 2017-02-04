@@ -1,0 +1,192 @@
+<!-- Skin swapper -->
+<div class="skinswapper" style="display:none;">
+    Skin Swapper
+</div>
+
+
+<!-- Home link -->
+<div class="navitem navhead{% if page.catagory == "home" %} active{% endif %}">
+    <a href="./">Home</a>
+</div>
+
+
+<!-- Source, issues and donate links -->
+<div id="headernavlinks">
+    <div class="navitem navhead">
+        <a href="https://github.com/SReject/JSON-For-Mirc/" target="_blank">Source</a>
+    </div>
+
+    <div class="navitem navhead">
+        <a href="https://github.com/SReject/JSON-For-Mirc/issues" target="_blank">Issues</a>
+    </div>
+
+    <div class="navitem navhead">
+        <a href="https://streamjar.tv/tip/sreject" target="_blank">Donate</a>
+    </div>
+</div>
+
+
+<!-- License -->
+<div class="navitem{% if page.catagory == "license" %} active{% endif %}">
+    <div class="navhead">
+        <a href="./license">License</a>
+        <a class="navsubtoggle" href="#"><i class="fa fa-ellipsis-h"></i></a>
+    </div>
+    <div class="navsub nomargin">
+        <a href="./license#warranty">Warranty</a>
+        <a href="./license#distribution">Distribution</a>
+        <a href="./license#usage">Usage</a>
+        <a href="./license#contribution">Contribution</a>
+    </div>
+</div>
+
+
+<!-- Download -->
+<div class="navitem{% if page.catagory == "download" %} active{% endif %}">
+    <div class="navhead">
+        <a href="./download">Download</a>
+        <a class="navsubtoggle" href="#"><i class="fa fa-ellipsis-h"></i></a>
+    </div>
+    <div class="navsub nomargin">
+        <a href="./download#installation">Installtion</a>
+        <a href="./download#stable">Stable</a>
+        <a href="./download#prerelease">Pre-Release</a>
+        <a href="https://github.com/SReject/JSON-For-Mirc/releases" target="_blank">All</a>
+    </div>
+</div>
+
+
+<!-- JSON Explained -->
+<div class="navitem{% if page.catagory == "jsonexplained" %} active{% endif %}">
+    <div class="navhead">
+        <a href="./jsonexplained">JSON</a>
+        <a class="navsubtoggle" href="#"><i class="fa fa-ellipsis-h"></i></a>
+    </div>
+    <div class="navsub">
+        <a class="navsubhead" href="./jsonexplained#whitespace">Whitespace</a>
+        <div>
+            <a class="navsubhead" href="./jsonexplained#datatypes/primitives">Primitives</a>
+            <div>
+                <a href="./jsonexplained#datatypes/primitives/null">Null</a>
+                <a href="./jsonexplained#datatypes/primitives/boolean">Boolean</a>
+                <a href="./jsonexplained#datatypes/primitives/number">Number</a>
+                <a href="./jsonexplained#datatypes/primitives/string">String</a>
+            </div>
+        </div>
+        <div>
+            <a href="./jsonexplained#datatypes/containers">Containers</a>
+            <div>
+                <a href="./jsonexplained#datatypes/containers/array">Array</a>
+                <a href="./jsonexplained#datatypes/containers/object">Object</a>
+            </div>
+        </div>
+        <div>
+            <a href="./jsonexplained#accessing">Accessing</a>
+            <div>
+                <a href="./jsonexplained#accessing/primitives">Primitives</a>
+                <a href="./jsonexplained#accessing/containers">Containers</a>
+                <a href="./jsonexplained#accessing/nesteddata">Nested Data</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Tutorial w/ subnav -->
+<div class="navitem{% if page.catagory == "tutorial" %} active{% endif %}">
+    <div class="navhead">
+        <a href="./tutorial">Tutorial</a>
+        <a class="navsubtoggle" href="#"><i class="fa fa-ellipsis-h"></i></a>
+    </div>
+    <div class="navsub nomargin">
+        <a href="./tutorial#creation">Creation</a>
+        <a href="./tutorial#webrequests">Web Requests</a>
+        <a href="./tutorial#stateinfo">State Info</a>
+        <a href="./tutorial#accessingdata">Accessing Data</a>
+        <a href="./tutorial#looping">Looping</a>
+        <a href="./tutorial#closing">Closing</a>
+        <a href="./tutorial#errorhandling">Error Handling</a>
+        <a href="./tutorial#misc">Misc</a>
+    </div>
+</div>
+
+
+<!-- Reference w/ subnav -->
+<div class="navitem{% if page.catagory == "reference" %} active{% endif %}">
+    <div class="navhead">
+        <a href="./reference">Reference</a>
+        <a class="navsubtoggle" href="#"><i class="fa fa-ellipsis-h"></i></a>
+    </div>
+    <div class="navsub">
+        <div>
+            <a href="./reference#cmd/jsonlist">/JSONList</a>
+        </div>
+        <div class="nomargin">
+            <a href="./reference#cmd/jsonlist">/JSONList</a>
+            <a href="./reference#cmd/jsonopen">/JSONOpen</a>
+            <a href="./reference#cmd/jsonhttpmethod">/JSONHttpMethod</a>
+            <a href="./reference#cmd/jsonhttpheader">/JSONHttpHeader</a>
+            <a href="./reference#cmd/jsonhttpfetch">/JSONHttpFetch</a>
+            <a href="./reference#cmd/jsonclose">/JSONClose</a>
+            <a href="./reference#cmd/jsonshutdown">/JSONShutdown</a>
+        </div>
+        <div>
+            <a href="./reference#id/jsonerror">$JSONError</a>
+        </div>
+        <div>
+            <a href="./reference#id/json">$JSON</a>
+            <div class="small">
+                <a href="./reference#id/json/fuzzy">Fuzzy Prefix</a>
+                <a href="./reference#id/json/json/tobvar">ToBvar Suffix</a>
+                <a href="./reference#id/json/json/tofile">ToFile Suffix</a>
+                <a href="./reference#id/json/state">.State</a>
+                <a href="./reference#id/json/inputtype">.InputType</a>
+                <a href="./reference#id/json/input">.Input</a>
+                <a href="./reference#id/json/ischild">.IsChild</a>
+                <a href="./reference#id/json/httpparse">.HttpParse</a>
+                <a href="./reference#id/json/httpstatus">.HttpStatus</a>
+                <a href="./reference#id/json/httpstatustext">.HttpStatusText</a>
+                <a href="./reference#id/json/httpheader">.HttpHeader</a>
+                <a href="./reference#id/json/httpheaders">.HttpHeaders</a>
+                <a href="./reference#id/json/httphead">.HttpHead</a>
+                <a href="./reference#id/json/httpbody">.HttpBody</a>
+                <a href="./reference#id/json/httpresponse">.HttpResponse</a>
+                <a href="./reference#id/json/path">.Path</a>
+                <a href="./reference#id/json/type">.Type</a>
+                <a href="./reference#id/json/iscontainer">.IsContainer</a>
+                <a href="./reference#id/json/length">.Length</a>
+                <a href="./reference#id/json/value">.Value</a>
+                <a href="./reference#id/json/string">.String</a>
+                <a href="./reference#id/json/debug">.Debug</a>
+                <a href="./reference#id/json/error">.Error</a>
+            </div>
+        </div>
+        <div>
+            <a href="./reference#id/jsonpath">$JSONPath</a>
+        </div>
+        <div>
+            <a href="./reference#id/jsonforeach">$JSONForEach</a>
+            <div class="smaller">
+                <a href="./reference#idjsonforeach/fuzzy">.Fuzzy</a>
+                <a href="./reference#idjsonforeach/walk">.Walk</a>
+            </div>
+        </div>
+        <div class="nomargin">
+            <a href="./reference#cmd/jsondebug">/JSONDebug</a>
+            <a href="./reference#id/jsondebug">$JSONDebug</a>
+        </div>
+        <div class="nomargin">
+            <a href="./reference#cmd/jsoncompat">/JSONCompat</a>
+            <a href="./reference#id/jsoncompat">$JSONCompat</a>
+        </div>
+        <div>
+            <a href="./reference#idjsonversion">$JSONVersion</a>
+        </div>
+    </div>
+</div>
+
+
+<!-- Get Involved -->
+<div class="navitem navhead{% if page.catagory == "getinvolved" %} active{% endif %}">
+    <a href="./getinvolved">Get Involved</a>
+</div>

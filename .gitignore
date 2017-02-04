@@ -1,7 +1,21 @@
-thumbs.db
+# Windows ignore
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+# repo specific ignored folders
 _site
 .sass-cache
 .jekyll-metadata
+
+# repo specific ignored files
+localstart.bat
 Gemfile
 Gemfile.lock
-localstart.bat

@@ -1,0 +1,72 @@
+---
+layout: default
+catagory: download
+---
+{% assign stablerelease = false %}
+{% assign prerelease = false %}
+{% for release in site.github.releases %}
+    {% if release.draft == false %}
+        {% if release.prerelease == false and stablerelease == false %}
+            {% assign stablerelease = release %}
+            {% break %}
+        {% elsif release.prerelease == true and prerelease == false %}
+            {% assign prerelease = release %}
+        {% endif %}
+    {% endif %}
+{% endfor %}
+
+
+<article id="installation">
+    <header><h1>Installation</h1></header>
+    <div class="body">
+        <p>After uninstalling all previous versions of JSONForMirc:</p>
+        <ol>
+            <li>Download the desired version</li>
+            <li>Move the file to the directory of your choosing</li>
+            <li>Within mIRC enter the following: <code style="word-wrap: break-word;">//load -rs $qt($$sfile($mircdir, Load JSONForMirc, Load))</code></li>
+            <li>In the window that appears navigate to where you stored JSONForMirc.mrc</li>
+            <li>Select JSONForMirc.mrc</li>
+            <li>Click the Load Button</li>
+        </ol>
+    </div>
+</article>
+
+<article id="stable">
+    {% if stablerelease == false %}
+    <header><h1>Stable Release</h1></header>
+    <div class="body">
+        <p class="italic">None at this time</p>
+    </div>
+
+    {% else %}
+    <header><h1>JSON For mIRC {{stablerelease.tag_name}}</h1> (stable)</header>
+    <div class="body">
+    </div>
+    {% endif %}
+</article>
+
+<article id="prerelease">
+    {% if prerelease == false %}
+    <header><h1>Pre-Release</h1></header>
+    <div class="body">
+        <p class="italic">None at this time</p>
+    </div>
+
+    {% else %}
+        {% assign download = false %}
+        {% for asset in prerelease.assets %}
+            {% assign name = asset.name | downcase %}
+            {% if name == "jsonformirc.mrc" %}
+                {% assign download = asset %}
+                {% break %}
+            {% endif %}
+        {% endfor %}
+
+    <header><h1><a href="{{download.browser_download_url}}"><i class="fa fa-download"></i> JSON For mIRC {{prerelease.tag_name}}</a></h1> (prerelease)</header>
+    <div class="body release">
+        <div class="markdown">
+            {{prerelease.body | markdownify }}
+        </div>
+    </div>
+    {% endif %}
+</article>

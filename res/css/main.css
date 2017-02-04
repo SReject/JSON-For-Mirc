@@ -1,0 +1,474 @@
+@import url('https://fonts.googleapis.com/css?family=Sarpanch:800,900');
+@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+@import url('./normalize.css');
+
+
+html, body {
+    min-width: 240px;
+    height: 100%;
+    font-size: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+/* Basic style setups
+** -----------------*/
+a, a:hover, a:visited {
+    text-decoration: none;
+    font-weight: inherit;
+    /* color: rgb(28, 100, 142); */
+    color: rgb(64,130,150);
+}
+a:hover {
+    /* color: rgb(36, 136, 193); */
+    color: rgb(96, 162, 182);
+}
+header, h1, h2, h3, h4, h5, h6, p, ul, ol {
+    margin: 0;
+    padding: 0;
+}
+ul, ol {
+    margin-bottom: 1em;
+    padding-left: 1em;
+}
+h1 {
+    font-size: 1.5em;
+}
+h2 {
+    font-size: 1.25em;
+}
+h3 {
+    font-size: 1.1em;
+}
+h1,h2,h3,h4,h5,h6 {
+    color: rgb(28, 100, 142);
+}
+header > h1 {
+    display: inline-block;
+}
+p:not(:last-child) {
+    margin-bottom: 1em;
+}
+code {
+    font-size: .9em;
+    background-color: rgb(5,5,5);
+    padding: 0em .25em;
+    border-radius: .25em;
+}
+pre {
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+}
+pre.codeblock code {
+    display: block;
+}
+code.comment,
+code > .comment {
+    color: rgb(0,96,0);
+}
+.small {
+    font-size:.9em;
+}
+.smaller {
+    font-size: .85em;
+}
+.smallest {
+    font-size: .8em;
+}
+
+
+body > div {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/************************
+**                     **
+**     Page Header     **
+**                     **
+************************/
+.pagehead {
+    flex: 0 0 auto;
+    position: relative;
+
+    padding: 1em;
+    background: rgb(0,0,0);
+    /*
+    background: -moz-linear-gradient(top, rgb(20,20,20) 0%, rgb(0,0,0) 100%);
+    background: -webkit-linear-gradient(top, rgb(20,20,20) 0%, rgb(0,0,0) 100%);
+    background: linear-gradient(to bottom, rgb(20,20,20) 0%, rgb(0,0,0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#141414', endColorstr='#000000', GradientType=0);
+*/
+    border-bottom: 1px solid rgb(10,10,10);
+}
+.pagehead > .wrapper {
+    display: flex;
+}
+.pagehead .navthumb {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    posistion: relative;
+}
+.pagehead .navthumb a {
+    font-size: 1.25em;
+}
+.pagehead .main {
+  text-align: center;
+  flex: 1 1 auto;
+}
+.pagehead .main > div {
+    flex: 1 0 auto;
+    display: inline-block;
+}
+.pagehead .main .head {
+    font-family: 'Sarpanch';
+    font-size: 1.25em;
+    color: rgb(7, 78, 191);
+}
+.pagehead .main .links {
+    display: none;
+    flex-basis: 0;
+}
+.pagehead .links > div {
+  flex: 1 1 auto;
+}
+
+
+
+/***********************************
+**                                **
+**     Page Content - Wrapper     **
+**                                **
+***********************************/
+.pagewrapper {
+    flex: 1 0 auto;
+    display: flex;
+    position: relative;
+}
+
+
+
+/************************************
+**                                 **
+**     Page Content - Nav List     **
+**                                 **
+************************************/
+.pagenav {
+    flex: 0 0 auto;
+    min-width: 240px;
+    width: 100%;
+    display: none;
+    position: absolute;
+    background-color: rgb(20,20,20);
+    border-bottom: 1px solid black;
+    box-shadow: 0px 2px 5px black;
+}
+.pagenav.show {
+    display: block;
+}
+.pagenav > * {
+}
+.pagenav a {
+    display: block;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.pagenav a:hover {
+  background-color: black;
+}
+.pagenav .navhead {
+    display: flex;
+}
+.pagenav .navhead > a:first-child {
+    flex: 1 1 auto;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+.pagenav .navitem {
+    padding-top: .25em;
+    padding-bottom: .25em;
+}
+.pagenav .navitem.active {
+    background-color: rgb(5,5,5) !important;
+}
+.pagenav .navitem.expand {
+    background-color: rgb(15,15,15);
+}
+.pagenav .navsub {
+    padding-left: .5em;
+    padding-right: .5em;
+}
+.pagenav .navsub:not(.nomargin) > *:not(:last-child) {
+    margin-bottom: .5em;
+}
+.pagenav .navsub > div > div {
+    padding-left: .5em;
+}
+.pagenav .navitem.active .navsubtoggle {
+    display: none;
+}
+.pagenav .navitem:not(.expand):not(.active) .navsub {
+    display: none;
+}
+
+
+
+/********************************
+**                             **
+**     Page Content - Main     **
+**                             **
+********************************/
+.pagecontent {
+    flex: 1 0 0;
+    background-color: rgb(10,10,10);
+    color: rgb(96,96,96);
+    padding: 0.25em;
+    overflow-x: hidden;
+}
+.pagecontent ul.simple {
+    list-style: none;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    padding: 0;
+}
+.pagecontent > * {
+    padding: 0;
+    margin: 0;
+}
+.pagecontent > *:not(:last-child) {
+    margin-bottom: 2em;
+}
+.pagecontent .release {
+    background-color: rgb(7,7,7);
+}
+.pagecontent .markdown {
+    font-size: .9em;
+}
+.pagecontent .markdown h1,h2,h3,h4,h5,h6 {
+    color: inherit;
+}
+.pagecontent article > div.body > section {
+    margin-bottom: 1.5em;
+}
+.pagecontent article > div.body > section h3 {
+    display: inline-block;
+}
+.pagecontent .codedoc .highlight,
+.pagecontent .codedoc > header {
+    font-family: monospace;
+    color: rgb(28, 100, 142);
+}
+.pagecontent .codedoc .highlight {
+    color: rgb(144,144,144);
+}
+.pagecontent .codedoc > header {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: break-all;
+    word-break: break-word;
+}
+.pagecontent .codedoc > header > a {
+    font-size: .8em;
+    margin-right: .5em;
+    color: rgb(32,32,32);
+    display: none;
+}
+.pagecontent .codedoc > div {
+    margin-bottom: 1em;
+}
+.pagecontent .codedoc .head {
+    color: rgb(28, 100, 142);
+}
+.pagecontent .codedoc .switches > .switch,
+.pagecontent .codedoc .parameters > .parameter,
+.pagecontent .codedoc .notes > .note {
+    margin-bottom: .75em;
+    font-size: .9em;
+}
+.pagecontent .codedoc .switches > .switch {
+    display: flex;
+}
+.pagecontent .codedoc .switches > .switch > div:first-child {
+    font-family: monospace;
+    color: rgb(144,144,144);
+    flex: 0 0 auto;
+    width: 2em;
+}
+.pagecontent .codedoc .switches > .switch > div:not(:first-child) {
+    flex: 1 1 auto;
+}
+
+
+
+
+
+
+
+/***********************
+**                    **
+**     Page Footer    **
+**                    **
+***********************/
+.pagefoot {
+    flex: 0 0 auto;
+    background-color: black;
+}
+
+
+
+/*****************************************
+**                                      **
+**     Screen-size Dependant Styles     **
+**                                      **
+*****************************************/
+@media (min-width: 280px) {}
+@media (min-width: 360px) {
+    .pagehead .navthumb a {
+        font-size: 2em;
+    }
+    .pagehead .main .head {
+        font-size: 2em;
+    }
+}
+@media (min-width: 480px) {
+    ul, ol {
+        margin-left: 1em;
+    }
+    .pagehead .navthumb > div {
+        position: absolute;
+    }
+    .pagehead .main .head {
+        font-size: 2.5em;
+    }
+    .pagehead .main .links {
+        display: flex;
+    }
+    .pagenav {
+        width: 240px;
+        border: 0px;
+        box-shadow: none;
+    }
+    .pagenav.show {
+        position: relative;
+    }
+    .pagenav #headernavlinks {
+        display: none;
+    }
+    .pagecontent {
+        font-size: 1.1em;
+        padding: .5em;
+    }
+    .pagecontent ul.simple {
+        margin-left: .5em;
+    }
+    .pagecontent article > div.body {
+        margin-left: .5em;
+        margin-right: .5em;
+    }
+    .pagecontent article > div.body > section.sub > div.body {
+        margin-left: .5em;
+        margin-right: .5em;
+    }
+    .pagecontent .release {
+        padding: .5em;
+        border-radius: .25em;
+        margin-top: 1em;
+        border: 1px solid transparent;
+        border-top-color: rgb(0,0,0);
+        border-left-color: rgb(0,0,0);
+        border-right-color: rgb(15,15,15);
+        border-bottom-color: rgb(15,15,15);
+
+        position: relative;
+    }
+    .pagecontent .release .details {
+        position: absolute;
+        z-index: 2;
+        width: 100%;
+        left: 0;
+        display: flex;
+        top: -1.5em;
+    }
+    .pagecontent .release .details > div {
+        padding: 1em;
+        margin: 0 1em;
+        flex: 1 1 auto;
+        text-align: center;
+        border-radius: .25em;
+
+        background: rgb(10,10,10);
+        box-shadow: inset 0px 0px 10px black;
+    }
+    .pagecontent pre.codeblock code {
+        padding: .5em;
+    }
+    .pagecontent .codedoc > header > a {
+        display: inline;
+    }
+    .pagecontent .codedoc > div {
+        padding-left: 1em;
+        padding-right: 1em;
+    }
+    .pagecontent .codedoc .switches > .switch,
+    .pagecontent .codedoc .parameters > .parameter,
+    .pagecontent .codedoc .notes > .note {
+        padding-left: .5em;
+        padding-right: .5em;
+    }
+}
+@media (min-width: 600px) {}
+@media (min-width: 720px) {}
+@media (min-width: 960px) {
+    .pagehead {
+        padding: 2em;
+    }
+    .pagehead > .wrapper > .navthumb {
+        display: none;
+    }
+    .pagehead .main .head {
+        font-size: 3em;
+    }
+    .pagenav {
+        display: block;
+        position: relative;
+    }
+    .pagecontent {
+        font-size: 1.3em;
+    }
+    .pagecontent ul.simple {
+        margin-left: 1em;
+    }
+    .pagecontent article > div.body {
+        margin-left: 1em;
+        margin-right: 1em;
+    }
+    .pagecontent article > div.body > section.sub > div.body {
+        margin-left: 1em;
+        margin-right: 1em;
+    }
+
+    .pagecontent pre.codeblock code {
+        padding: 1em;
+    }
+    .pagecontent .codedoc > div {
+        padding-left: 2em;
+        padding-right: 2em;
+    }
+    .pagecontent .codedoc .switches > .switch,
+    .pagecontent .codedoc .parameters > .parameter,
+    .pagecontent .codedoc .notes > .note {
+        padding-left: 1em;
+        padding-right: 1em;
+    }
+}
+@media (min-width: 1028px) {}
+@media (min-width: 1280px) {}
