@@ -62,13 +62,13 @@ on *:UNLOAD:{
 
 ;; Menu for the debug window
 menu @SReject/JSONForMirc/Log {
-  .Clear: clear -@ $window
+  .Clear: clear -@ $active
   .-
   .$iif(!$jfm_SaveDebug, $style(2)) Save: jfm_SaveDebug
   .-
   .Toggle Debug: jsondebug
   .-
-  .Close: jsondebug off | close -@ $window
+  .Close: jsondebug off | close -@ $active
 }
 
 
