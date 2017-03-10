@@ -1077,14 +1077,12 @@ alias JSONForEach {
   ;;   Call: ,forEach,1,bool,$true|$false,bool,$true|$false[,bstr,$N,...]
   %Log = $!JSONForEach(
   %Call = ,forEach,1,bool, $+ $iif(walk == $prop, $true, $false) $+ ,bool, $+ $iif(fuzzy == $prop, $true, $false)
-  :next
-  if (%X < $0) {
-    inc %X
+  while (%X < $0) {
+    inc %x
     %Log = %Log $+ $($ $+ %X, 2) $+ ,
     if (%X > 2) {
       %Call = %Call $+ ,bstr, $+ $ $+ %X
     }
-    goto next
   }
 
   ;; Log the alias call
@@ -1147,10 +1145,8 @@ alias JSONForEach {
       ;; Get an available com name based on the input com's name
       %Com = $gettok(%JSON, 1-2, 58) $+ :
       %X = $ticks
-      :next2
-      if ($com(%Com $+ %X)) {
-        inc %X
-        goto next2
+      while ($com(%Com $+ %X)) {
+        inc %x
       }
       %Com = %Com $+ %X
 
@@ -1186,11 +1182,9 @@ alias JSONForEach {
             ;; Get a name to use for the child com
             %ChildCom = $gettok(%Com, 1-2, 58) $+ :
             %Name = $ticks
-
-            :next3
-            if ($com(%ChildCom $+ %Name)) {
+            
+            while ($com(%ChildCom $+ %Name)) {
               inc %Name
-              goto next3
             }
             %Name = %ChildCom $+ %Name
 
@@ -1494,13 +1488,10 @@ alias -l jfm_TmpBVar {
   jfm_log -I $!jfm_TmpBVar
 
   ;; Loop until a bvar that isn't in use is found
-  :next
-  if (!$bvar(&SReject/JSONForMirc/Tmp $+ %N)) {
-    jfm_log -EsD &SReject/JSONForMirc/Tmp $+ %N
-    return &SReject/JSONForMirc/Tmp $+ %N
+  while ($bvar(&SReject/JSONForMirc/Tmp $+ %N)) {
+    inc %n
   }
-  inc %N
-  goto next
+  return &SReject/JSONForMirc/Tmp $+ %N
 }
 
 
@@ -1693,7 +1684,7 @@ alias -l jfm_Create {
 alias -l jfm_Exec {
 
   ;; Local variable declaration
-  var %Args, %Index = 1, %Params, %Error
+  var %Args, %Index = 0, %Params, %Error
 
   ;; Cleanup from previous call
   if ($hget(SReject/JSONForMirc, Exec)) {
@@ -1701,8 +1692,8 @@ alias -l jfm_Exec {
   }
 
   ;; Loop over inputs, storing them in %Args(for logging), and %Params(for com calling)
-  :args
-  if (%Index <= $0) {
+  while (%Index < $0) {
+    inc %Index
     %Args = %Args $+ $iif($len(%Args), $chr(44)) $+ $($ $+ %Index, 2)
     if (%Index >= 3) {
       if ($prop == fromBvar) && ($regex($($ $+ %Index, 2), /^& (&\S+)$/)) {
@@ -1712,8 +1703,6 @@ alias -l jfm_Exec {
         %Params = %Params $+ ,bstr,$ $+ %Index
       }
     }
-    inc %Index
-    goto args
   }
   %Params = $!com($1,$2,1 $+ %Params $+ )
 
