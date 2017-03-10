@@ -932,7 +932,7 @@ alias JSON {
       %ChildCom = JSON: $+ $gettok(%Com, 2, 58) $+ :
 
       ;; Get a unique com name for the handler
-      %X = $ticks
+      %X = $ticks $+ 000000
       while ($com(%ChildCom $+ %X)) {
         inc %X
       }
@@ -1144,7 +1144,7 @@ alias JSONForEach {
 
       ;; Get an available com name based on the input com's name
       %Com = $gettok(%JSON, 1-2, 58) $+ :
-      %X = $ticks
+      %X = $ticks $+ 000000
       while ($com(%Com $+ %X)) {
         inc %x
       }
@@ -1181,7 +1181,7 @@ alias JSONForEach {
 
             ;; Get a name to use for the child com
             %ChildCom = $gettok(%Com, 1-2, 58) $+ :
-            %Name = $ticks
+            %Name = $ticks $+ 000000
             
             while ($com(%ChildCom $+ %Name)) {
               inc %Name
@@ -1482,7 +1482,7 @@ alias JSONDebug {
 alias -l jfm_TmpBVar {
 
   ;; Local variable declaration
-  var %N = $ticks
+  var %N = $ticks $+ 000000
 
   ;; Log the alias call
   jfm_log -I $!jfm_TmpBVar
