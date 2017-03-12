@@ -1070,7 +1070,7 @@ alias JSONForEach {
   }
 
   ;; Local variable declarations
-  var %Error, %Log, %Call, %X = 0, %JSON, %Com, %ChildCom, %Result = 0, %Name
+  var %Error, %Log, %Call, %X = 0, %JSON, %Com, %ChildCom, %Result = 0, %Name, %Cmd = $iif(/ $+ * !iswm $2, /) $+ $2
 
   ;; Build log message and call parameter portion:
   ;;   Log: $JSONForEach(@Name, @Command, members...)[@Prop]
@@ -1176,32 +1176,30 @@ alias JSONForEach {
           %Result = $v1
           %X = 0
 
+          ;; Get a name for the child com
+          %ChildCom = $gettok(%Com, 1-2, 58) $+ :
+          %Name = $ticks
+          while ($com(%ChildCom $+ %Name)) {
+            inc %Name
+          }
+          %Name = %ChildCom $+ %Name
+
           ;; Loop over each item in the returned list
           while (%X < %Result) {
 
-            ;; Get a name to use for the child com
-            %ChildCom = $gettok(%Com, 1-2, 58) $+ :
-            %Name = $ticks $+ 000000
-            
-            while ($com(%ChildCom $+ %Name)) {
-              inc %Name
-            }
-            %Name = %ChildCom $+ %Name
-
             ;; Attempt to get a reference to the nTH item and then check for errors
-            if (!$com(%Com, %X, 2, dispatch* %Name)) || ($comerr) || (!$com(%Name)) {
+            if (!$com(%Com, %X, 2, dispatch* %Name) || $comerr || !$com(%Name)) {
               %Error = $jfm_GetError
               break
             }
 
-            ;; If successful, start a timer to close the com and then call the specified command
-            else {
-              jfm_log -I Calling $iif(/ $+ * !iswm $2, /) $+ $2 %Name
-              .timer $+ %Name -iom 1 0 JSONClose $unsafe(%Name)
-              $2 %Name
-              jfm_log -D
-            }
+            ;; Log the command call, call the command, close the child com
+            jfm_log -I Calling %cmd %Name
+            $2 %Name
+            .comclose %Name
+            jfm_log -D
 
+            ;; move to next result
             inc %X
           }
         }
@@ -1220,6 +1218,9 @@ alias JSONForEach {
   if (%Error) {
     if ($com(%Com)) {
       .comclose $v1
+    }
+    if (JSON:* iswm %Name && $com(%Name)) {
+      .comclose %Name
     }
     hadd -mu0 SReject/JSONForMirc Error %Error
     jfm_log -EeDF %Error
