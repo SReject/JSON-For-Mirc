@@ -743,24 +743,50 @@ alias JSON {
   }
 
   ;; Local variable declartions
-  var %X = 1, %Args, %Params, %Error, %Com, %I = 0, %Prefix, %Prop, %Suffix, %Offset = $iif(*toFile iswm $prop, 3, 2), %Type, %Output, %Result, %ChildCom, %Call
-
-  ;; Loop over all parameters
-  while (%X <= $0) {
-
-    ;; Store each parameter in %Args delimited by a comma(,)
-    %Args = %Args $+ $iif($len(%Args), $chr(44)) $+ $($ $+ %X, 2)
-
-    ;; If the parameter is greater than the offset store it the parameter under %Params
-    if (%X >= %Offset) {
-      %Params = %Params $+ ,bstr,$ $+ %X
-    }
-    inc %X
+  var %X, %Args, %Params, %Error, %Com, %I = 0, %Prefix, %Prop, %Suffix, %Offset = 2, %Type, %Output, %Result, %ChildCom, %Call
+  
+  ;; If the tofile prop has been specified, the member offset is 3, not 2
+  if (*ToFile iswm $prop) {
+    %Offset = 3
   }
-  %X = 1
+
+  ;; if debugging is enabled  
+  if ($JSONDebug) {
+    %X = 1
+  
+    ;; Loop over all parameters
+    while (%X <= $0) {
+  
+      ;; if args is not null, append a comma
+      if (%Args !== $null) {
+        %Args = %Args $+ $chr(44)
+      }
+
+      ;; Store each parameter in %Args delimited by a comma(,)
+      %Args = %Args $+ $($ $+ %X, 2)
+
+      ;; If the parameter is greater than the offset store it the parameter under %Params
+      if (%X >= %Offset) {
+        %Params = %Params $+ ,bstr,$ $+ %X
+      }
+
+      inc %X
+    }
+  }
+
+  ;; if debugging isn't enabled and there are members specified
+  elseif ($0 >= %Offset) {
+
+    ;; loop over members, building the parameters list
+    %X = %Offset
+    while (%x <= $0) {
+      %Param = %Params $+ ,bstr,$ $+ %X
+      inc %x
+    }
+  }
 
   ;; Log the alias call
-  jfm_log -I $!JSON( $+ %Args $+ ) $+ $iif($len($prop), . $+ $prop)
+  jfm_log -I $!JSON( $+ %Args $+ ) $+ $iif($prop !== $null, . $+ $prop)
 
   ;; If the alias was called without any inputs
   if (!$0) || ($0 == 1 && $1 == $null) {
@@ -785,9 +811,10 @@ alias JSON {
   }
 
   ;; If @Name is a numerical value
-  elseif ($regex($1, /^\d+$/)) {
-
+  elseif ($1 isnum 0- && . !isin $1) {
+  
     ;; Loop over all coms
+    %X = 1
     while ($com(%X)) {
 
       ;; If the com is a json handler and
@@ -891,7 +918,12 @@ alias JSON {
   ;;   Deduce if the specified handler is a child
   elseif (%Prop == isChild) {
     %Result = $jfm_TmpBvar
-    bset -t %Result 1 $iif(JSON:?*:?* iswm %Com, $true, $false)
+    if (JSON:?*:?* iswm %com) {
+      bset -t %Result 1 $true
+    }
+    else {
+      bset -t %Result 1 $false
+    }
   }
 
   ;; These props do not require the json data to be walked or an input to be specified:
@@ -1070,13 +1102,27 @@ alias JSONForEach {
   }
 
   ;; Local variable declarations
-  var %Error, %Log, %Call, %X = 0, %JSON, %Com, %ChildCom, %Result = 0, %Name, %Cmd = $iif(/ $+ * !iswm $2, /) $+ $2
+  var %Error, %Log, %Call, %X = 0, %JSON, %Com, %ChildCom, %Result = 0, %Name, %Cmd = $2
 
+  ;; prefix the input command with /
+  if (/ $+ * !iswm $2) {
+    %Cmd = / $+ $2
+  }
+  
   ;; Build log message and call parameter portion:
   ;;   Log: $JSONForEach(@Name, @Command, members...)[@Prop]
   ;;   Call: ,forEach,1,bool,$true|$false,bool,$true|$false[,bstr,$N,...]
   %Log = $!JSONForEach(
-  %Call = ,forEach,1,bool, $+ $iif(walk == $prop, $true, $false) $+ ,bool, $+ $iif(fuzzy == $prop, $true, $false)
+  if ($prop == walk) {
+    %Call = ,forEach,1,bool,$true,bool,$false
+  }
+  elseif ($prop == fuzzy) {
+    %Call = ,foreach,1,bool,$false,bool,$true
+  }
+  else {
+    %Call = ,foreach,1,bool,$false,bool,$false
+  }
+  
   while (%X < $0) {
     inc %x
     %Log = %Log $+ $($ $+ %X, 2) $+ ,
@@ -1289,9 +1335,7 @@ alias JSONPath {
       %Result = $v1
 
       ;; If $2 is 0 do nothing
-      if (!$2) {
-        noop
-      }
+      if (!$2) noop
 
       ;; If $2 is greater than the path length, %Result is nothing/null
       elseif ($2 > %Result) {
