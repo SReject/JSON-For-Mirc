@@ -744,7 +744,7 @@ alias JSON {
 
   ;; Local variable declartions
   var %X, %Args, %Params, %Error, %Com, %I = 0, %Prefix, %Prop, %Suffix, %Offset = 2, %Type, %Output, %Result, %ChildCom, %Call
-  
+
   ;; If the tofile prop has been specified, the member offset is 3, not 2
   if (*ToFile iswm $prop) {
     %Offset = 3
@@ -753,10 +753,10 @@ alias JSON {
   ;; if debugging is enabled  
   if ($JSONDebug) {
     %X = 1
-  
+
     ;; Loop over all parameters
     while (%X <= $0) {
-  
+
       ;; if args is not null, append a comma
       if (%Args !== $null) {
         %Args = %Args $+ $chr(44)
@@ -780,7 +780,7 @@ alias JSON {
     ;; loop over members, building the parameters list
     %X = %Offset
     while (%x <= $0) {
-      %Param = %Params $+ ,bstr,$ $+ %X
+      %Params = %Params $+ ,bstr,$ $+ %X
       inc %x
     }
   }
@@ -812,7 +812,7 @@ alias JSON {
 
   ;; If @Name is a numerical value
   elseif ($1 isnum 0- && . !isin $1) {
-  
+
     ;; Loop over all coms
     %X = 1
     while ($com(%X)) {
@@ -1112,12 +1112,12 @@ alias JSONForEach {
     %Call = ,forEach,1,bool,$true,bool,$false
   }
   elseif ($prop == fuzzy) {
-    %Call = ,foreach,1,bool,$false,bool,$true
+    %Call = ,forEach,1,bool,$false,bool,$true
   }
   else {
-    %Call = ,foreach,1,bool,$false,bool,$false
+    %Call = ,forEach,1,bool,$false,bool,$false
   }
-  
+
   while (%X < $0) {
     inc %x
     %Log = %Log $+ $($ $+ %X, 2) $+ ,
@@ -1224,7 +1224,7 @@ alias JSONForEach {
             inc %Name
           }
           %Name = %ChildCom $+ %Name
-          
+
           ;; increase the ForEach index and store it
           ;; This is to make access to the item's data via $JSONItem(Todo) faster
           hinc -m SReject/JSONForMirc ForEach/Index
@@ -1234,7 +1234,7 @@ alias JSONForEach {
           while (%X < %Result) {
 
             ;; Attempt to get a reference to the nTH item and then check for errors
-            if (!$com(%Com, %X, 2, dispatch* %Name) || $comerr || !$com(%Name)) {
+            if (!$com(%Com, %X, 2, dispatch* %Name) || $comerr) {
               %Error = $jfm_GetError
               break
             }
@@ -1248,7 +1248,7 @@ alias JSONForEach {
             ;; move to next result
             inc %X
           }
-          
+
           ;; Remove the child com name from the hashtable
           ;; decrease the foreach index and if the index is 0 remove the hashtable item
           hdel SReject/JSONForMirc ForEach/ $+ $hget(SReject/JSONForMirc, ForEach/Index)
@@ -1284,6 +1284,67 @@ alias JSONForEach {
   else {
     jfm_log -EsDF %Result
     return %Result
+  }
+}
+
+
+;; $JSONItem(@Property)
+;;   Returns information related to the current item from a $JSONForEach loop
+;;   This is a very slimmed down version of $JSON/accesing with no error checking and minimal input validation
+;;   May add more items upon request
+alias JSONItem {
+
+  ;; retrieve the item's com name and validate it
+  var %Com = $hget(SReject/JSONForMirc, ForEach/ $+ $hget(SReject/JSONForMirc, ForEach/Index)), %Type, %Bvar, %Text
+  if (!$isid || !%Com || !$com(%Com)) {
+    return
+  }
+
+  ;; returns the value of an item
+  if ($1 == Value || $1 == Valuetobvar) {
+    
+    ;; get a temp bvar and then retrieve the items value into it
+    %BVar = $jfm_TmpBVar
+    noop $com(%Com, value, 1) $Com(%Com, %BVar).result
+    
+    ;; if the value is to be retrieved as a bvar, return the bvar
+    if ($1 == valuetobvar) {
+      return %Bvar
+    }
+    
+    ;; Otherwise store the text from the bvar
+    ;; unset the bvar(circumvents possible looping from next $JSONEach iteration)
+    ;; and return the text
+    %Text = $bvar(%BVar, 1, 4000).text
+    bunset %BVar
+    return %Text
+  }
+  
+  ;; returns the length of the item
+  elseif ($1 == Length) {
+    noop $com(%com, length, 1)
+    return $com(%com).result
+  }
+
+  elseif ($1 == Type || $1 == IsContainer) {
+  
+    ;; retrieve the item's type
+    noop $com(%Com, type, 1)
+    var %type = $com(%Com).result
+
+    ;; if the type is requested, return it
+    if ($1 == type) {
+      return %Type
+    }
+    
+    ;; if the input is "IsContainer" and is an object or arry
+    ;; return $true
+    if (%type == Object || %Type == Array) {
+      return $true
+    }
+    
+    ;; otherwise return false
+    return $false
   }
 }
 
@@ -1535,14 +1596,14 @@ alias JSONDebug {
 alias -l jfm_TmpBVar {
 
   ;; Local variable declaration
-  var %N = $ticks $+ 000000
+  var %N = $ticks $+ 00000
 
   ;; Log the alias call
   jfm_log -I $!jfm_TmpBVar
 
   ;; Loop until a bvar that isn't in use is found
   while ($bvar(&SReject/JSONForMirc/Tmp $+ %N)) {
-    inc %n
+    inc %N
   }
   return &SReject/JSONForMirc/Tmp $+ %N
 }
