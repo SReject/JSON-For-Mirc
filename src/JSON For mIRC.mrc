@@ -1605,6 +1605,7 @@ alias -l jfm_TmpBVar {
   while ($bvar(&SReject/JSONForMirc/Tmp $+ %N)) {
     inc %N
   }
+  jfm_log -EsD &SReject/JSONForMirc/Tmp $+ %N
   return &SReject/JSONForMirc/Tmp $+ %N
 }
 
