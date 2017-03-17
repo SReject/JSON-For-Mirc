@@ -1102,13 +1102,8 @@ alias JSONForEach {
   }
 
   ;; Local variable declarations
-  var %Error, %Log, %Call, %X = 0, %JSON, %Com, %ChildCom, %Result = 0, %Name, %Cmd = $2
+  var %Error, %Log, %Call, %X = 0, %JSON, %Com, %ChildCom, %Result = 0, %Name
 
-  ;; prefix the input command with /
-  if (/ $+ * !iswm $2) {
-    %Cmd = / $+ $2
-  }
-  
   ;; Build log message and call parameter portion:
   ;;   Log: $JSONForEach(@Name, @Command, members...)[@Prop]
   ;;   Call: ,forEach,1,bool,$true|$false,bool,$true|$false[,bstr,$N,...]
@@ -1229,6 +1224,11 @@ alias JSONForEach {
             inc %Name
           }
           %Name = %ChildCom $+ %Name
+          
+          ;; increase the ForEach index and store it
+          ;; This is to make access to the item's data via $JSONItem(Todo) faster
+          hinc -m SReject/JSONForMirc ForEach/Index
+          hadd -m SReject/JSONForMirc ForEach/ $+ $hget(SReject/JSONForMirc, ForEach/Index) %Name
 
           ;; Loop over each item in the returned list
           while (%X < %Result) {
@@ -1240,13 +1240,21 @@ alias JSONForEach {
             }
 
             ;; Log the command call, call the command, close the child com
-            jfm_log -I Calling %cmd %Name
+            jfm_log -I Calling $1 %Name
             $2 %Name
             .comclose %Name
             jfm_log -D
 
             ;; move to next result
             inc %X
+          }
+          
+          ;; Remove the child com name from the hashtable
+          ;; decrease the foreach index and if the index is 0 remove the hashtable item
+          hdel SReject/JSONForMirc ForEach/ $+ $hget(SReject/JSONForMirc, ForEach/Index)
+          hdec SReject/JSONForMirc ForEach/Index
+          if ($hget(SReject/JSONForMirc, ForEach/Index) == 0) {
+            hdel SReject/JsonForMirc ForEach/Index
           }
         }
       }
