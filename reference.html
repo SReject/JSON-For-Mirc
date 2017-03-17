@@ -955,6 +955,32 @@ Content-Length: &lt;data_length&gt;</code></pre>
             </div>
         </div>
     </div>
+    <div class="notes">
+        <div class="head">Notes</div>
+        <div class="note">
+            <a href="#id/jsonitem">$JSONItem</a> can be used for quicker access to a limited set of data related to the looped item.
+        </div>
+    </div>
+</article>
+<article class="codedoc" id="id/jsonitem">
+    <header>
+        <a href="#id/jsonitem"><i class="fa fa-link"></a></a>$JSONItem(Query)
+    </header>
+    <div class="description">
+        Returns various information related to the item currently being looped over by <a href="#id/jsonforeach">$JSONForEach</a>
+    </div>
+    <div class="parameters">
+        <div class="head">Parameters</div>
+        <div class="parameter">
+            <div>
+                <div><span class="highlight">Query</span> <span class="smaller">- Required</span></div>
+            </div>
+            <div>
+                Indicates what information about the item handle to retrieve.<br>
+                Valid inputs are <code>Value</code>, <code>ValueToBvar</code>, <code>Length</code>, <code>IsContainer</code>, and <code>Type</code>
+            </div>
+        </div>
+    </div>
 </article>
 <article class="codedoc" id="cmd/jsoncompat">
     <header>
