@@ -497,7 +497,7 @@
         }
     };
 
-    JSONCreate = function(type, source, parse) {
+    JSONCreate = function(type, source, parse, timeout) {
         var self = new JSONWrapper();
         self._state = 'init';
         self._type = (type || 'text').toLowerCase();
@@ -509,6 +509,7 @@
                 throw new Error('HTTP_NOT_FOUND');
             }
             self._state = 'http_pending';
+            self._http.timeout = timeout;
             self._http.url = source;
         } else {
             self._state = 'parse_pending';
