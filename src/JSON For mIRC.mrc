@@ -539,6 +539,19 @@ alias JSONHttpFetch {
 }
 
 
+;; /JSONHttpTimeout @name @Timeout
+;;     Sets HTTP timeout for the handle
+;;
+;;     @Name - String - Required
+;;         The name of the JSON handle with a pending HTTP request to set the timeout for
+;;
+;;     @Timeout - Number - Required
+;;         The time, in milliseconds, to wait before raising a timeout error
+alias JSONHttpTimeout {
+  ;; to do 
+}
+
+
 ;; /JSONClose -w @Name
 ;;     Closes an open JSON handler and all child handlers
 ;;
