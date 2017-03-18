@@ -139,7 +139,8 @@
         this._http = parent._http || {
             method: 'GET',
             url: '',
-            headers: []
+            headers: [],
+            timeout: 60
         };
     }
 
@@ -228,10 +229,11 @@
                             this._http.data  = null;
                         }
 
-                        // Create the request
-                        request = new ActiveXObject(HTTPObject);
-                        request.setTimeouts(30000, 60000, 60000, 60000);
-                        request.open(this._http.method, this._http.url, false);
+                        // Create the request, and store it witht he handler
+                        this._http.response = request = new ActiveXObject(HTTPObject);
+                        
+                        // initialize the request
+                        request.open(this._http.method, this._http.url, true);
 
                         // Apply headers
                         this._http.headers.forEach(function (header) {
@@ -262,8 +264,13 @@
                         // make the request
                         request.send(this._http.data);
 
-                        // store the response
-                        this._http.response = request;
+                        // wait for the request to complete or the timeout to expire                        
+                        request.waitForResponse(this._http.timeout);
+                        
+                        // if the request timed out
+                        if (request.readyState !== 4) {
+                            throw new Error("HTTP_TIMEOUT");
+                        }
 
                         // if the response isn't to be parsed, return the handle instance
                         if (this._parse === false) {
