@@ -230,7 +230,8 @@
                         }
 
                         // Create the request, and store it witht he handler
-                        this._http.response = request = new ActiveXObject(HTTPObject);
+                        request = new ActiveXObject(HTTPObject);
+                        this._http.response = request;
                         
                         // initialize the request
                         request.open(this._http.method, this._http.url, true);
@@ -265,7 +266,7 @@
                         request.send(this._http.data);
 
                         // wait for the request to complete or the timeout to expire                        
-                        request.waitForResponse(this._http.timeout);
+                        request.waitForResponse(this._http.timeout || 60);
                         
                         // if the request timed out
                         if (request.readyState !== 4) {

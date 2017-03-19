@@ -128,7 +128,7 @@ alias JSONOpen {
   if ($jfm_ComInit) {
     %Error = $v1
   }
-  
+
   ;; Basic switch validation
   elseif (!$regex(SReject/JSONOpen/switches, %Switches, ^(?:(?:[dbfuUw]|(?:t(\d+)))*)$)) {
     %Error = SWITCH_INVALID
@@ -182,7 +182,6 @@ alias JSONOpen {
   else {
     %Com = JSON: $+ $1
     %BVar = $jfm_TmpBVar
-    
 
 
     ;; If input is a bvar indicate it is the bvar to read from and that it
@@ -219,8 +218,12 @@ alias JSONOpen {
       bset -t %BVar 1 $2-
     }
 
+    jfm_ToggleTimers -p
+
     ;; Attempt to create the handler
     %Error = $jfm_Create(%Com, %Type, %BVar, %HttpOptions, %Timeout)
+
+    jfm_ToggleTimers -r
   }
 
   ;; Error handling: if an client error occured, store the error message then clear the error state
@@ -515,12 +518,16 @@ alias JSONHttpFetch {
       }
 
       ;; Attempt to store the data with the handler instance
-      %Error = $jfm_Exec(%Com, httpSetData, & %BVar).fromBvar
+      %Error = $jfm_Exec(%Com, httpSetData, %BVar).fromBvar
     }
 
     ;; Call the js-side parse function for the handler
     if (!%Error) {
+      jfm_ToggleTimers -p
+
       %Error = $jfm_Exec(%Com, parse)
+
+      jfm_ToggleTimers -r
     }
   }
 
@@ -549,19 +556,6 @@ alias JSONHttpFetch {
 }
 
 
-;; /JSONHttpTimeout @name @Timeout
-;;     Sets HTTP timeout for the handle
-;;
-;;     @Name - String - Required
-;;         The name of the JSON handle with a pending HTTP request to set the timeout for
-;;
-;;     @Timeout - Number - Required
-;;         The time, in milliseconds, to wait before raising a timeout error
-alias JSONHttpTimeout {
-  ;; to do 
-}
-
-
 ;; /JSONClose -w @Name
 ;;     Closes an open JSON handler and all child handlers
 ;;
@@ -572,7 +566,9 @@ alias JSONHttpTimeout {
 alias JSONClose {
 
   ;; Insure the alias is called as a command
-  if ($isid) return
+  if ($isid) {
+    return
+  }
 
   ;; Unset the global error variable incase the last call ended in error
   if ($hget(SReject/JSONForMirc, Error)) {
@@ -654,12 +650,12 @@ alias JSONClose {
   ;; If an error occured, store the error in the hashtable then log the error
   if (%Error) {
     hadd -mu0 SReject/JSONForMirc Error %Error
-    jfm_log -EeDF /JSONClose %Error
+    jfm_log -EeD /JSONClose %Error
   }
 
   ;; If no errors, decrease the indent for log lines
   else {
-    jfm_log -EsDF All matching handles closed
+    jfm_log -EsD All matching handles closed
   }
 }
 
@@ -773,7 +769,7 @@ alias JSON {
     %Offset = 3
   }
 
-  ;; if debugging is enabled  
+  ;; if debugging is enabled
   if ($JSONDebug) {
     %X = 1
 
@@ -1013,7 +1009,7 @@ alias JSON {
       jfm_log
     }
 
-    ;; v0.2.x compatbility mode - If no prop has been specified: 
+    ;; v0.2.x compatbility mode - If no prop has been specified:
     ;;     If the referenced item is a container, return a reference to that item
     ;;     If the reference is not a container, return the value
     if ($JSONCompat) && ($prop == $null) {
@@ -1325,16 +1321,16 @@ alias JSONItem {
 
   ;; returns the value of an item
   if ($1 == Value || $1 == Valuetobvar) {
-    
+
     ;; get a temp bvar and then retrieve the items value into it
     %BVar = $jfm_TmpBVar
     noop $com(%Com, value, 1) $Com(%Com, %BVar).result
-    
+
     ;; if the value is to be retrieved as a bvar, return the bvar
     if ($1 == valuetobvar) {
       return %Bvar
     }
-    
+
     ;; Otherwise store the text from the bvar
     ;; unset the bvar(circumvents possible looping from next $JSONEach iteration)
     ;; and return the text
@@ -1342,7 +1338,7 @@ alias JSONItem {
     bunset %BVar
     return %Text
   }
-  
+
   ;; returns the length of the item
   elseif ($1 == Length) {
     noop $com(%com, length, 1)
@@ -1350,7 +1346,7 @@ alias JSONItem {
   }
 
   elseif ($1 == Type || $1 == IsContainer) {
-  
+
     ;; retrieve the item's type
     noop $com(%Com, type, 1)
     var %type = $com(%Com).result
@@ -1359,13 +1355,13 @@ alias JSONItem {
     if ($1 == type) {
       return %Type
     }
-    
+
     ;; if the input is "IsContainer" and is an object or arry
     ;; return $true
     if (%type == Object || %Type == Array) {
       return $true
     }
-    
+
     ;; otherwise return false
     return $false
   }
@@ -1726,6 +1722,20 @@ alias -l jfm_ComInit {
 }
 
 
+;; /jfm_ToggleTimers -r|-p
+;;   Pauses/resumes all jfm related timers
+alias -l jfm_ToggleTimers {
+  var %x = 1, %timer
+  while ($timer(%x)) {
+    %timer = $v1
+    if ($regex(%timer, /^JSON:[^\?\*\:]+$/i)) {
+      $+(.timer, %timer) $1
+    }
+    inc %x
+  }
+}
+
+
 ;; $jfm_GetError
 ;;     Attempts to get the last error that occured in the JS handler
 alias -l jfm_GetError {
@@ -1743,7 +1753,7 @@ alias -l jfm_GetError {
 
   ;; If the ShellError com is open, close it
   if ($com(SReject/JSONForMirc/JSONShellError)) {
-    .comclose $v1
+    .comclose SReject/JSONForMirc/JSONShellError
   }
 
   ;; Attempt to retrieve the shell com's last error and store the result in %Error
@@ -1753,7 +1763,7 @@ alias -l jfm_GetError {
 
   ;; Close the ShellError com
   if ($com(SReject/JSONForMirc/JSONShellError)) {
-    .comclose $v1
+    .comclose SReject/JSONForMirc/JSONShellError
   }
 
   ;; Log and return the error
@@ -1784,7 +1794,7 @@ alias -l jfm_Create {
 
   ;; Local variable declaration
   var %Wait = $iif(1 & $4, $true, $false), %Parse = $iif(2 & $4, $false, $true), %Timeout = 60, %Error
-  
+
   if (4 & $4 && $5 !== $null) {
     %Timeout = $5
   }
@@ -1798,8 +1808,8 @@ alias -l jfm_Create {
   }
 
   ;; Attempt to call the parse method if the handler should not wait for the http request
-  elseif ($2 !== http || ($2 == http && !%Wait)) && (!$com($1, parse, 1)) {
-    %Error = $jfm_GetError
+  elseif ($2 !== http) || ($2 == http && !%Wait) {
+    %Error = $jfm_Exec($1, parse)
   }
 
   if (%Error) {
@@ -1853,7 +1863,7 @@ alias -l jfm_Exec {
 
   ;; Attempt the com call and if an error occurs
   ;;   retrieve the error, log the error, and return it
-  if (!$(%Params, 2)) || ($comerr) {
+  if (!$(%Params, 2) || $comerr) {
     %Error = $jfm_GetError
     jfm_log -EeD %Error
     return %Error
