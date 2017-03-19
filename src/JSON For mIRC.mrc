@@ -518,7 +518,7 @@ alias JSONHttpFetch {
       }
 
       ;; Attempt to store the data with the handler instance
-      %Error = $jfm_Exec(%Com, httpSetData, %BVar).fromBvar
+      %Error = $jfm_Exec(%Com, httpSetData, & %BVar).fromBvar
     }
 
     ;; Call the js-side parse function for the handler
