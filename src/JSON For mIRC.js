@@ -234,7 +234,7 @@
                         this._http.response = request;
                         
                         // initialize the request
-                        request.open(this._http.method, this._http.url, true);
+                        request.open(this._http.method, this._http.url, false);
 
                         // Apply headers
                         this._http.headers.forEach(function (header) {
@@ -265,6 +265,11 @@
                         // make the request
                         request.send(this._http.data);
 
+                        /*
+                        //Due to how .waitForResponse() works, this method will not work for executing a user-defined http timeout
+                        // An idea for a fix would be to spawn a new process that will make the request, and
+                        // kill the request after the specified timeout but that feels dirty; will ponder the matter after a stable release
+                        
                         // wait for the request to complete or the timeout to expire                        
                         request.waitForResponse(this._http.timeout || 60);
                         
@@ -272,6 +277,7 @@
                         if (request.readyState !== 4) {
                             throw new Error("HTTP_TIMEOUT");
                         }
+                        */
 
                         // if the response isn't to be parsed, return the handle instance
                         if (this._parse === false) {
