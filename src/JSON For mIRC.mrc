@@ -90,7 +90,6 @@ menu @SReject/JSONForMirc/Log {
 ;;     -u:  The input is from a url
 ;;     -U:  The input is from a url and its data should not be parsed
 ;;     -w:  Used with -u; The handle should wait for /JSONHttpGet to be called to perform the url request
-;;     -tN: used with -u; Sets the HTTP timeout to N
 ;;
 ;;     @Name - String - Required
 ;;         The name to use to reference the JSON handler
@@ -113,7 +112,7 @@ alias JSONOpen {
   }
 
   ;; Local variable declarations
-  var %Switches, %Error, %Com = $false, %Type = text, %HttpOptions = 0, %BVar, %BUnset = $true, %Timeout = 60
+  var %Switches, %Error, %Com = $false, %Type = text, %HttpOptions = 0, %BVar, %BUnset = $true
 
   ;; Log the /JSONOpen command is being called
   jfm_log -I /JSONOpen $1-
@@ -130,10 +129,10 @@ alias JSONOpen {
   }
 
   ;; Basic switch validation
-  elseif (!$regex(SReject/JSONOpen/switches, %Switches, ^(?:(?:[dbfuUw]|(?:t(\d+)))*)$)) {
+  elseif (!$regex(SReject/JSONOpen/switches, %Switches, ^[dbfuUw]*$)) {
     %Error = SWITCH_INVALID
   }
-  elseif ($regex(%Switches, ([dbfuUwt]).*?\1)) {
+  elseif ($regex(%Switches, ([dbfuUw]).*?\1)) {
     %Error = SWITCH_DUPLICATE: $+ $regml(1)
   }
   elseif ($regex(%Switches, /([bfuU])/g) > 1) {
@@ -141,9 +140,6 @@ alias JSONOpen {
   }
   elseif (u !isin %Switches) && (w isincs %Switches) {
     %Error = SWITCH_NOT_APPLICABLE:w
-  }
-  elseif (u !isin %Switches) && (t isincs %Switches) {
-    %Error = SWITCH_NOT_APPLICABLE:t
   }
 
   ;; Validate handler name input
@@ -200,10 +196,6 @@ alias JSONOpen {
       if (U isincs %Switches) {
         inc %HttpOptions 2
       }
-      if (t isincs %Switches) {
-        inc %HttpOptions 4
-        %Timeout = $regml(SReject/JSONOpen/Switches, 1)
-      }
       %Type = http
       bset -t %BVar 1 $2
     }
@@ -221,7 +213,7 @@ alias JSONOpen {
     jfm_ToggleTimers -p
 
     ;; Attempt to create the handler
-    %Error = $jfm_Create(%Com, %Type, %BVar, %HttpOptions, %Timeout)
+    %Error = $jfm_Create(%Com, %Type, %BVar, %HttpOptions)
 
     jfm_ToggleTimers -r
   }
@@ -1793,17 +1785,13 @@ alias -l jfm_GetError {
 alias -l jfm_Create {
 
   ;; Local variable declaration
-  var %Wait = $iif(1 & $4, $true, $false), %Parse = $iif(2 & $4, $false, $true), %Timeout = 60, %Error
-
-  if (4 & $4 && $5 !== $null) {
-    %Timeout = $5
-  }
+  var %Wait = $iif(1 & $4, $true, $false), %Parse = $iif(2 & $4, $false, $true), %Error
 
   ;; Log the alias call
   jfm_log -I $!jfm_create( $+ $1 $+ , $+ $2 $+ , $+ $3 $+ , $+ $4 $+ , $+ $5 $+ )
 
   ;; Attempt to create the json handler and if an error occurs retrieve the error, log it and return it
-  if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, $2, &bstr, $3, bool, %Parse, int, %Timeout, dispatch* $1)) || ($comerr) || (!$com($1)) {
+  if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, $2, &bstr, $3, bool, %Parse, dispatch* $1)) || ($comerr) || (!$com($1)) {
     %Error = $jfm_GetError
   }
 

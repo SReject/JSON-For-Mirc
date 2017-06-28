@@ -139,8 +139,7 @@
         this._http = parent._http || {
             method: 'GET',
             url: '',
-            headers: [],
-            timeout: 60
+            headers: []
         };
     }
 
@@ -221,6 +220,7 @@
 
             this._state = 'done';
             try {
+
                 // if the type is an http request
                 if (this._type === 'http') {
                     try {
@@ -264,20 +264,6 @@
 
                         // make the request
                         request.send(this._http.data);
-
-                        /*
-                        //Due to how .waitForResponse() works, this method will not work for executing a user-defined http timeout
-                        // An idea for a fix would be to spawn a new process that will make the request, and
-                        // kill the request after the specified timeout but that feels dirty; will ponder the matter after a stable release
-                        
-                        // wait for the request to complete or the timeout to expire                        
-                        request.waitForResponse(this._http.timeout || 60);
-                        
-                        // if the request timed out
-                        if (request.readyState !== 4) {
-                            throw new Error("HTTP_TIMEOUT");
-                        }
-                        */
 
                         // if the response isn't to be parsed, return the handle instance
                         if (this._parse === false) {
@@ -504,7 +490,7 @@
         }
     };
 
-    JSONCreate = function(type, source, parse, timeout) {
+    JSONCreate = function(type, source, parse) {
         var self = new JSONWrapper();
         self._state = 'init';
         self._type = (type || 'text').toLowerCase();
@@ -516,7 +502,6 @@
                 throw new Error('HTTP_NOT_FOUND');
             }
             self._state = 'http_pending';
-            self._http.timeout = timeout;
             self._http.url = source;
         } else {
             self._state = 'parse_pending';
