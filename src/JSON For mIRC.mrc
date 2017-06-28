@@ -27,8 +27,8 @@ on *:LOAD:{
   }
 
   ;; mIRC check
-  elseif ($version < 7.47) || ($version == 7.47 && (!$beta || $beta < 91)) {
-    echo -ag [JSON For mIRC] mIRC v7.47.91 beta or later is required
+  elseif ($version < 7.48) {
+    echo -ag [JSON For mIRC] mIRC v7.48 or later is required
     .unload -rs $qt($script)
   }
 
@@ -1471,7 +1471,7 @@ alias JSONError {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %Ver = 1.0.3012
+    var %Ver = 1.0.3013
     if ($0) {
       return %Ver
     }
