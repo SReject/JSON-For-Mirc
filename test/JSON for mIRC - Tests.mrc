@@ -83,7 +83,7 @@ alias -l jfm_test {
   if (%err == $null) {
     return %testnum /JSONOpen -q : Failed to report error (SWITCH_INVALID)
   }
-  if (SWITCH_INVALID:* !iswm %err) {
+  if (SWITCH_INVALID !iswm %err) {
     return %testnum /JSONOpen -q : Reported incorrect error: $v2
   }
   $(%echo,2) /JSONOpen -q : Passed Check: SWITCH_INVALID
