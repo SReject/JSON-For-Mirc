@@ -1,7 +1,7 @@
 ;; /JSONTest
 alias JSONTest {
   _cleanup
-  tokenize 32 $jfm_test
+  tokenize 32 $jfm_test($1)
   if ($0) {
     echo 04 -sgei6 [# $+ $base($1,10,10,2) $+ ] $2-
   }
@@ -23,6 +23,9 @@ alias -l jfm_test {
   var %res
   var %echo = echo 03 -sgi6 $!+([#,$base(%testNum,10,10,3),])
 
+  jsonshutdown
+  jsondebug on
+  window -n @SReject/JSONForMirc/Log
 
   ;;============================;;
   ;;                            ;;
@@ -30,7 +33,10 @@ alias -l jfm_test {
   ;;                            ;;
   ;;============================;;
 
+
+
   ;; Check $JSONVersion
+  :1
   inc %testnum
   %res = $JSONVersion
   if (!$regex(%res, /^(?:SReject\/JSONForMirc v\d{1,4}\.\d{1,4}\.\d{1,4})$/)) {
@@ -40,6 +46,7 @@ alias -l jfm_test {
 
 
   ;; Check $JSONVersion(short)
+  :2
   inc %testnum
   %res = $JSONVersion(short)
   if (!$regex(%res, /^(?:\d{1,4}\.\d{1,4}\.\d{1,4})$/)) {
@@ -55,6 +62,7 @@ alias -l jfm_test {
   ;;=========================;;
 
   ;; Tests to make sure "/JSONOpen" raises "PARAMETER_MISSING" error
+  :3
   inc %testnum
   JSONOpen
   %err = $JSONError
@@ -68,6 +76,7 @@ alias -l jfm_test {
 
 
   ;; tests to make sure /JSONOpen raises "SWITCH_INVALID" when an unknown switch is specified
+  :4
   inc %testnum
   JSONOpen -q jfm_test "a"
   %err = $JSONError
@@ -81,6 +90,7 @@ alias -l jfm_test {
 
 
   ;; tests to make sure /JSONOpen raises "SWITCH_CONFLICT" when conflicting switches -bf are specified
+  :5
   inc %testnum
   JSONOpen -bf jfm_test "a"
   %err = $JSONError
@@ -322,6 +332,12 @@ alias -l jfm_test {
   }
   $(%echo,2) /JSONClose : Passed Check: Close
 
+
+  ;;=======================;;
+  ;;                       ;;
+  ;;     Parsing tests     ;;
+  ;;                       ;;
+  ;;=======================;;
 
   ;; test to make sure null is properly parsed
   inc %testnum
@@ -1045,8 +1061,8 @@ alias -l jfm_test {
     return %testnum $!JSON(jfm_test, ~ 1).FuzzyValue : Returned incorrect value: $v2
   }
   $(%echo,2) $!JSON(jfm_test, ~ 1).FuzzyValue : Passed Check
-  
-  
+
+
   ;;=========================;;
   ;;                         ;;
   ;;     $JSONPath tests     ;;
@@ -1077,14 +1093,14 @@ alias -l jfm_test {
     return %testnum $!JSONPath(..., 1) : Returned incorrect value: $v2
   }
   $(%echo,2) $!JSONPath(..., 1) : Passed Check
-  
-  
+
+
   ;;============================;;
   ;;                            ;;
   ;;     $JSONForEach Tests     ;;
   ;;                            ;;
   ;;============================;;
-  
+
   ;; Test $JSONForEach() on arrays
   inc %testnum
   unset %_jfm_foreach
@@ -1101,7 +1117,7 @@ alias -l jfm_test {
   }
   $(%echo,2) $!JSONForEach(<array>, ...) : Passed Check
 
-  
+
   ;; Test $JSONForEach() on objects
   inc %testnum
   unset %_jfm_foreach
@@ -1118,17 +1134,17 @@ alias -l jfm_test {
   }
   $(%echo,2) $!JSONForEach(<object>, ...) : Passed Check
 
-  
+
   ;; Close the JSON handle
   JSONClose jfm_test
-  
-  
+
+
   ;;==============================;;
   ;;                              ;;
   ;;     /JSONOpen HTTP tests     ;;
   ;;                              ;;
   ;;==============================;;
-  
+
   ;; Attempt to retrieve data from a remote source
   inc %testnum
   JSONOpen -u jfm_test http://echo.jsontest.com/key/value
@@ -1137,7 +1153,7 @@ alias -l jfm_test {
   }
   $(%echo,2) /JSONOpen -u : Request succeeded
 
-  
+
   ;; Check to make sure the parsed json can be accessed
   inc %testnum
   %res = $JSON(jfm_test, key).value
@@ -1149,8 +1165,8 @@ alias -l jfm_test {
     return %testnum $!JSON(jfm_test, key).value after request returned incorrect value: $v2
   }
   $(%echo,2) $!JSON(jfm_test, key).value after request: Passed Check
-  
-  
+
+
   ;; Check $JSON().HttpStatus
   inc %testnum
   %res = $JSON(jfm_test).HttpStatus  
@@ -1165,8 +1181,8 @@ alias -l jfm_test {
     return %testnum $!JSON(jfm_test).HttpStatus : Returned incorrect value: %res
   }
   $(%echo,2) $!JSON(jfm_test).HttpStatus : Passed Check
-  
-  
+
+
   ;; Check $JSON().HttpStatusText
   inc %testnum
   %res = $JSON(jfm_test).HttpStatusText 
@@ -1178,8 +1194,8 @@ alias -l jfm_test {
     return %testnum $!JSON(jfm_test).HttpStatusText : Returned incorrect value: $!null
   }
   $(%echo,2) $!JSON(jfm_test).HttpStatusText : Passed Check
-  
-  
+
+
   ;; Check $JSON().HttpHeader
   inc %testnum
   %res = $JSON(jfm_test, Content-Length).HttpHeader
@@ -1191,8 +1207,8 @@ alias -l jfm_test {
     return %testnum $!JSON(jfm_test, Content-Length).HttpHeader : Returned incorrect value: $!null
   }
   $(%echo,2) $!JSON(jfm_test, Content-Length).HttpHeader : Passed Check
-  
-  
+
+
   ;; Check $JSON().HttpHeaders
   inc %testnum
   %res = $JSON(jfm_test).HttpHeaders
@@ -1204,8 +1220,8 @@ alias -l jfm_test {
     return %testnum $!JSON(jfm_test).HttpHeaders : Returned incorrect value: $!null
   }
   $(%echo,2) $!JSON(jfm_test).HttpHeaders : Passed Check
-  
-  
+
+
   ;; Check $JSON().HttpHead
   inc %testnum
   %res = $JSON(jfm_test).HttpHead
@@ -1217,8 +1233,8 @@ alias -l jfm_test {
     return %testnum $!JSON(jfm_test).HttpHead : Returned incorrect value: $!null
   }
   $(%echo,2) $!JSON(jfm_test).HttpHead : Passed Check
-  
-  
+
+
   ;; Check $JSON().HttpBody
   inc %testnum
   %res = $JSON(jfm_test).HttpBody
@@ -1230,8 +1246,8 @@ alias -l jfm_test {
     return %testnum $!JSON(jfm_test).HttpBody : Returned incorrect value: $!null
   }
   $(%echo,2) $!JSON(jfm_test).HttpBody : Passed Check
-  
-  
+
+
   ;; Check $JSON().HttpResponse
   inc %testnum
   %res = $JSON(jfm_test).HttpResponse
@@ -1243,8 +1259,8 @@ alias -l jfm_test {
     return %testnum $!JSON(jfm_test).HttpResponse : Returned incorrect value: $!null
   }
   $(%echo,2) $!JSON(jfm_test).HttpResponse : Passed Check
-  
-  
+
+
   ;; Check $JSON().HttpParse
   inc %testnum
   %res = $JSON(jfm_test).HttpParse
@@ -1256,9 +1272,9 @@ alias -l jfm_test {
     return %testnum $!JSON(jfm_test).HttpParse : Returned incorrect value: $!null
   }
   $(%echo,2) $!JSON(jfm_test).HttpParse : Passed Check
-  
+
   JSONClose jfm_test
-  
+
 }
 
 
