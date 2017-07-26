@@ -1,21 +1,55 @@
-/*jslint for:true*/
-/*globals ActiveXObject, JSONCreate*/
 (function() {
+    
+    // es5 .forEach() semi-polyfill
+    Array.prototype.forEach = function (callback) {
+        for (var i = 0; i < this.length; i += 1) {
+            callback.call(this, this[i], i);
+        }
+    };
+
+    // es6 .find() semi-polyfill
+    Array.prototype.find = function (callback) {
+        for (var i = 0; i < this.length; i += 1) {
+            if (callback.call(this, this[i])) {
+                return this[i];
+            }
+        }
+    };
+    
+    // http/web object detection
+    HTTPObject = ['MSXML2.SERVERXMLHTTP.6.0', 'MSXML2.SERVERXMLHTTP.3.0', 'MSXML2.SERVERXMLHTTP'].find(function (xhr) {
+        try {
+            return new ActiveXObject(xhr), xhr;
+        } catch (ignore) {}
+    });
 
     // returns the type of an input
-    function getType(obj) {
-        if (obj === null) return 'null';
+    function GETTYPE(obj) {
+        if (obj === null) {
+            return 'null';
+        }
         return Object.prototype.toString.call(obj).match(/^\[object ([^\]]+)\]$/)[1].toLowerCase();
     }
 
+    // Returns an array containing all of an object's own properties' key names
+    function GETKEYS(obj) {
+        var keys = [], key;
+        for (key in obj) {
+            if (HASKEY(obj, key)) {
+                keys.push(key);
+            }
+        }
+        return keys;
+    }
+
     // returns true if an input object has the specified property
-    function hasOwnProp(obj, property) {
+    function HASKEY(obj, property) {
         return Object.prototype.hasOwnProperty.call(obj, property);
     }
 
     // Checks if an instance has been parsed
     // if not, an error is thrown otherwise the instance is returned
-    function parsed(self) {
+    function PARSED(self) {
         if (self._state !== 'done' || self._error || !self._parse) {
             throw new Error('NOT_PARSED');
         }
@@ -24,7 +58,7 @@
 
     // checks if an instance has a pending http request
     // if not, an error is thrown, otherwise the instance is returned
-    function httpPending(self) {
+    function HTTPPENDING(self) {
         if (self._type !== 'http') {
             throw new Error('HTTP_NOT_INUSE');
         }
@@ -36,7 +70,7 @@
 
     // Checks if an instance http request has completed
     // if not, an error is thrown, otherwise the instance is returned
-    function httpDone(self) {
+    function HTTPDONE(self) {
         if (self._type !== 'http') {
             throw new Error('HTTP_NOT_INUSE');
         }
@@ -46,49 +80,9 @@
         return self._http;
     }
 
-    // es5 .forEach() polyfill
-    Array.prototype.forEach = function (callback) {
-        for (var i = 0; i < this.length; i += 1) {
-            callback.call(this, this[i], i);
-        }
-    };
-
-    // es6 .find() polyfill
-    Array.prototype.find = function (callback) {
-        for (var i = 0; i < this.length; i += 1) {
-            if (callback.call(this, this[i])) {
-                return this[i];
-            }
-        }
-    };
-
-    // es5 .keys() polyfill
-    Object.keys = function (obj) {
-        var keys = [], key;
-        for (key in obj) {
-            if (hasOwnProp(obj, key)) {
-                keys.push(key);
-            }
-        }
-        return keys;
-    };
-
-    // es5 JSON.parse polyfill
-    (JSON = {}).parse = function(i) {
-        try {
-            i = String(i).replace(/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g, function(c) {
-                return '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4);
-            });
-            if (/^[\],:{}\s]*$/.test(i.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-                return eval('(' + i + ')');
-            }
-        } catch (e) {}
-        throw new Error("INVALID_JSON");
-    };
-
-    // es5 JSON.stringify polyfill
-    JSON.stringify = function (value) {
-        var type = getType(value),
+    // es5 JSON.stringify equivulant
+    function STRINGIFY(value) {
+        var type = GETTYPE(value),
             output = '[';
         if (value === undefined || type === 'function') {
             return;
@@ -109,7 +103,7 @@
         }
         if (type === 'array') {
             value.forEach(function (item, index) {
-                item = JSON.stringify(item);
+                item = STRINGIFY(item);
                 if (item) {
                     output += (index ? ',' : '') + item;
                 }
@@ -117,23 +111,17 @@
             return output + ']';
         }
         output = [];
-        Object.keys(value).forEach(function (key) {
-            var res = JSON.stringify(value[key]);
+        GETKEYS(value).forEach(function (key) {
+            var res = STRINGIFY(value[key]);
             if (res) {
-                output.push(JSON.stringify(key) + ':' + res);
+                output.push(STRINGIFY(key) + ':' + res);
             }
         });
         return '{' + output.join(',') + '}';
-    };
+    }
 
-    HTTPObject = ['MSXML2.SERVERXMLHTTP.6.0', 'MSXML2.SERVERXMLHTTP.3.0', 'MSXML2.SERVERXMLHTTP'].find(function (xhr) {
-        try {
-            var test = new ActiveXObject(xhr);
-            return xhr;
-        } catch (ignore) {}
-    });
-
-    function JSONWrapper(parent, json) {
+    // JSON instance constructor
+    function JSONInstance(parent, json) {
         if (parent === undefined) {
             parent = {};
         }
@@ -156,7 +144,7 @@
         };
     }
 
-    JSONWrapper.prototype = {
+    JSONInstance.prototype = {
         state: function () {
             return this._state;
         },
@@ -178,35 +166,35 @@
         },
 
         httpSetMethod: function (method) {
-            httpPending(this).method = method;
+            HTTPPENDING(this).method = method;
         },
 
         httpSetHeader: function (header, value) {
-            httpPending(this).headers.push([header, value]);
+            HTTPPENDING(this).headers.push([header, value]);
         },
 
         httpSetData: function (data) {
-            httpPending(this).data = data;
+            HTTPPENDING(this).data = data;
         },
 
         httpStatus: function() {
-            return httpDone(this).response.status;
+            return HTTPDONE(this).response.status;
         },
 
         httpStatusText: function () {
-            return httpDone(this).response.statusText;
+            return HTTPDONE(this).response.statusText;
         },
 
         httpHeaders: function() {
-            return httpDone(this).response.getAllResponseHeaders();
+            return HTTPDONE(this).response.getAllResponseHeaders();
         },
 
         httpHeader: function (header) {
-            return httpDone(this).response.getResponseHeader(header);
+            return HTTPDONE(this).response.getResponseHeader(header);
         },
 
         httpBody: function () {
-            return httpDone(this).response.responseBody;
+            return HTTPDONE(this).response.responseBody;
         },
 
         httpHead: function () {
@@ -214,7 +202,7 @@
         },
 
         httpResponse: function () {
-            return this.httpHead() + '\r\n\r\n' + this.httpBody();
+            return this.httpHead() + '\r\n\r\n' + this._http.response.reponseText;
         },
 
         // Retrieves and parses input json
@@ -225,33 +213,35 @@
                 throw new Error('PARSE_NOT_PENDING');
             };
 
+            var setDefaults     = true,
+                setTypeHeader   = false,
+                setLengthHeader = false,
+                request,
+                json;
+
             this._state = 'done';
             try {
+
                 // if the type is an http request
                 if (this._type === 'http') {
                     try {
-                        
-                        var setDefaults     = true,
-                            setTypeHeader   = false,
-                            setLengthHeader = false,
-                            request         = new ActiveXObject(HTTPObject);
-                            
                         if (this._http.data == undefined) {
                             setDefaults      = false;
                             this._http.data  = null;
                         }
-                            
-                        
 
-                        // Create the request
-                        request.setTimeouts(30000, 60000, 60000, 60000);
+                        // Create the request, and store it witht he handler
+                        request = new ActiveXObject(HTTPObject);
+                        this._http.response = request;
+                        
+                        // initialize the request
                         request.open(this._http.method, this._http.url, false);
 
                         // Apply headers
                         this._http.headers.forEach(function (header) {
                             request.setRequestHeader(header[0], header[1]);
                             if (header[0].toLowerCase() === "content-type") {
-                                setTypeHeader = true
+                                setTypeHeader = true;
                             }
                             if (header[0].toLowerCase() === "content-length") {
                                 setLengthHeader = true;
@@ -276,9 +266,6 @@
                         // make the request
                         request.send(this._http.data);
 
-                        // store the response
-                        this._http.response = request;
-
                         // if the response isn't to be parsed, return the handle instance
                         if (this._parse === false) {
                             return this;
@@ -294,10 +281,23 @@
                     }
                 }
 
-                // parse the input json and return the handle instance
+                // Parse the input data
+                json = String(this._input).replace(/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g, function(chr) {
+                    return '\\u' + ('0000' + chr.charCodeAt(0).toString(16)).slice(-4);
+                });
+                if (!/^[\],:{}\s]*$/.test(json.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+                    throw new Error("INVALID_JSON");
+                }
+                try {
+                    json = eval('(' + json + ')');
+                } catch (e) {
+                    throw new Error("INVALID_JSON");
+                }
+
+                // Return the handle
                 this._json = {
                     path: [],
-                    value: JSON.parse(this._input)
+                    value: json
                 };
                 return this;
 
@@ -309,7 +309,7 @@
         },
 
         walk: function () {
-            var self   = parsed(this),
+            var self   = PARSED(this),
                 result = self._json.value,
                 args   = Array.prototype.slice.call(arguments),
                 fuzzy  = args.shift(),
@@ -318,25 +318,26 @@
                 member,
                 isFuzzy,
                 keys;
+
             while (args.length) {
-                type = getType(result)
+                type = GETTYPE(result);
+                member = String(args.shift());
                 if (type !== 'array' && type !== 'object') {
                     throw new Error('ILLEGAL_REFERENCE');
                 }
-                member = String(args.shift());
-                if (fuzzy && type == 'object' && /^[~=]./.test(member)) {
+                if (fuzzy && /^[~=]./.test(member)) {
                     isFuzzy = '~' === member.charAt(0);
                     member = member.replace(/^[~=]\x20?/, '');
-                    if (isFuzzy) {
-                        keys = Object.keys(result);
+                    if (type == 'object' && isFuzzy) {
+                        keys = GETKEYS(result);
                         if (/^\d+$/.test(member)) {
                             member = parseInt(member, 10);
                             if (member >= keys.length) {
                                 throw new Error('FUZZY_INDEX_NOT_FOUND');
                             }
                             member = keys[member];
-                        } else if (!hasOwnProp(result, member)) {
-                            member = member.toLowerCase()
+                        } else if (!HASKEY(result, member)) {
+                            member = member.toLowerCase();
                             member = keys.find(function (key) {
                                 return member === key.toLowerCase();
                             });
@@ -345,21 +346,21 @@
                             }
                         }
                     }
-                }       
-                if (!hasOwnProp(result, member)) {
+                }
+                if (!HASKEY(result, member)) {
                     throw new Error('REFERENCE_NOT_FOUND');
                 }
                 path.push(member);
                 result = result[member];
             }
-            return new JSONWrapper(self, {
+            return new JSONInstance(self, {
                 path: path,
                 value: result
             });
         },
 
         forEach: function () {
-            var self = parsed(this),
+            var self = PARSED(this),
                 args = Array.prototype.slice.call(arguments),
                 type = self.type(),
                 res = [],
@@ -368,28 +369,28 @@
             args.shift();
 
             function addResult(item, path) {
-                var ref = new JSONWrapper(self, {
+                var ref = new JSONInstance(self, {
                         path: path,
                         value: item
                     });
 
                 if (maxDepth !== Infinity && args.length > 1) {
-                    ref = ref.walk.apply(ref, args.slice(0))
+                    ref = ref.walk.apply(ref, args.slice(0));
                 }
                 res.push(ref);
             }
 
             function walk(item, path, depth) {
-                var type = getType(item);
+                var type = GETTYPE(item);
                 path = path.slice(0);
 
                 if (depth > maxDepth) {
                     addResult(item, path);
 
                 } else if (type === 'object') {
-                    Object.keys(item).forEach(function (key) {
+                    GETKEYS(item).forEach(function (key) {
                         var kpath = path.slice(0);
-                        kpath.push(key)
+                        kpath.push(key);
                         walk(item[key], kpath, depth + 1);
                     });
 
@@ -413,7 +414,7 @@
         },
 
         type: function () {
-            return getType(parsed(this)._json.value);
+            return GETTYPE(PARSED(this)._json.value);
         },
 
         isContainer: function () {
@@ -421,16 +422,16 @@
         },
 
         pathLength: function () {
-            return parsed(this)._json.path.length;
+            return PARSED(this)._json.path.length;
         },
 
         pathAtIndex: function (index) {
-            return parsed(this)._json.path[index];
+            return PARSED(this)._json.path[index];
         },
 
         path: function () {
             var result = '';
-            parsed(this)._json.path.forEach(function (item) {
+            PARSED(this)._json.path.forEach(function (item) {
                 result += (result ? ' ' : '') + String(item).replace(/([\\ ])/g, function (chr) {
                     return ' ' === chr ? '\s' : '\\';
                 });
@@ -439,19 +440,19 @@
         },
 
         length: function () {
-            var self = parsed(this),
+            var self = PARSED(this),
                 type = self.type();
             if (type === 'string' || type === 'array') {
                 return self._json.value.length;
             }
             if (type === 'object') {
-                return Object.keys(self._json.value).length;
+                return GETKEYS(self._json.value).length;
             }
             throw new Error('INVALID_TYPE');
         },
 
         value: function () {
-            parsed(this);
+            PARSED(this);
             if (this.type() === 'number' && /./.test(String(this._json.value))) {
                 return String(this._json.value);
             }
@@ -459,7 +460,7 @@
         },
 
         string: function () {
-            return JSON.stringify(parsed(this)._json.value);
+            return STRINGIFY(PARSED(this)._json.value);
         },
 
         debug: function () {
@@ -486,15 +487,15 @@
                     responseText: this._http.response.responseText
                 };
             }
-            return JSON.stringify(result);
+            return STRINGIFY(result);
         }
     };
 
     JSONCreate = function(type, source, parse) {
-        var self = new JSONWrapper();
+        var self = new JSONInstance();
         self._state = 'init';
         self._type = (type || 'text').toLowerCase();
-        self._parse = parse === false ? false : true
+        self._parse = parse === false ? false : true;
 
         if (self._type === 'http') {
             if (!HTTPObject) {

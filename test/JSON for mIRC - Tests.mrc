@@ -1,593 +1,1318 @@
 ;; /JSONTest
 alias JSONTest {
-  var %x = 1, %fail
-  JSONShutDown
-  JSONDebug on
+  _cleanup
+  tokenize 32 $jfm_test($1)
+  if ($0) {
+    echo 04 -sgei6 [# $+ $base($1,10,10,2) $+ ] $2-
+  }
+  else {
+    echo 12 -sgei6 All tests passed
+  }
+  _cleanup
+}
+
+
+alias -l jfm_test {
+  ;; variables that will be needed within testing
+  var %jsondata = {"null":null,"true":true,"false":false,"int":1,"dec":1.1,"negint":-1,"negdec":-1.1,"string":"string","array":["item0","item1","item2"],"object":{"key0":"item0","key1":"item1","key2":"item2"}}
+  var %debugdata = {"state":"done","input":"{\"null\":null,\"true\":true,\"false\":false,\"int\":1,\"dec\":1.1,\"negint\":-1,\"negdec\":-1.1,\"string\":\"string\",\"array\":[\"item0\",\"item1\",\"item2\"],\"object\":{\"key0\":\"item0\",\"key1\":\"item1\",\"key2\":\"item2\"}}","type":"text","error":false,"parse":true,"http":{"url":"","method":"GET","headers":[]},"isChild":false,"json":{"path":[],"value":{"null":null,"true":true,"false":false,"int":1,"dec":1.1,"negint":-1,"negdec":-1.1,"string":"string","array":["item0","item1","item2"],"object":{"key0":"item0","key1":"item1","key2":"item2"}}}}
+
+  ;; state variables
+  var %testnum = 0
+  var %err
+  var %res
+  var %echo = echo 03 -sgi6 $!+([#,$base(%testNum,10,10,3),])
+
+  jsonshutdown
+  jsondebug on
   window -n @SReject/JSONForMirc/Log
-  while ($isalias(jfm_test $+ %x)) {
-    tokenize 32 $jfm_test [ $+ [ %x ] ]
-    if (!$1) {
-      %fail = $true
-      echo 04 -si6 [# $+ $base(%x,10,10,2) $+ ] $2-
-      break
-    }
-    echo 03 -si6 [# $+ $base(%x,10,10,2) $+ ] $2-
-    inc %x
+
+  ;;============================;;
+  ;;                            ;;
+  ;;     $JSONVersion tests     ;;
+  ;;                            ;;
+  ;;============================;;
+
+
+
+  ;; Check $JSONVersion
+  :1
+  inc %testnum
+  %res = $JSONVersion
+  if (!$regex(%res, /^(?:SReject\/JSONForMirc v\d{1,4}\.\d{1,4}\.\d{1,4})$/)) {
+    return %testnum $!JSONVersion : Returned incorrect value: %res
   }
-  JSONClose -w *
-  if (!%fail) {
-    echo 12 -s All tests passed
+  $(%echo,2) $!JSONVersion : Passed Check
+
+
+  ;; Check $JSONVersion(short)
+  :2
+  inc %testnum
+  %res = $JSONVersion(short)
+  if (!$regex(%res, /^(?:\d{1,4}\.\d{1,4}\.\d{1,4})$/)) {
+    return %testnum $!JSONVersion(short) : Returned incorrect value: %res
   }
-}
-alias -l jfm_test1 {
+  $(%echo,2) $!JSONVersion(short) : Passed Check
+
+
+  ;;=========================;;
+  ;;                         ;;
+  ;;     /JSONOPEN tests     ;;
+  ;;                         ;;
+  ;;=========================;;
+
+  ;; Tests to make sure "/JSONOpen" raises "PARAMETER_MISSING" error
+  :3
+  inc %testnum
   JSONOpen
-  if ($JSONError !== PARAMETER_MISSING) return $false /JSONOpen
-  return $true /JSONOpen
-}
-alias -l jfm_test2 {
-  JSONOpen -q jfm_test2 "a"
-  if (SWITCH_INVALID:* !iswm $JSONError) return $false /JSONOpen -q jfm_test2 "a"
-  return $true /JSONOpen -q jfm_test2 "a"
-}
-alias -l jfm_test3 {
-  JSONOpen -bf jfm_test3 "a"
-  if (SWITCH_CONFLICT:* !iswm $JSONError) return $false /JSONOpen -bf jfm_test3 "a"
-  return $true /JSONOpen -bf jfm_test3 "a"
-}
-alias -l jfm_test4 {
-  JSONOpen -bu jfm_test4 "a"
-  if (SWITCH_CONFLICT:* !iswm $JSONError) return $false /JSONOpen -bu jfm_test4 "a"
-  return $true /JSONOpen -bu jfm_test4 "a"
-}
-alias -l jfm_test5 {
-  JSONOpen -bU jfm_test5 "a"
-  if (SWITCH_CONFLICT:* !iswm $JSONError) return $false /JSONOpen -bU jfm_test5 "a"
-  return $true /JSONOpen -bU jfm_test5 "a"
-}
-alias -l jfm_test6 {
-  JSONOpen -fu jfm_test6 "a"
-  if (SWITCH_CONFLICT:* !iswm $JSONError) return $false /JSONOpen -fu jfm_test6 "a"
-  return $true /JSONOpen -fu jfm_test6 "a"
-}
-alias -l jfm_test7 {
-  JSONOpen -fU jfm_test7 "a"
-  if (SWITCH_CONFLICT:* !iswm $JSONError) return $false /JSONOpen -fU jfm_test7 "a"
-  return $true /JSONOpen -fU jfm_test7 "a"
-}
-alias -l jfm_test8 {
-  JSONOpen -uU jfm_test8 "a"
-  if (SWITCH_CONFLICT:* !iswm $JSONError) return $false /JSONOpen -uU jfm_test8 "a"
-  return $true /JSONOpen -uU jfm_test8 "a"
-}
-alias -l jfm_test9 {
-  JSONOpen -w jfm_test1h "a"
-  if (SWITCH_NOT_APPLICABLE:* !iswm $JSONError) return $false /JSONOpen -w /jfm_test9 "a"
-  return $true /JSONOpen -w jfm_test9 "a"
-}
-alias -l jfm_test10 {
-  JSONOpen -b jfm_test10
-  if (PARAMETER_MISSING !== $JSONError) return $false /JSONOpen -b jfm_test10
-  return $true /JSONOpen -b jfm_test10
-}
-alias -l jfm_test11 {
-  JSONOpen -b jfm_test11 jfm_test11
-  if (PARAMETER_INVALID:NOT_BVAR !== $JSONError) return $false /JSONOpen -b jfm_test11 jfm_test11
-  return $true /JSONOpen -b jfm_test11 jfm_test11
-}
-alias -l jfm_test12 {
-  JSONOpen -b jfm_test12 &jfm_test12 b
-  if (PARAMETER_INVALID:BVAR !== $JSONError) return $false /JSONOpen -b jfm_test12 &jfm_test12 b
-  return $true /JSONOpen -b jfm_test12 &jfm_test12 b
-}
-alias -l jfm_test13 {
-  JSONOpen -b jfm_test13 &jfm_test13
-  if (PARAMETER_INVALID:BVAR_EMPTY !== $JSONError) return $false /JSONOpen -b jfm_test13 &jfm_test13
-  return $true /JSONOpen -b jfm_test13 &jfm_test13
-}
-alias -l jfm_test14 {
-  JSONOpen -f jfm_test14
-  if (PARAMETER_MISSING !== $JSONError) return $false /JSONOpen -f jfm_test14
-  return $true /JSONOpen -f jfm_test14
-}
-alias -l jfm_test15 {
-  JSONOpen -f jfm_test15 jfm_test15
-  if (PARAMETER_INVALID:FILE_DOESNOT_EXIST !== $JSONError) return $false /JSONOpen -f jfm_test15 jfm_test15
-  return $true /JSONOpen -f jfm_test15 jfm_test15
-}
-alias -l jfm_test16 {
-  JSONOpen -u jfm_test16
-  if (PARAMETER_MISSING !== $JSONError) return $false /JSONOpen -u jfm_test16
-  return $true /JSONOpen -u jfm_test16
-}
-alias -l jfm_test17 {
-  JSONOpen -u jfm_test17 jfm test17
-  if (PARAMETER_INVALID:URL_SPACES !== $JSONError) return $false /JSONOpen -u jfm_test17 jfm test17
-  return $true /JSONOpen -u jfm_test17 jfm test17
-}
-alias -l jfm_test18 {
-  JSONOpen jfm_test18 test18
-  if ($JSONError !== INVALID_JSON) return $false /JSONOpen jfm_test18 test18
-  return $true /JSONOpen jfm_test18 test18
-}
-alias -l jfm_test19 {
-  JSONOpen -d jfm_test19 null
-  if ($JSONError) return $false /JSONOpen -d jfm_test19 null
-  return $true /JSONOpen -d jfm_test19 null
-}
-alias -l jfm_test20 {
-  JSONOpen -d jfm_test20 true
-  if ($JSONError) return $false /JSONOpen -d jfm_test20 true
-  return $true /JSONOpen -d jfm_test20 true
-}
-alias -l jfm_test21 {
-  JSONOpen -d jfm_test21 false
-  if ($JSONError) return $false /JSONOpen -d jfm_test21 false
-  return $true /JSONOpen -d jfm_test21 false
-}
-alias -l jfm_test22 {
-  JSONOpen -d jfm_test22 1
-  if ($JSONError) return $false /JSONOpen -d jfm_test22 1
-  return $true /JSONOpen -d jfm_test22 1
-}
-alias -l jfm_test23 {
-  JSONOpen -d jfm_test23 1.1
-  if ($JSONError) return $false /JSONOpen -d jfm_test23 1.1
-  return $true /JSONOpen -d jfm_test23 1.1
-}
-alias -l jfm_test24 {
-  JSONOpen -d jfm_test24 -1
-  if ($JSONError) return $false /JSONOpen -d jfm_test24 -1
-  return $true /JSONOpen -d jfm_test24 -1
-}
-alias -l jfm_test25 {
-  JSONOpen -d jfm_test25 -1.1
-  if ($JSONError) return $false /JSONOpen -d jfm_test25 -1.1
-  return $true /JSONOpen -d jfm_test25 -1.1
-}
-alias -l jfm_test26 {
-  JSONOpen -d jfm_test26 ""
-  if ($JSONError) return $false /JSONOpen -d jfm_test26 ""
-  return $true /JSONOpen -d jfm_test26 ""
-}
-alias -l jfm_test27 {
-  JSONOpen -d jfm_test27 "jfm_test27"
-  if ($JSONError) return $false /JSONOpen -d jfm_test27 "jfm_test27"
-  return $true /JSONOpen -d jfm_test27 "jfm_test27"
-}
-alias -l jfm_test28 {
-  JSONOpen -d jfm_test28 []
-  if ($JSONError) return $false /JSONOpen -d jfm_test28 []
-  return $true /JSONOpen -d jfm_test28 []
-}
-alias -l jfm_test29 {
-  JSONOpen -d jfm_test29 [null, true, false, 1, 1.1, -1, -1.1, "", "jfm_test29"]
-  if ($JSONError) return $false /JSONOpen -d jfm_test29 [null, true, false, 1, 1.1, -1, -1.1, "", "jfm_test29"]
-  return $true /JSONOpen -d jfm_test29 [null, true, false, 1, 1.1, -1, -1.1, "", "jfm_test29"]
-}
-alias -l jfm_test30 {
-  JSONOpen -d jfm_test30 {}
-  if ($JSONError) return $false /JSONOpen -d jfm_test30 {}
-  return $true /JSONOpen -d jfm_test30 {}
-}
-alias -l jfm_test31 {
-  JSONOpen -d jfm_test31 {"null": null, "true": true, "false": false, "number": 1, "string": "jfm_test31"}
-  if ($JSONError) return $false /JSONOpen -d jfm_test31 {"null": null, "true": true, "false": false, "number": 1, "string": "jfm_test31"}
-  return $true /JSONOpen -d jfm_test31 {"null": null, "true": true, "false": false, "number": 1, "string": "jfm_test31"}
-}
-alias -l jfm_test32 {
-  JSONOpen -d jfm_test32 {"null": null, "true": true, "false": false, "number": 1, "string": "jfm_test32", "array":["jfm_test32"], "object":{"key": "jfm_test32"}}
-  if ($JSONError) return $false /JSONOpen -d jfm_test32 {"null": null, "true": true, "false": false, "number": 1, "string": "jfm_test32", "array":["jfm_test32"], "object":{"key": "jfm_test32"}}
-  return $true /JSONOpen -d jfm_test32 {"null": null, "true": true, "false": false, "number": 1, "string": "jfm_test32", "array":["jfm_test32"], "object":{"key": "jfm_test32"}}
-}
-alias -l jfm_test33 {
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen : Failed to report error (PARAMETER_MISSING)
+  }
+  if (PARAMETER_MISSING !== %err) {
+    return %testnum /JSONOpen : Reported incorrect error: $v1
+  }
+  $(%echo,2) /JSONOpen : Passed Check: PARAMETER_MISSING
+
+
+  ;; tests to make sure /JSONOpen raises "SWITCH_INVALID" when an unknown switch is specified
+  :4
+  inc %testnum
+  JSONOpen -q jfm_test "a"
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -q : Failed to report error (SWITCH_INVALID)
+  }
+  if (SWITCH_INVALID !iswm %err) {
+    return %testnum /JSONOpen -q : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -q : Passed Check: SWITCH_INVALID
+
+
+  ;; tests to make sure /JSONOpen raises "SWITCH_CONFLICT" when conflicting switches -bf are specified
+  :5
+  inc %testnum
+  JSONOpen -bf jfm_test "a"
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -bf : Failed to report error (SWITCH_CONFLICT)
+  }
+  if (SWITCH_CONFLICT:* !iswm %err) {
+    return %testnum /JSONOpen -bf : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -bf : Passed Check: SWITCH_CONFLICT
+
+
+  ;; tests to make sure /JSONOpen raises "SWITCH_CONFLICT" when conflicting switches -bu are specified
+  inc %testnum
+  JSONOpen -bu jfm_test "a"
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -bu : Failed to report error (SWITCH_CONFLICT)
+  }
+  if (SWITCH_CONFLICT:* !iswm %err) {
+    return %testnum /JSONOpen -bu : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -bu : Passed Check: SWITCH_CONFLICT
+
+
+  ;; tests to make sure /JSONOpen raises "SWITCH_CONFLICT" when conflicting switches -bU are specified
+  inc %testnum
+  JSONOpen -bU jfm_test "a"
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -bU : Failed to report error (SWITCH_CONFLICT)
+  }
+  if (SWITCH_CONFLICT:* !iswm %err) {
+    return %testnum /JSONOpen -bU : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -bU : Passed Check: SWITCH_CONFLICT
+
+
+  ;; tests to make sure /JSONOpen raises "SWITCH_CONFLICT" when conflicting switches -fu are specified
+  inc %testnum
+  JSONOpen -fu jfm_test "a"
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -fu : Failed to report error (SWITCH_CONFLICT)
+  }
+  if (SWITCH_CONFLICT:* !iswm %err) {
+    return %testnum /JSONOpen -fu : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -fu : Passed Check: SWITCH_CONFLICT
+
+
+  ;; tests to make sure /JSONOpen raises "SWITCH_CONFLICT" when conflicting switches -fU are specified
+  inc %testnum
+  JSONOpen -fU jfm_test "a"
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -fU : Failed to report error (SWITCH_CONFLICT)
+  }
+  if (SWITCH_CONFLICT:* !iswm %err) {
+    return %testnum /JSONOpen -fU : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -fU : Passed Check: SWITCH_CONFLICT
+
+
+  ;; tests to make sure /JSONOpen raises "SWITCH_CONFLICT" when conflicting switches -uU are specified
+  inc %testnum
+  JSONOpen -uU jfm_test "a"
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -uU : Failed to report error (SWITCH_CONFLICT)
+  }
+  if (SWITCH_CONFLICT:* !iswm %err) {
+    return %testnum /JSONOpen -uU : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -uU : Passed Check: SWITCH_CONFLICT
+
+
+  ;; test to make sure /JSONOpen raises "SWITCH_NOT_APPLICABLE" when -w is specified without -u/-U
+  inc %testnum
+  JSONOpen -w jfm_test "a"
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -uU : Failed to report error (SWITCH_NOT_APPLICABLE)
+  }
+  if (SWITCH_NOT_APPLICABLE:* !iswm %err) {
+    return %testnum /JSONOpen -uU : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -w : Passed Check: SWITCH_NOT_APPLICABLE
+
+
+  ;; test to make sure /JSONOpen raises "PARAMETER_MISSING" if -b is specified
+  inc %testnum
+  JSONOpen -b jfm_test
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -b : Failed to report error (PARAMETER_MISSING)
+  }
+  if (PARAMETER_MISSING !== %err) {
+    return %testnum /JSONOpen -b : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -b : Passed Check: PARAMETER_MISSING
+
+
+  ;; test to make sure /JSONOpen raises "PARAMETER_INVALID:NOT_BVAR" if -b is specified without a valid bvar
+  inc %testnum
+  JSONOpen -b jfm_test nope
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -b : Failed to report error (PARAMETER_INVALID:NOT_BVAR)
+  }
+  if (PARAMETER_INVALID:NOT_BVAR !== %err) {
+    return %testnum /JSONOpen -b : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -b : Passed Check: PARAMETER_INVALID:NOT_BVAR
+
+
+  ;; test to make sure /JSONOpen raises "PARAMETER_INVALID:NOT_BVAR" if -b is specified without a valid bvar
+  inc %testnum
+  JSONOpen -b jfm_test &jfm_test nope
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -b : Failed to report error (PARAMETER_INVALID:BVAR)
+  }
+  if (PARAMETER_INVALID:BVAR !== %err) {
+    return %testnum /JSONOpen -b : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -b : Passed Check: PARAMETER_INVALID:BVAR
+
+
+  ;; test to make sure /JSONOpen raises "PARAMETER_INVALID:BVAR_EMPTY" if -b is specified and the bvar is empty or doesn't exist
+  inc %testnum
+  JSONOpen -b jfm_test &jfm_test
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -b : Failed to report error (PARAMETER_INVALID:BVAR_EMPTY)
+  }
+  if (PARAMETER_INVALID:BVAR_EMPTY !== %err) {
+    return %testnum /JSONOpen -b : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -b : Passed Check: PARAMETER_INVALID:BVAR_EMPTY
+
+
+  ;; test to make sure /JSONOpen raises "PARAMETER_MISSING" if -f is specified
+  inc %testnum
+  JSONOpen -f jfm_test
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -f : Failed to report error (PARAMETER_MISSING)
+  }
+  if (PARAMETER_MISSING !== %err) {
+    return %testnum /JSONOpen -f : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -f : Passed Check: PARAMETER_MISSING
+
+
+  ;; test to make sure /JSONOpen raises "PARAMETER_INVALID:FILE_DOESNOT_EXIST" if -f is specified but the file does not exist
+  inc %testnum
+  JSONOpen -f jfm_test jfm_test
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -f : Failed to report error (PARAMETER_INVALID:FILE_DOESNOT_EXIST)
+  }
+  if (PARAMETER_INVALID:FILE_DOESNOT_EXIST !== %err) {
+    return %testnum /JSONOpen -f : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -f : Passed Check: PARAMETER_INVALID:FILE_DOESNOT_EXIST
+
+
+  ;; test to make sure /JSONOpen raises "PARAMETER_MISSING" if -u is specified but no url parameter is specified
+  inc %testnum
+  JSONOpen -u jfm_test
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -u : Failed to report error (PARAMETER_MISSING)
+  }
+  if (PARAMETER_MISSING !== %err) {
+    return %testnum /JSONOpen -u : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -u : Passed Check: PARAMETER_MISSING
+
+
+  ;; test to make sure /JSONOpen raises "PARAMETER_INVALID:URL_SPACES" if -u is specified but the url parameter contains spaces
+  inc %testnum
+  JSONOpen -u jfm_test jfm test
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -u : Failed to report error (PARAMETER_INVALID:URL_SPACES)
+  }
+  if (PARAMETER_INVALID:URL_SPACES !== %err) {
+    return %testnum /JSONOpen -u : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -u : Passed Check: PARAMETER_INVALID:URL_SPACES
+
+
+  ;; test to make sure /JSONOpen raises "PARAMETER_MISSING" if -u is specified but no url parameter is specified
+  inc %testnum
+  JSONOpen -U jfm_test
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -U : Failed to report error (PARAMETER_MISSING)
+  }
+  if (PARAMETER_MISSING !== %err) {
+    return %testnum /JSONOpen -U : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -U : Passed Check: PARAMETER_MISSING
+
+
+  ;; test to make sure /JSONOpen raises "PARAMETER_INVALID:URL_SPACES" if -U is specified but the url parameter contains spaces
+  inc %testnum
+  JSONOpen -U jfm_test jfm test
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -U : Failed to report error (PARAMETER_INVALID:URL_SPACES)
+  }
+  if (PARAMETER_INVALID:URL_SPACES !== %err) {
+    return %testnum /JSONOpen -U : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -U : Passed Check: PARAMETER_INVALID:URL_SPACES
+
+
+  ;; test to make sure /JSONOpen raises "INVALID_JSON" when applicable
+  inc %testnum
+  JSONOpen jfm_test jfm_test
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen : Failed to report error (INVALID_JSON)
+  }
+  if (INVALID_JSON !== %err) {
+    return %testnum /JSONOpen : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen : Passed Check: INVALID_JSON
+
+
+  ;; test to make sure /JSONClose closes the json handle
+  inc %testnum
+  JSONClose jfm_test
+  if ($com(JSON:jfm_test)) {
+    return %testnum /JSONClose : Failed to close handle
+  }
+  $(%echo,2) /JSONClose : Passed Check: Close
+
+
+  ;;=======================;;
+  ;;                       ;;
+  ;;     Parsing tests     ;;
+  ;;                       ;;
+  ;;=======================;;
+
+  ;; test to make sure null is properly parsed
+  inc %testnum
+  JSONOpen jfm_test null
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum /JSONOpen : failed to parse null : $v2
+  }
+  $(%echo,2) /JSONOpen : Passed Parse: null
+  JSONClose jfm_test
+
+
+  ;; test to make sure true is properly parsed
+  inc %testnum
+  JSONOpen jfm_test true
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum /JSONOpen : failed to parse true : $v2
+  }
+  $(%echo,2) /JSONOpen : Passed Parse: true
+  JSONClose jfm_test
+
+
+  ;; test to make sure false is properly parsed
+  inc %testnum
+  JSONOpen jfm_test false
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum /JSONOpen : failed to parse false : $v2
+  }
+  $(%echo,2) /JSONOpen : Passed Parse: false
+  JSONClose jfm_test
+
+
+  ;; test to make sure 1 is properly parsed
+  inc %testnum
+  JSONOpen jfm_test 1
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum /JSONOpen : failed to parse 1 : $v2
+  }
+  $(%echo,2) /JSONOpen : Passed Parse: 1
+  JSONClose jfm_test
+
+
+  ;; test to make sure 1.1 is properly parsed
+  inc %testnum
+  JSONOpen jfm_test 1.1
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum /JSONOpen : failed to parse 1.1 : $v2
+  }
+  $(%echo,2) /JSONOpen : Passed Parse: 1.1
+  JSONClose jfm_test
+
+
+  ;; test to make sure -1 is properly parsed
+  inc %testnum
+  JSONOpen jfm_test -1
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum /JSONOpen : failed to parse -1 : $v2
+  }
+  $(%echo,2) /JSONOpen : Passed Parse: -1
+  JSONClose jfm_test
+
+
+  ;; test to make sure -1.1 is properly parsed
+  inc %testnum
+  JSONOpen jfm_test -1.1
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum /JSONOpen : failed to parse -1.1 : $v2
+  }
+  $(%echo,2) /JSONOpen : Passed Parse: -1.1
+  JSONClose jfm_test
+
+
+  ;; test to make sure "" is properly parsed
+  inc %testnum
+  JSONOpen jfm_test ""
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum /JSONOpen : failed to parse "" : $v2
+  }
+  $(%echo,2) /JSONOpen : Passed Parse: ""
+  JSONClose jfm_test
+
+
+  ;; test to make sure strings is properly parsed
+  inc %testnum
+  JSONOpen jfm_test "jfm_test"
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum /JSONOpen : failed to parse "jfm_test" : $v2
+  }
+  $(%echo,2) /JSONOpen : Passed Parse: "jfm_test"
+  JSONClose jfm_test
+
+
+  ;; test to make sure empty arrays is properly parsed
+  inc %testnum
+  JSONOpen jfm_test []
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum /JSONOpen : failed to parse [] : $v2
+  }
+  $(%echo,2) /JSONOpen : Passed Parse: []
+  JSONClose jfm_test
+
+
+  ;; test to make sure primitive-filled arrays are properly parsed
+  inc %testnum
+  JSONOpen jfm_test [null, true, false, 1, 1.1, -1, -1.1, "", "jfm_test"]
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum /JSONOpen : failed to parse [null, true, false, 1, 1.1, -1, -1.1, "", "jfm_test29"] : $v2
+  }
+  $(%echo,2) /JSONOpen : Passed Parse: [null, true, false, 1, 1.1, -1, -1.1, "", "jfm_test29"]
+  JSONClose jfm_test
+
+
+  ;; test to make sure empty objects are properly parsed
+  inc %testnum
+  JSONOpen jfm_test {}
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum /JSONOpen : failed to parse {} : $v2
+  }
+  $(%echo,2) /JSONOpen : Passed Parse: {}
+  JSONClose jfm_test
+
+
+  ;; test to make sure primitive-filled objects are properly parsed
+  inc %testnum
+  JSONOpen jfm_test {"null": null, "true": true, "false": false, "number": 1, "string": "jfm_test31"}
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum /JSONOpen : failed to parse {"null": null, "true": true, "false": false, "number": 1, "string": "jfm_test31"} : $v2
+  }
+  $(%echo,2) /JSONOpen : Passed Parse: {"null": null, "true": true, "false": false, "number": 1, "string": "jfm_test31"}
+  JSONClose jfm_test
+
+
+  ;; test to make sure complex arrays are properly parsed
+  inc %testnum
+  JSONOpen jfm_test [{"key":"value"}]
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum /JSONOpen : failed to parse [{"key":"value"}] : $v2
+  }
+  $(%echo,2) /JSONOpen : Passed Parse: [{"key":"value"}]
+  JSONClose jfm_test
+
+
+  ;; test to make sure complex objects are properly parsed
+  inc %testnum
+  JSONOpen jfm_test {"key":["value"]}
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum /JSONOpen : failed to parse {"key":["value"]} : $v2
+  }
+  $(%echo,2) /JSONOpen : Passed Parse: {"key":["value"]}
+  JSONClose jfm_test
+
+
+  ;; test to make sure data from bvars is properly parsed
+  inc %testnum
   bunset &jfm_test
-  bset -t &jfm_test 1 "jfm_test"
-  JSONOpen -bd jfm_test74 &jfm_test
-  if ($JSONError) return $false /JSONOpen -bd jfm_test74 &jfm_test
-  return $true /JSONOpen -bd jfm_test74 &jfm_test
-}
-alias -l jfm_test34 {
-  var %file = $scriptdirjfm_test75.json
-  write $qt(%file) "jfm_test"
-  JSONOpen -fd jfm_test75 %file
+  bset -t &jfm_test 1 {"key":["value"]}
+  JSONOpen -b jfm_test &jfm_test
+  bunset &jfm_test
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum /JSONOpen : failed to parse input from bvar : $v2
+  }
+  $(%echo,2) /JSONOpen : Passed Parse: input from bvar
+  JSONClose jfm_test
+
+
+  ;; test to make sure data from files is properly parsed
+  inc %testnum
+  var %file = $scriptdirjfm_test.json
+  write $qt(%file) {"key":["value"]}
+  JSONOpen -f jfm_test %file
   .remove $qt(%file)
-  if ($JSONError) return $false /JSONOpen -fd jfm_test75 %file -> $v1
-  return $true /JSONOpen -fd jfm_test75 %file
-}
-alias -l jfm_test35 {
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum /JSONOpen : failed to parse input from file : $v2
+  }
+  $(%echo,2) /JSONOpen : Passed Parse: input from file
+  JSONClose jfm_test
+
+
+  ;;=====================;;
+  ;;                     ;;
+  ;;     $JSON tests     ;;
+  ;;                     ;;
+  ;;=====================;;
+
+  ;; Check to make sure $JSON reports PARAMETER_MISSING
+  inc %testnum
   noop $JSON
-  if (MISSING_PARAMETERS !== $JSONError) return $false $!JSON
-  return $true $!JSON
-}
-alias -l jfm_test36 {
+  %err = $JSONError
+  if ($null == %err) {
+    return %testnum $!JSON : Failed to report error (PARAMETER_MISSING)
+  }
+  if (PARAMETER_MISSING !== %err) {
+    return %testnum $!JSON : Reported incorrect error: $v2
+  }
+  $(%echo,2) $!JSON : Passed Check: PARAMETER_MISSING
+
+
+  ;; Check to make sure $JSON() reports PARAMETER_MISSING
+  inc %testnum
   noop $JSON()
-  if (MISSING_PARAMETERS !== $JSONError) return $false $!JSON()
-  return $true $!JSON()
+  %err = $JSONError
+  if ($null == %err) {
+    return %testnum $!JSON() : Failed to report error (PARAMETER_MISSING)
+  }
+  if (PARAMETER_MISSING !== %err) {
+    return %testnum $!JSON() : Reported incorrect error: $v2
+  }
+  $(%echo,2) $!JSON() : Passed Check: PARAMETER_MISSING
+
+
+  ;; Check to make sure $JSON(0, ...) reports INVALID_NAME
+  inc %testnum
+  noop $JSON(0, jfm_test)
+  %err = $JSONError
+  if ($null == %err) {
+    return %testnum $!JSON(0, jfm_test) : Failed to report error (INVALID_NAME)
+  }
+  if (INVALID_NAME !== %err) {
+    return %testnum $!JSON(0, jfm_test) : Reported incorrect error: $v2
+  }
+  $(%echo,2) $!JSON(0, jfm_test) : Passed Check: INVALID_NAME
+
+
+  ;; Check to make sure $JSON(0).prop reports PROP_NOT_APPLICABLE
+  inc %testnum
+  noop $JSON(0).jfm_test
+  %err = $JSONError
+  if ($null == %err) {
+    return %testnum $!JSON(0).jfm_test : Failed to report error (PROP_NOT_APPLICABLE)
+  }
+  if (PROP_NOT_APPLICABLE !== %err) {
+    return %testnum $!JSON(0).jfm_test : Reported incorrect error: $v2
+  }
+  $(%echo,2) $!JSON(0).jfm_test : Passed Check: PROP_NOT_APPLICABLE
+
+
+  ;; Check to make sure $JSON(0) returns a numerical value
+  inc %testnum
+  %res = $JSON(0)
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(0) : Report error: $v2
+  }
+  if (%res !isnum) {
+    return %testnum $!JSON(0) : Returned non-numerical value: %res
+  }
+  if (0 !== %res) {
+    return %testnum $!JSON(0) : Returned a value other than 0: $v2
+  }
+  $(%echo,2) $!JSON(0) : Passed Check
+
+
+  ;; Check to make sure $JSON(_nonhandler_) reports the correct error
+  inc %testnum
+  %res = $JSON(jfm_test)
+  %err = $JSONError
+  if ($null == %err) {
+    return %testnum $!JSON(jfm_test) : Failed to report error (HANDLER_NOT_FOUND)
+  }
+  if (HANDLER_NOT_FOUND !== %err) {
+    return %testnum $!JSON(jfm_test) : Reported incorrect error: $v2
+  }
+  if ($null !== %res) {
+    return %testnum $!JSON(jfm_test) : Returned a value after an error occured: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test) : Passed Check: HANDLER_NOT_FOUND
+
+
+  ;; Open a valid json handler for the following tests
+  JSONOpen jfm_test %jsondata
+  if ($JSONError) {
+    return --- Failed to open json handle for valid json data, tests cannot continue: $v1
+  }
+
+
+  ;; Test to make sure $JSON(name) returns correct name
+  inc %testnum
+  %res = $JSON(jfm_test)
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test) : Reported invalid error: $v2
+  }
+  if (JSON:jfm_test !== %res) {
+    return %testnum $!JSON(jfm_test) : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test) : Passed Check
+
+
+  ;; Test $JSON().State
+  inc %testnum
+  %res = $JSON(jfm_test).State
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test).State : Reported invalid error: $v2
+  }
+  if (done !== %res) {
+    return %testnum $!JSON(jfm_test).State : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test).State : Passed Check
+
+
+  ;; Test $JSON().InputType
+  inc %testnum
+  %res = $JSON(jfm_test).InputType
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test).InputType : Reported invalid error: $v2
+  }
+  if (text !== %res) {
+    return %testnum $!JSON(jfm_test).InputType : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test).InputType : Passed Check
+
+
+  ;; Test $JSON().Input
+  inc %testnum
+  %res = $JSON(jfm_test).Input
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test).Input : Reported invalid error: $v2
+  }
+  if (%jsondata !== %res) {
+    return %testnum $!JSON(jfm_test).Input : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test).Input : Passed Check
+
+
+  ;; Test $JSON().IsChild
+  inc %testnum
+  %res = $JSON(jfm_test).IsChild
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test).IsChild : Reported invalid error: $v2
+  }
+  if ($false !== %res) {
+    return %testnum $!JSON(jfm_test).IsChild : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test).IsChild : Passed Check
+
+
+  ;; Test $JSON().Error
+  inc %testnum
+  %res = $JSON(jfm_test).Error
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test).Error : Reported invalid error: $v2
+  }
+  if ($null !== %res) {
+    return %testnum $!JSON(jfm_test).Error : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test).Error : Passed Check
+
+
+  ;; Test $JSON().Path
+  inc %testnum
+  %res = $JSON(jfm_test).Path
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test).Path : Reported invalid error: $v2
+  }
+  if ($null !== %res) {
+    return %testnum $!JSON(jfm_test).Path : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test).Path : Passed Check
+
+
+  ;; Test $JSON().Type
+  inc %testnum
+  %res = $JSON(jfm_test).Type
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test).Type : Reported invalid error: $v2
+  }
+  if (object !== %res) {
+    return %testnum $!JSON(jfm_test).Type : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test).Type : Passed Check
+
+
+  ;; Test $JSON().IsContainer
+  inc %testnum
+  %res = $JSON(jfm_test).IsContainer
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test).IsContainer : Reported invalid error: $v2
+  }
+  if ($true !== %res) {
+    return %testnum $!JSON(jfm_test).IsContainer : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test).IsContainer : Passed Check
+
+
+  ;; Test $JSON().Length
+  inc %testnum
+  %res = $JSON(jfm_test).Length
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test).Length : Reported invalid error: $v2
+  }
+  if (10 !== %res) {
+    return %testnum $!JSON(jfm_test).Length : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test).length : Passed Check
+
+  ;; Test $JSON().String
+  inc %testnum
+  %res = $JSON(jfm_test).String
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test).String : Reported invalid error: $v2
+  }
+  if (%jsondata !== %res) {
+    return %testnum $!JSON(jfm_test).String : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test).String : Passed Check
+
+
+  ;; Test $JSON().Debug
+  inc %testnum
+  %res = $JSON(jfm_test).Debug
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test).Debug : Reported invalid error: $v2
+  }
+  if (%debugdata !== %res) {
+    return %testnum $!JSON(jfm_test).Debug : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test).Debug : Passed Check
+
+
+  ;; Check to make sure $JSON(name, members..) returns a reference
+  inc %testnum
+  %res = $JSON(jfm_test, true)
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, true) : Reported invalid error: $v2
+  }
+  if (JSON:jfm_test:?* !iswm %res) {
+    return %testnum $!JSON(jfm_test, true) : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, true) : Passed Check
+
+
+  ;; Check to make sure $JSON(name, <points to undefined>) reports error
+  inc %testnum
+  %res = $JSON(jfm_test, undefined)
+  %err = $JSONError
+  if (REFERENCE_NOT_FOUND !== %err) {
+    return %testnum $!JSON(jfm_test, undefined) : reported invalid error: $v2
+  }
+  if ($null !== %res) {
+    return %testnum $!JSON(jfm_test, undefined) : Returned value with error: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, undefined) : Passed Check
+
+
+  ;; Check to make sure $JSON(name, <points to null>).value returns correct value
+  inc %testnum
+  %res = $JSON(jfm_test, null).value
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, null).Value : Reported invalid error: $v2
+  }
+  if ($null !== %res) {
+    return %testnum $!JSON(jfm_test, null).Value : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, null).Value : Passed Check
+
+
+  ;; Check to make sure $JSON(name, <points to true>).value returns correct value
+  inc %testnum
+  %res = $JSON(jfm_test, true).Value
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, true).Value : Reported invalid error: $v2
+  }
+  if ($true !== %res) {
+    return %testnum $!JSON(jfm_test, true).Value : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, true).Value : Passed Check
+
+
+  ;; Check to make sure $JSON(name, <points to false>).value returns correct value
+  inc %testnum
+  %res = $JSON(jfm_test, false).Value
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, false).Value : Reported invalid error: $v2
+  }
+  if ($false !== %res) {
+    return %testnum $!JSON(jfm_test, false).Value : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, false).Value : Passed Check
+
+
+  ;; Check to make sure $JSON(name, <points to uint>).value returns correct value
+  inc %testnum
+  %res = $JSON(jfm_test, int).Value
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, int).Value : Reported invalid error: $v2
+  }
+  if (1 !== %res) {
+    return %testnum $!JSON(jfm_test, int).Value : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, int).Value : Passed Check
+
+
+  ;; Check to make sure $JSON(name, <points to signed int>).value returns correct value
+  inc %testnum
+  %res = $JSON(jfm_test, negint).Value
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, negint).Value : Reported invalid error: $v2
+  }
+  if (-1 !== %res) {
+    return %testnum $!JSON(jfm_test, negint).Value : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, negint).Value : Passed Check
+
+
+  ;; Check to make sure $JSON(name, <points to decimal>).value returns correct value
+  inc %testnum
+  %res = $JSON(jfm_test, dec).Value
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, dec).Value : Reported invalid error: $v2
+  }
+  if (1.1 !== %res) {
+    return %testnum $!JSON(jfm_test, dec).Value : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, dec).Value : Passed Check
+
+
+  ;; Check to make sure $JSON(name, <points to signed decimal>).value returns correct value
+  inc %testnum
+  %res = $JSON(jfm_test, negdec).Value
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, negdec).Value : Reported invalid error: $v2
+  }
+  if (-1.1 !== %res) {
+    return %testnum $!JSON(jfm_test, negdec).Value : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, negdec).Value : Passed Check
+
+
+  ;; Check to make sure $JSON(name, <points to string>).value returns correct value
+  inc %testnum
+  %res = $JSON(jfm_test, string).Value
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, string).Value : Reported invalid error: $v2
+  }
+  if (string !== %res) {
+    return %testnum $!JSON(jfm_test, string).Value : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, string).Value : Passed Check
+
+
+  ;; Check to make sure $JSON(name, <path to string>).length returns correct value
+  inc %testnum
+  %res = $JSON(jfm_test, string).Length
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, string).Length : Reported invalid error: $v2
+  }
+  if (6 !== %res) {
+    return %testnum $!JSON(jfm_test, string).Length : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, string).Length : Passed Check
+
+
+  ;; Check to make sure $JSON(name, <points to array>).value returns correct error
+  inc %testnum
+  %res = $JSON(jfm_test, array).Value
+  %err = $JSONError
+  if ($null == %err) {
+    return %testnum $!JSON(jfm_test, array).Value : Failed to report error (INVALID_TYPE)
+  }
+  if (INVALID_TYPE !== %err) {
+    return %testnum $!JSON(jfm_test, array).Value : Reported invalid error: $v2
+  }
+  if (%res) {
+    return %testnum $!JSON(jfm_test, array).Value : Returned value in error state: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, array).Value : Passed Check
+
+
+  ;; Check to make sure $JSON(name, <path to array>).length returns correct value
+  inc %testnum
+  %res = $JSON(jfm_test, array).Length
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, array).Length : Reported invalid error: $v2
+  }
+  if (3 !== %res) {
+    return %testnum $!JSON(jfm_test, array).Length : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, array).Length : Passed Check
+
+
+  ;; Check to make sure $JSON(name, <points to array>, 0).value returns correct value
+  inc %testnum
+  %res = $JSON(jfm_test, array, 0).Value
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, array, 0).Value : Reported invalid error: $v2
+  }
+  if (item0 !== %res) {
+    return %testnum $!JSON(jfm_test, array, 0).Value : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, array, 0).Value : Passed Check
+
+
+  ;; Check to make sure $JSON(name, <points to array>, 0).value returns correct value
+  inc %testnum
+  %res = $JSON(jfm_test, array, 2).Value
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, array, 2).Value : Reported invalid error: $v2
+  }
+  if (item2 !== %res) {
+    return %testnum $!JSON(jfm_test, array, 2).Value : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, array, 2).Value : Passed Check
+
+
+  ;; Check to make sure $JSON(name, <points to object>).value returns correct error
+  inc %testnum
+  %res = $JSON(jfm_test, object).Value
+  %err = $JSONError
+  if ($null == %err) {
+    return %testnum $!JSON(jfm_test, object).Value : Failed to report error (INVALID_TYPE)
+  }
+  if (INVALID_TYPE !== %err) {
+    return %testnum $!JSON(jfm_test, object).Value : Reported invalid error: $v2
+  }
+  if (%res) {
+    return %testnum $!JSON(jfm_test, object).Value : Returned value in error state: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, object).Value : Passed Check
+
+
+  ;; Check to make sure $JSON(name, <path to object>).length returns correct value
+  inc %testnum
+  %res = $JSON(jfm_test, object).Length
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, object).Length : Reported invalid error: $v2
+  }
+  if (3 !== %res) {
+    return %testnum $!JSON(jfm_test, object).Length : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, object).Length : Passed Check
+
+
+  ;; Check to make sure $JSON(name, <points to object>, 0).value returns correct value
+  inc %testnum
+  %res = $JSON(jfm_test, object, key0).Value
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, object, key0).Value : Reported invalid error: $v2
+  }
+  if (item0 !== %res) {
+    return %testnum $!JSON(jfm_test, object, key0).Value : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, object, key0).Value : Passed Check
+
+
+  ;; Check to make sure $JSON(name, <points to object>, 0).value returns correct value
+  inc %testnum
+  %res = $JSON(jfm_test, object, key2).Value
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, object, key2).Value : Reported invalid error: $v2
+  }
+  if (item2 !== %res) {
+    return %testnum $!JSON(jfm_test, object, key2).Value : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, object, key2).Value : Passed Check
+
+
+  ;; Check to make sure $JSON(name, fuzzy member).value returns correct value as case-insensitive
+  inc %testnum
+  %res = $JSON(jfm_test, ~ TRUE).FuzzyValue
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, ~ TRUE).FuzzyValue : Reported invalid error: $v2
+  }
+  if ($true !== %res) {
+    return %testnum $!JSON(jfm_test, ~ TRUE).FuzzyValue : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, ~ TRUE).FuzzyValue : Passed Check
+
+
+  ;; Check to make sure $JSON(name, fuzzy member).value returns correct value as index
+  inc %testnum
+  %res = $JSON(jfm_test, ~ 1).FuzzyValue
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, ~ 1).FuzzyValue : Reported invalid error: $v2
+  }
+  if ($true !== %res) {
+    return %testnum $!JSON(jfm_test, ~ 1).FuzzyValue : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, ~ 1).FuzzyValue : Passed Check
+
+
+  ;;=========================;;
+  ;;                         ;;
+  ;;     $JSONPath tests     ;;
+  ;;                         ;;
+  ;;=========================;;
+
+  ;; Check to make sure $JSONPath(..., 0) returns correct amount of items in path variable
+  inc %testnum
+  %res = $JSONPath($JSON(jfm_test, array), 0)
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSONPath(..., 0) : Reported invalid error: $v2
+  }
+  if (1 !== %res) {
+    return %testnum $!JSONPath(..., 0) : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSONPath(..., 0) : Passed Check
+
+
+  ;; Check to make sure $JSONPath(..., 0) returns correct key name
+  inc %testnum
+  %res = $JSONPath($JSON(jfm_test, array), 1)
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSONPath(..., 1) : Reported invalid error: $v2
+  }
+  if (array !== %res) {
+    return %testnum $!JSONPath(..., 1) : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSONPath(..., 1) : Passed Check
+
+
+  ;;============================;;
+  ;;                            ;;
+  ;;     $JSONForEach Tests     ;;
+  ;;                            ;;
+  ;;============================;;
+
+  ;; Test $JSONForEach() on arrays
+  inc %testnum
+  unset %_jfm_foreach
+  %res = $JSONForEach($JSON(jfm_test, array), _jfm_ForEach)
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSONForEach(<array>, ...) : Reported invalid error: $v2
+  }
+  if (%_jfm_foreach) {
+    return %testnum $!JSONForEach(<array>, ...) /_jfm_ForEach : $v1
+  }
+  if (3 !== %res) {
+    return %testnum $!JSONForEach(<array>, ...) : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSONForEach(<array>, ...) : Passed Check
+
+
+  ;; Test $JSONForEach() on objects
+  inc %testnum
+  unset %_jfm_foreach
+  %res = $JSONForEach($JSON(jfm_test, object), _jfm_ForEach)
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSONForEach(<object>, ...) : Reported invalid error: $v2
+  }
+  if (%_jfm_foreach) {
+    return %testnum $!JSONForEach(<object>, ...) /_jfm_ForEach : $v1
+  }
+  if (3 !== %res) {
+    return %testnum $!JSONForEach(<object>, ...) : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSONForEach(<object>, ...) : Passed Check
+
+
+  ;; Close the JSON handle
+  JSONClose jfm_test
+
+
+  ;;==============================;;
+  ;;                              ;;
+  ;;     /JSONOpen HTTP tests     ;;
+  ;;                              ;;
+  ;;==============================;;
+
+  ;; Attempt to retrieve data from a remote source
+  inc %testnum
+  JSONOpen -u jfm_test http://echo.jsontest.com/key/value
+  if ($null !== $JSONError) {
+    return %testnum /JSONOpen -u : Request reported error: $v2
+  }
+  $(%echo,2) /JSONOpen -u : Request succeeded
+
+
+  ;; Check to make sure the parsed json can be accessed
+  inc %testnum
+  %res = $JSON(jfm_test, key).value
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, key).value after request reported invalid error: $v2
+  }
+  if (value !== %res) {
+    return %testnum $!JSON(jfm_test, key).value after request returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSON(jfm_test, key).value after request: Passed Check
+
+
+  ;; Check $JSON().HttpStatus
+  inc %testnum
+  %res = $JSON(jfm_test).HttpStatus  
+  %Err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test).HttpStatus : Reported invalid error: $v2
+  }
+  if ($null == %res) {
+    return %testnum $!JSON(jfm_test).HttpStatus : Returned incorrect value: $!null
+  }
+  if (%res !isnum) {
+    return %testnum $!JSON(jfm_test).HttpStatus : Returned incorrect value: %res
+  }
+  $(%echo,2) $!JSON(jfm_test).HttpStatus : Passed Check
+
+
+  ;; Check $JSON().HttpStatusText
+  inc %testnum
+  %res = $JSON(jfm_test).HttpStatusText 
+  %Err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test).HttpStatusText : Reported invalid error: $v2
+  }
+  if ($null == %res) {
+    return %testnum $!JSON(jfm_test).HttpStatusText : Returned incorrect value: $!null
+  }
+  $(%echo,2) $!JSON(jfm_test).HttpStatusText : Passed Check
+
+
+  ;; Check $JSON().HttpHeader
+  inc %testnum
+  %res = $JSON(jfm_test, Content-Length).HttpHeader
+  %Err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test, Content-Length).HttpHeader : Reported invalid error: $v2
+  }
+  if ($null == %res) {
+    return %testnum $!JSON(jfm_test, Content-Length).HttpHeader : Returned incorrect value: $!null
+  }
+  $(%echo,2) $!JSON(jfm_test, Content-Length).HttpHeader : Passed Check
+
+
+  ;; Check $JSON().HttpHeaders
+  inc %testnum
+  %res = $JSON(jfm_test).HttpHeaders
+  %Err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test).HttpHeaders : Reported invalid error: $v2
+  }
+  if ($null == %res) {
+    return %testnum $!JSON(jfm_test).HttpHeaders : Returned incorrect value: $!null
+  }
+  $(%echo,2) $!JSON(jfm_test).HttpHeaders : Passed Check
+
+
+  ;; Check $JSON().HttpHead
+  inc %testnum
+  %res = $JSON(jfm_test).HttpHead
+  %Err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test).HttpHead : Reported invalid error: $v2
+  }
+  if ($null == %res) {
+    return %testnum $!JSON(jfm_test).HttpHead : Returned incorrect value: $!null
+  }
+  $(%echo,2) $!JSON(jfm_test).HttpHead : Passed Check
+
+
+  ;; Check $JSON().HttpBody
+  inc %testnum
+  %res = $JSON(jfm_test).HttpBody
+  %Err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test).HttpBody : Reported invalid error: $v2
+  }
+  if ($null == %res) {
+    return %testnum $!JSON(jfm_test).HttpBody : Returned incorrect value: $!null
+  }
+  $(%echo,2) $!JSON(jfm_test).HttpBody : Passed Check
+
+
+  ;; Check $JSON().HttpResponse
+  inc %testnum
+  %res = $JSON(jfm_test).HttpResponse
+  %Err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test).HttpResponse : Reported invalid error: $v2
+  }
+  if ($null == %res) {
+    return %testnum $!JSON(jfm_test).HttpResponse : Returned incorrect value: $!null
+  }
+  $(%echo,2) $!JSON(jfm_test).HttpResponse : Passed Check
+
+
+  ;; Check $JSON().HttpParse
+  inc %testnum
+  %res = $JSON(jfm_test).HttpParse
+  %Err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSON(jfm_test).HttpParse : Reported invalid error: $v2
+  }
+  if ($null == %res) {
+    return %testnum $!JSON(jfm_test).HttpParse : Returned incorrect value: $!null
+  }
+  $(%echo,2) $!JSON(jfm_test).HttpParse : Passed Check
+
+  JSONClose jfm_test
+
 }
-alias -l jfm_test37 {
-  noop $JSON(0, jfm_test35)
-  if (INVALID_NAME !== $JSONError) return $false $!JSON(0, jfm_test35)
-  return $true $!JSON(0, jfm_test35)
+
+
+;; Frees all json-related resources:
+;;   Closes all json related coms
+;;   frees the json hashtable
+;;   turns off al related timers
+alias -l _cleanup {
+  unset %_jfm_ForEach
+  var %x = $com(0)
+  while (%x) {
+    if (JSON:* iswm $com(%x)) .comclose $v2
+    dec %x
+  }
+  if ($hget(SReject/JSONForMirc)) {
+    hfree $v1
+  }
+  .timerJSON:* off
 }
-alias -l jfm_test38 {
-  noop $JSON(0).jfm_test36
-  if (PROP_NOT_APPLICABLE !== $JSONError) return $false $!JSON(0).jfm_test36
-  return $true $!JSON(0).jfm_test36
-}
-alias -l jfm_test39 {
-  var %jfm_test37 = $JSON(0)
-  if ($JSONError) return $false $!JSON(0) $+([,$v1,])
-  if (%jfm_test37 !isnum) return $false $!JSON(0) $+([,no-numerical,])
-  return $true $!JSON(0)
-}
-alias -l jfm_test40 {
-  noop $JSON(jfm_test38)
-  if (HANDLER_NOT_FOUND !== $JSONError) return $false $!JSON(jfm_test38)
-  return $true $!JSON(jfm_test38)
-}
-alias -l jfm_test41 {
-  JSONOpen -d jfm_testprops {"key":"value"}
-  if ($JSONError) return $false /JSONOpen -d jfm_testprops {"key":"value"}
-  return $true /JSONOpen -d jfm_testprops {"key":"value"}
-}
-alias -l jfm_test42 {
-  if (done !== $JSON(jfm_testprops).State) return $false $!JSON(jfm_testprops).State == $v2
-  return $true $!JSON(jfm_testprops).State
-}
-alias -l jfm_test43 {
-  if (text !== $JSON(jfm_testprops).InputType) return $false $!JSON(jfm_testprops).InputType == $v2
-  return $true $!JSON(jfm_testprops).InputType
-}
-alias -l jfm_test44 {
-  if ({"key":"value"} !== $JSON(jfm_testprops).Input) return $false $!JSON(jfm_testprops).Input == $v2
-  return $true $!JSON(jfm_testprops).Input
-}
-alias -l jfm_test45 {
-  if ($false !== $JSON(jfm_testprops).IsChild) return $false $!JSON(jfm_testprops).IsChild == $v2
-  return $true $!JSON(jfm_testprops).IsChild
-}
-alias -l jfm_test46 {
-  if ($null !== $JSON(jfm_testprops).Error) return $false $!JSON(jfm_testprops).Error == $v2
-  return $true $!JSON(jfm_testprops).Error
-}
-alias -l jfm_test47 {
-  if ($null !== $JSON(jfm_testprops).Path) return $false $!JSON(jfm_testprops).Path == $v2
-  return $true $!JSON(jfm_testprops).Path
-}
-alias -l jfm_test48 {
-  if (object !== $JSON(jfm_testprops).Type) return $false $!JSON(jfm_testprops).Type == $v2
-  return $true $!JSON(jfm_testprops).Type
-}
-alias -l jfm_test49 {
-  if ($true !== $JSON(jfm_testprops).IsContainer) return $false $!JSON(jfm_testprops).IsContainer == $v2
-  return $true $!JSON(jfm_testprops).IsContainer
-}
-alias -l jfm_test50 {
-  if (1 !== $JSON(jfm_testprops).Length) return $false $!JSON(jfm_testprops).Length == $v2
-  return $true $!JSON(jfm_testprops).Length
-}
-alias -l jfm_test51 {
-  if ({"key":"value"} !== $JSON(jfm_testprops).String) return $false $!JSON(jfm_testprops).String == $v2
-  return $true $!JSON(jfm_testprops).String
-}
-alias -l jfm_test52 {
-  var %debug = {"state":"done","input":"{\"key\":\"value\"}","type":"text","error":false,"parse":true,"http":{"url":"","method":"GET","headers":[]},"isChild":false,"json":{"path":[],"value":{"key":"value"}}}
-  if (%debug !== $JSON(jfm_testprops).Debug) return $false $!JSON(jfm_testprops).Debug == $v2
-  return $true $!JSON(jfm_testprops).Debug
-}
-alias -l jfm_test53 {
-  var %input = {"null":null,"true":true,"false":false,"int":1,"dec":1.1,"negint":-1,"negdec":-1.1,"string":"jfm_testvalues","array":["item0","item1","item2"],"object":{"key0":"item0","key1":"item1","key2":"item2"}}
-  JSONOpen -d jfm_testvalues %input
-  if ($JSONError) return $false /JSONOpen -d jfm_testvalues %input
-  return $true /JSONOpen -d jfm_testvalues %input
-}
-alias -l jfm_test54 {
-  var %res = $JSON(jfm_testvalues, true)
-  if ($JSONError) return $false $!JSON(jfm_testvalues, true) $+([,$v1,])
-  if (JSON:jfm_testvalues:?* !iswm %res) return $false $!JSON(jfm_testvalues, true) == $v2
-  return $true $!JSON(jfm_testvalues, true)
-}
-alias -l jfm_test55 {
-  var %res = $JSON(jfm_testvalues, null).value
-  if ($JSONError) return $false $!JSON(jfm_testvalues, null).value $+([,$v1,])
-  if ($null !== %res) return $false $!JSON(jfm_testvalues, null).value == $v2
-  return $true $!JSON(jfm_testvalues, null).value
-}
-alias -l jfm_test56 {
-  var %res = $JSON(jfm_testvalues, true).value
-  if ($JSONError) return $false $!JSON(jfm_testvalues, true).value $+([,$v1,])
-  if ($true !== %res) return $false $!JSON(jfm_testvalues, true).value == $v2
-  return $true $!JSON(jfm_testvalues, true).value
-}
-alias -l jfm_test57 {
-  var %res = $JSON(jfm_testvalues, false).value
-  if ($JSONError) return $false $!JSON(jfm_testvalues, false).value $+([,$v1,])
-  if ($false !== %res) return $false $!JSON(jfm_testvalues, false).value == $v2
-  return $true $!JSON(jfm_testvalues, false).value
-}
-alias -l jfm_test58 {
-  var %res = $JSON(jfm_testvalues, int).value
-  if ($JSONError) return $false $!JSON(jfm_testvalues, int).value $+([,$v1,])
-  if (1 !== %res) return $false $!JSON(jfm_testvalues, int).value == $v2
-  return $true $!JSON(jfm_testvalues, int).value
-}
-alias -l jfm_test59 {
-  var %res = $JSON(jfm_testvalues, dec).value
-  if ($JSONError) return $false $!JSON(jfm_testvalues, dec).value $+([,$v1,])
-  if (1.1 !== %res) return $false $!JSON(jfm_testvalues, dec).value == $v2
-  return $true $!JSON(jfm_testvalues, dec).value
-}
-alias -l jfm_test60 {
-  var %res = $JSON(jfm_testvalues, negint).value
-  if ($JSONError) return $false $!JSON(jfm_testvalues, negint).value $+([,$v1,])
-  if (-1 !== %res) return $false $!JSON(jfm_testvalues, negint).value == $v2
-  return $true $!JSON(jfm_testvalues, negint).value
-}
-alias -l jfm_test61 {
-  var %res = $JSON(jfm_testvalues, negdec).value
-  if ($JSONError) return $false $!JSON(jfm_testvalues, negdec).value $+([,$v1,])
-  if (-1.1 !== %res) return $false $!JSON(jfm_testvalues, negdec).value == $v2
-  return $true $!JSON(jfm_testvalues, negdec).value
-}
-alias -l jfm_test62 {
-  var %res = $JSON(jfm_testvalues, string).value
-  if ($JSONError) return $false $!JSON(jfm_testvalues, string).value $+([,$v1,])
-  if (jfm_testvalues !== %res) return $false $!JSON(jfm_testvalues, string).value == $v2
-  return $true $!JSON(jfm_testvalues, string).value
-}
-alias -l jfm_test63 {
-  var %res = $JSON(jfm_testvalues, string).length
-  if ($JSONError) return $false $!JSON(jfm_testvalues, string).length $+([,$v1,])
-  if (14 !== %res) return $false $!JSON(jfm_testvalues, string).length == $v2
-  return $true $!JSON(jfm_testvalues, string).length
-}
-alias -l jfm_test64 {
-  var %res = $JSON(jfm_testvalues, array).value
-  if ($null !== %res) return $false $!JSON(jfm_testvalues, array).value == $v1
-  if (INVALID_TYPE !== $JSONError) return $false $!JSON(jfm_testvalues, array).value $+([,$v2,])
-  return $true $!JSON(jfm_testvalues, array).value
-}
-alias -l jfm_test65 {
-  var %res = $JSON(jfm_testvalues, array).length
-  if ($JSONError) return $false $!JSON(jfm_testvalues, array).length $+([,$v1,])
-  if (3 !== %res) return $false $!JSON(jfm_testvalues, array).length == $v2
-  return $true $!JSON(jfm_testvalues, array).length
-}
-alias -l jfm_test66 {
-  var %res = $JSON(jfm_testvalues, array, 0).value
-  if ($JSONError) return $false $!JSON(jfm_testvalues, array, 0).value $+([,$v1,])
-  if (item0 !== %res) return $false $!JSON(jfm_testvalues, array, 0).value == $v2
-  return $true $!JSON(jfm_testvalues, array, 0).value
-}
-alias -l jfm_test67 {
-  var %res = $JSON(jfm_testvalues, array, 1).value
-  if ($JSONError) return $false $!JSON(jfm_testvalues, array, 1).value $+([,$v1,])
-  if (item1 !== %res) return $false $!JSON(jfm_testvalues, array, 1).value == $v2
-  return $true $!JSON(jfm_testvalues, array, 1).value
-}
-alias -l jfm_test68 {
-  var %res = $JSON(jfm_testvalues, array, 2).value
-  if ($JSONError) return $false $!JSON(jfm_testvalues, array, 2).value $+([,$v1,])
-  if (item2 !== %res) return $false $!JSON(jfm_testvalues, array, 2).value == $v2
-  return $true $!JSON(jfm_testvalues, array, 2).value
-}
-alias -l jfm_test69 {
-  var %res = $JSON(jfm_testvalues, object).value
-  if ($null !== %res) return $false $!JSON(jfm_testvalues, object).value == $v1
-  if (INVALID_TYPE !== $JSONError) return $false $!JSON(jfm_testvalues, object).value $+([,$v2,])
-  return $true $!JSON(jfm_testvalues, object).value
-}
-alias -l jfm_test70 {
-  var %res = $JSON(jfm_testvalues, object).length
-  if ($JSONError) return $false $!JSON(jfm_testvalues, object).length $+([,$v1,])
-  if (3 !== %res) return $false $!JSON(jfm_testvalues, object).length == $v2
-  return $true $!JSON(jfm_testvalues, object).length
-}
-alias -l jfm_test71 {
-  var %res = $JSON(jfm_testvalues, object, key0).value
-  if ($JSONError) return $false $!JSON(jfm_testvalues, object, key0).value $+([,$v1,])
-  if (item0 !== %res) return $false $!JSON(jfm_testvalues, object, key0).value == $v2
-  return $true $!JSON(jfm_testvalues, object, key0).value
-}
-alias -l jfm_test72 {
-  var %res = $JSON(jfm_testvalues, object, key1).value
-  if ($JSONError) return $false $!JSON(jfm_testvalues, object, key1).value $+([,$v1,])
-  if (item1 !== %res) return $false $!JSON(jfm_testvalues, object, key1).value == $v2
-  return $true $!JSON(jfm_testvalues, object, key1).value
-}
-alias -l jfm_test73 {
-  var %res = $JSON(jfm_testvalues, object, key2).value
-  if ($JSONError) return $false $!JSON(jfm_testvalues, object, key2).value $+([,$v1,])
-  if (item2 !== %res) return $false $!JSON(jfm_testvalues, object, key2).value == $v2
-  return $true $!JSON(jfm_testvalues, object, key2).value
-}
-alias -l jfm_test74 {
-  var %res = $JSON(jfm_testvalues, ~ TRUE).fuzzyValue
-  if ($JSONError) return $false $!JSON(jfm_testvalues, ~ TRUE).fuzzyValue $+([,$v1,])
-  if ($true !== %res) return $false $!JSON(jfm_testvalues, ~ TRUE).fuzzyValue == $v2
-  return $true $!JSON(jfm_testvalues, ~ TRUE).fuzzyValue
-}
-alias -l jfm_test75 {
-  var %res = $JSON(jfm_testvalues, ~ 1).fuzzyValue
-  if ($JSONError) return $false $!JSON(jfm_testvalues, ~ 1).fuzzyValue $+([,$v1,])
-  if ($true !== %res) return $false $!JSON(jfm_testvalues, ~ 1).fuzzyValue == $v2
-  return $true $!JSON(jfm_testvalues, ~ 1).fuzzyValue
-}
-alias -l jfm_test76 {
-  var %JSON = $json(jfm_testvalues, array), %res
-  if ($JSONError) return $false $!JSON(jfm_testvalues, array) $+([,$v1,])
-  %res = $JSONPath(%JSON,0)
-  if ($JSONError) return $false $!JSONPath( $+ %JSON $+ ,0) $+([,$v1,])
-  if (1 !== %res) return $false $!JSONPath( $+ %JSON $+ ,0) ==  $v2
-  return $true $!JSONPath( $+ %JSON $+ ,0)
-}
-alias -l jfm_test77 {
-  var %JSON = $json(jfm_testvalues, array, 0), %res = $JSONPath(%JSON,1)
-  if ($JSONError) return $false $!JSONPath( $+ %JSON $+ ,1) $+([,$v1,])
-  if (array !== %res) return $false $!JSONPath( $+ %JSON $+ ,1) ==  $v2
-  return $true $!JSONPath( $+ %JSON $+ ,1)
-}
-alias -l jfm_test78 {
-  set -u0 %_jfm_test78_forEachTest $false
-  var %res = $JSONForEach($JSON(jfm_testvalues, array), _jfm_test78_forEachTest)
-  if ($JSONError) return $false $!JSONForEach($JSON(jfm_testvalues, array), _jfm_test78_forEachTest) $+([,$v1,])
-  if (%_jfm_test78_forEachTest) return $false $v1
-  if (3 !== %res) return $false $!JSONForEach($JSON(jfm_testvalues, array), _jfm_test78_forEachTest) == $v2
-  unset %_jfm_test78_forEachTest
-  return $true $!JSONForEach($JSON(jfm_testvalues, array), _jfm_test78_forEachTest)
-}
-alias _jfm_test78_forEachTest {
-  if (!%_jfm_test78_forEachTest) {
+
+
+;; Verifies passed inputs from $JSONForEach()
+alias _jfm_ForEach {
+  if (!%_jfm_ForEach) {
     if ($0 !== 1) {
-      set -u0 %_jfm_test78_forEachTest INVALID_PARAMETERS
+      set -u1 %_jfm_ForEach Too many parameters passed to alias
     }
-    elseif (!$com($1)) {
-      set -u0 %_jfm_test78_forEachTest COM_DOESNOT_EXIST
+    elseif ($null == $com($1)) {
+      set -u1 %_jfm_ForEach Passed reference does not exist: $v2
     }
     else {
-      var %res = $JSON($1).value
-      if ($jsonerror) {
-        set -u0 %_jfm_test78_forEachTest $v1
+      var %res = $JSON($1).Value
+      if ($null !== $JSONError) {
+        set -u1 %_jfm_ForEach Attempting to retrieve item value reported invalid error: $v2
       }
-      elseif (item* !iswm %Res) {
-        set -u0 %_jfm_test78_forEachTest $!JSON( $+ $1 $+ ).value == %Res
-      }
-    }
-  }
-}
-alias -l jfm_test79 {
-  var %res = $JSONVersion, %match = /^SReject\/JSONForMirc v\d{1,4}\.\d{1,4}\.\d{1,4}$/
-  if (!$regex(%res, %match)) {
-    return $false $!JSONVersion == %res
-  }
-  return $true $!JSONVersion
-}
-alias -l jfm_test80 {
-  var %res = $JSONVersion(short), %match = /^\d{1,4}\.\d{1,4}\.\d{1,4}$/
-  if (!$regex(%res, %match)) {
-    return $false $!JSONVersion(short) == %res
-  }
-  return $true $!JSONVersion(short)
-}
-alias -l jfm_test81 {
-  set -u0 %_jfm_test81_forEachTest $false
-  var %res = $JSONForEach($JSON(jfm_testvalues, object), _jfm_test81_forEachTest)
-  if ($JSONError) return $false $!JSONForEach($JSON(jfm_testvalues, object), _jfm_test81_forEachTest) $+([,$v1,])
-  if (%_jfm_test81_forEachTest) return $false $v1
-  if (3 !== %res) return $false $!JSONForEach($JSON(jfm_testvalues, object), _jfm_test81_forEachTest) == $v2
-  unset %_jfm_test81_forEachTest
-  return $true $!JSONForEach($JSON(jfm_testvalues, object), _jfm_test81_forEachTest)
-}
-alias _jfm_test81_forEachTest {
-  if (!%_jfm_test81_forEachTest) {
-    if ($0 !== 1) {
-      set -u0 %_jfm_test81_forEachTest INVALID_PARAMETERS
-    }
-    elseif (!$com($1)) {
-      set -u0 %_jfm_test81_forEachTest COM_DOESNOT_EXIST
-    }
-    else {
-      var %res = $JSON($1).value
-      if ($jsonerror) {
-        set -u0 %_jfm_test81_forEachTest $v1
-      }
-      elseif (item* !iswm %Res) {
-        set -u0 %_jfm_test81_forEachTest $!JSON( $+ $1 $+ ).value == %Res
+      elseif (item? !iswm %res) {
+        set -u1 %_jfm_ForEach Retrieved item value invalid: $v2
       }
     }
   }
-}
-alias -l jfm_test82 {
-  JSONOpen -ud jfm_test82 http://echo.jsontest.com/key/jfm_test82
-  if ($JSONError) {
-    return $false /JSONOpen -u jfm_test82 http://echo.jsontest.com/key/jfm_test82
-  }
-  var %res = $JSON(jfm_test82, key).value
-  if ($JSONError) {
-    return $false $v1
-  }
-  if (%res !== jfm_test82) {
-    return $false $!JSON(jfm_test82, key).value == %res
-  }
-  return $true /JSONOpen -u jfm_test82 http://echo.jsontest.com/key/jfm_test82
-}
-alias -l jfm_test83 {
-  var %res = $JSON(jfm_test82).HttpStatus
-  if ($JSONError) {
-    return $false $!JSON(jfm_test82).HttpStatus $v1
-  }
-  if (%res == $null) {
-    return $false $!JSON(jfm_test82).HttpStatus == $!null
-  }
-  return $true $!JSON(jfm_test82).HttpStatus
-}
-alias -l jfm_test84 {
-  var %res = $JSON(jfm_test82).HttpStatusText
-  if ($JSONError) {
-    return $false $!JSON(jfm_test82).HttpStatusText $v1
-  }
-  if (%res == $null) {
-    return $false $!JSON(jfm_test82).HttpStatusText == $!null
-  }
-  return $true $!JSON(jfm_test82).HttpStatusText
-}
-alias -l jfm_test85 {
-  var %res = $JSON(jfm_test82, Content-Length).HttpHeader
-  if ($JSONError) {
-    return $false $!JSON(jfm_test82, Content-Length).HttpHeader : $v1
-  }
-  if (%res == $null) {
-    return $false $!JSON(jfm_test82, Content-Length).HttpHeader == $!null
-  }
-  return $true $!JSON(jfm_test82, Content-Length).HttpHeader
-}
-alias -l jfm_test86 {
-  var %res = $JSON(jfm_test82).HttpHeaders
-  if ($JSONError) {
-    return $false $!JSON(jfm_test82).HttpHeaders : $v1
-  }
-  if (%res == $null) {
-    return $false $!JSON(jfm_test82).HttpHeaders == $!null
-  }
-  return $true $!JSON(jfm_test82).HttpHeaders
-}
-alias -l jfm_test87 {
-  var %res = $JSON(jfm_test82).HttpHead
-  if ($JSONError) {
-    return $false $!JSON(jfm_test82).HttpHead : $v1
-  }
-  if (%res == $null) {
-    return $false $!JSON(jfm_test82).HttpHead == $!null
-  }
-  return $true $!JSON(jfm_test82).HttpHead
-}
-alias -l jfm_test88 {
-  var %res = $JSON(jfm_test82).HttpBody
-  if ($JSONError) {
-    return $false $!JSON(jfm_test82).HttpBody : $v1
-  }
-  if (%res == $null) {
-    return $false $!JSON(jfm_test82).HttpBody == $!null
-  }
-  return $true $!JSON(jfm_test82).HttpBody
-}
-alias -l jfm_test89 {
-  var %res = $JSON(jfm_test82).HttpResponse
-  if ($JSONError) {
-    return $false $!JSON(jfm_test82).HttpResponse : $v1
-  }
-  if (%res == $null) {
-    return $false $!JSON(jfm_test82).HttpResponse == $!null
-  }
-  return $true $!JSON(jfm_test82).HttpResponse
-}
-alias -l jfm_test90 {
-  var %res = $JSON(jfm_test82).HttpParse
-  if ($JSONError) {
-    return $false $!JSON(jfm_test82).HttpParse : $v1
-  }
-  if (%res != $true) {
-    return $false $!JSON(jfm_test82).HttpParse == $v1
-  }
-  return $true $!JSON(jfm_test82).HttpParse
 }
