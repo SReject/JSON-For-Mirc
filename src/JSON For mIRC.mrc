@@ -18,9 +18,12 @@ alias JSONUrlGet {
 ;; Check to make sure mIRC/AdiIRC is of an applicable version
 on *:LOAD:{
 
+  ;; call jsonshutdown so the JS engine from a previously loaded version gets shutdown
+  JSONShutdown
+
   ;; Adiirc check
   if ($~adiircexe) {
-    if ($version < 2.7) {
+    if ($version < 2.8) {
       echo -ag [JSON For mIRC] AdiIRC v2.7 beta 01/28/2016 or later is required
       .unload -rs $qt($script)
     }
@@ -29,13 +32,14 @@ on *:LOAD:{
   ;; mIRC check
   elseif ($version < 7.48) {
     echo -ag [JSON For mIRC] mIRC v7.48 or later is required
+    .disable #SReject/JSONForMirc/CompatMode
     .unload -rs $qt($script)
   }
+}
 
-  ;; If passed, call jsonshutdown so the JS engine from a previously loaded version gets shutdown
-  else {
-    JSONShutdown
-  }
+;; clean up incase mirc/adiirc closed due to a crash
+on *:START:{
+  JSONShutDown
 }
 
 
@@ -104,7 +108,9 @@ menu @SReject/JSONForMirc/Log {
 alias JSONOpen {
 
   ;; Insure the alias was called as a command
-  if ($isid) return
+  if ($isid) {
+    return
+  }
 
   ;; Unset the global error variable incase the last call ended in error
   if ($hget(SReject/JSONForMirc, Error)) {
@@ -264,7 +270,9 @@ alias JSONOpen {
 alias JSONHttpMethod {
 
   ;; Insure the alias was called as a command
-  if ($isid) return
+  if ($isid) {
+    return
+  }
 
   ;; Unset the global error variable incase the last call ended in error
   if ($hget(SReject/JSONForMirc, Error)) {
@@ -346,7 +354,9 @@ alias JSONHttpMethod {
 alias JSONHttpHeader {
 
   ;; Insure the alias was called as a command
-  if ($isid) return
+  if ($isid) {
+    return
+  }
 
   ;; Unset the global error variable incase the last call ended in error
   if ($hget(SReject/JSONForMirc, Error)) {
@@ -428,7 +438,9 @@ alias JSONHttpHeader {
 alias JSONHttpFetch {
 
   ;; Insure the alias is called as a command
-  if ($isid) return
+  if ($isid) {
+    return
+  }
 
   ;; Unset the global error variable incase the last call ended in error
   if ($hget(SReject/JSONForMirc, Error)) {
@@ -657,7 +669,9 @@ alias JSONClose {
 alias JSONList {
 
   ;; Insure the alias was called as a command
-  if ($isid) return
+  if ($isid) {
+    return
+  }
 
   ;; Local variable declarations
   var %X = 1, %I = 0
@@ -688,7 +702,9 @@ alias JSONList {
 alias JSONShutDown {
 
   ;; Insure the alias was called as a command
-  if ($isid) return
+  if ($isid) {
+    return
+  }
 
   ;; Close all json instances
   JSONClose -w *
@@ -1105,7 +1121,9 @@ alias JSON {
 alias JSONForEach {
 
   ;; Insure the alias was called as an identifier
-  if (!$isid) return
+  if (!$isid) {
+    return
+  }
 
   ;; Unset the global error variable incase the last call ended in error
   if ($hget(SReject/JSONForMirc,Error)) {
@@ -1894,7 +1912,9 @@ alias -l jfm_log {
   ;; If the debug window is not open, disable logging and unset the log indent variable
   if (!$window(@SReject/JSONForMirc/Log)) {
     .JSONDebug off
-    if ($hget(SReject/JSONForMirc,LogIndent)) { hdel SReject/JSONForMirc LogIndent }
+    if ($hget(SReject/JSONForMirc,LogIndent)) {
+      hdel SReject/JSONForMirc LogIndent
+    }
   }
   else {
 
@@ -1925,7 +1945,6 @@ alias -l jfm_log {
       elseif (l isincs %Switches) {
         %Color = 13
       }
-
 
       ;; Compile the prefix
       %Prefix = $chr(3) $+ %Color $+ %Prefix
