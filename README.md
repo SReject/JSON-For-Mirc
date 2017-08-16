@@ -1,6 +1,7 @@
 [![Donate](https://img.shields.io/badge/Link-Donate-blue.svg)](https://streamjar.tv/tip/SReject) 
 [![IRC](https://img.shields.io/badge/IRC-SwiftIRC-brightgreen.svg "Join us on IRC")](https://qwebirc.swiftirc.net/?channels=%23jsonformirc) 
-[![Twitch Chat](https://img.shields.io/badge/Chat-Twitch-brightgreen.svg "Join us on IRC")](https://twitch.tv/mirchelp)  
+[![Twitch Chat](https://img.shields.io/badge/Chat-Twitch-brightgreen.svg "Join us on IRC")](https://twitch.tv/mirchelp) 
+[![Discord Chat](https://img.shields.io/badge/Chat-Discord-brightgreen.svg "Join us on IRC")]((https://discord.gg/tqyRbab)  
 
 # [Downloads](https://github.com/SReject/JSON-For-Mirc/releases)  
 
