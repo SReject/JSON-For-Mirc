@@ -5,7 +5,7 @@
 
 # [Downloads](https://github.com/SReject/JSON-For-Mirc/releases)  
 
-# [Docs](https://sreject.github.io/JSON-For-Mirc)
+# [Docs](http://sreject.github.io/JSON-For-Mirc/reference)
 
 JSON For mIRC
 ===
