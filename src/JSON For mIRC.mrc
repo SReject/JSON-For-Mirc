@@ -28,7 +28,7 @@ on *:LOAD:{
       .unload -rs $qt($script)
     }
     if (!$file($envvar(windir) $+ \System32\tsc64.dll)) {
-      echo -ag [JSON For mIRC] tsc.dll v1.1.0.0 or later is required - Download and install it (restart the client after the installation) from: https://tablacus.github.io/scriptcontrol_en.html
+      echo -ag [JSON For mIRC] tsc64.dll v1.1.0.0 or later is required - Download and install it (restart the client after the installation) from: https://tablacus.github.io/scriptcontrol_en.html
       .unload -rs $qt($script)
     }
   }
