@@ -23,11 +23,12 @@ on *:LOAD:{
 
   ;; Adiirc check
   if ($~adiircexe) {
-    if ($version < 2.8) {
-      echo -ag [JSON For mIRC] AdiIRC v2.7 beta 01/28/2016 or later is required
+    if ($version < 3.0) {
+      echo -ag [JSON For mIRC] AdiIRC v3.0 or later is required
       .unload -rs $qt($script)
     }
-    if (!$file($envvar(windir) $+ \System32\tsc64.dll)) {
+    ;; tsc64.dll check, this extra dll is required for adiirc 64bits version to work
+    if ($bits == 64) && (!$file($envvar(windir) $+ \System32\tsc64.dll)) {
       echo -ag [JSON For mIRC] tsc64.dll v1.1.0.0 or later is required - Download and install it (restart the client after the installation) from: https://tablacus.github.io/scriptcontrol_en.html
       .unload -rs $qt($script)
     }
