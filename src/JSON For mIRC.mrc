@@ -123,7 +123,8 @@ alias JSONOpen {
   }
 
   ;; Local variable declarations
-  var %Switches, %Error, %Com = $false, %Type = text, %HttpOptions = 0, %BVar, %BUnset = $true
+  ; (slv) Added %HttpInsecure
+  var %Switches, %Error, %Com = $false, %Type = text, %HttpOptions = 0, %BVar, %BUnset = $true, %HttpInsecure = 0
 
   ;; Log the /JSONOpen command is being called
   jfm_log -I /JSONOpen $1-
@@ -140,7 +141,8 @@ alias JSONOpen {
   }
 
   ;; Basic switch validation
-  elseif (!$regex(SReject/JSONOpen/switches, %Switches, ^[dbfuUw]*$)) {
+  ; (slv) Added k Switch
+  elseif (!$regex(SReject/JSONOpen/switches, %Switches, ^[dbfuUwk]*$)) {
     %Error = SWITCH_INVALID
   }
   elseif ($regex(%Switches, ([dbfuUw]).*?\1)) {
@@ -207,6 +209,10 @@ alias JSONOpen {
       if (U isincs %Switches) {
         inc %HttpOptions 2
       }
+      ; (slv) Added k Switch
+      if (k isincs %Switches) {
+        %HttpInsecure = -1
+      }
       %Type = http
       bset -t %BVar 1 $2
     }
@@ -224,7 +230,7 @@ alias JSONOpen {
     jfm_ToggleTimers -p
 
     ;; Attempt to create the handler
-    %Error = $jfm_Create(%Com, %Type, %BVar, %HttpOptions)
+    %Error = $jfm_Create(%Com, %Type, %BVar, %HttpOptions, %HttpInsecure)
 
     jfm_ToggleTimers -r
   }
@@ -1808,13 +1814,15 @@ alias -l jfm_GetError {
 alias -l jfm_Create {
 
   ;; Local variable declaration
-  var %Wait = $iif(1 & $4, $true, $false), %Parse = $iif(2 & $4, $false, $true), %Error
+  ; (slv) Added %Insecure
+  var %Wait = $iif(1 & $4, $true, $false), %Parse = $iif(2 & $4, $false, $true), %Insecure = $iif($4 == -1 || $5 == -1, $true, $false), %Error
 
   ;; Log the alias call
   jfm_log -I $!jfm_create( $+ $1 $+ , $+ $2 $+ , $+ $3 $+ , $+ $4 $+ , $+ $5 $+ )
 
   ;; Attempt to create the json handler and if an error occurs retrieve the error, log it and return it
-  if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, $2, &bstr, $3, bool, %Parse, dispatch* $1)) || ($comerr) || (!$com($1)) {
+  ; (slv) Added %Insecure
+  if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, $2, &bstr, $3, bool, %Parse, bool, %Insecure, dispatch* $1)) || ($comerr) || (!$com($1)) {
     %Error = $jfm_GetError
   }
 
