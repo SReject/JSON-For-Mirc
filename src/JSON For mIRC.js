@@ -1,4 +1,4 @@
-(function() {
+(function(root) {
     
     // es5 .forEach() semi-polyfill
     Array.prototype.forEach = function (callback) {
@@ -491,7 +491,9 @@
         }
     };
 
-    JSONCreate = function(type, source, parse) {
+    root.JSONInstance = JSONInstance;
+
+    root.JSONCreate = function(type, source, parse) {
         var self = new JSONInstance();
         self._state = 'init';
         self._type = (type || 'text').toLowerCase();
@@ -510,4 +512,4 @@
         }
         return self;
     };
-}());
+}(this));
