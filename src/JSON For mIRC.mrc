@@ -715,6 +715,9 @@ alias JSONShutDown {
   if ($hget(SReject/JSONForMirc)) {
     hfree $v1
   }
+
+  ;; disable debug group
+  .disable #SReject/JSONForMirc/Log
 }
 
 
