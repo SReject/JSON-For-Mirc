@@ -1411,7 +1411,7 @@ alias JSONError {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %Ver = 1.0.4000
+    var %Ver = 1.0.4001
     if ($0) {
       return %Ver
     }
