@@ -1040,6 +1040,7 @@ alias JSON {
 
 ;; $JSONForValues(@Name|Ref|N, /callback[, sub-members])
 alias JSONForValues {
+
   ;; Insure the alias was called as an identifier
   if (!$isid) {
     return
@@ -1133,14 +1134,14 @@ alias JSONForValues {
 
         ;; Retrieve the result
         noop $com(%JSON, %BVar).result
-                
-        ;; Loop over each \0 delimited 'string' in the result
+
+        ;; Loop over each \1 delimited 'string' in the result
         %X = 1
-        while ($bfind(%BVar, %X, 0)) {
+        while ($bfind(%BVar, %X, 1)) {
 
           ;; Get text for the value
           %N = $v1
-          %Value = $bvar($1, %x, $calc(%N - %X - 1)).text
+          %Value = $bvar(%BVar, %X, $calc(%N - %X)).text
 
           ;; Log command call and call command
           jfm_log -I Calling: $2 %Value
@@ -1158,7 +1159,7 @@ alias JSONForValues {
         if (%X <= $bvar(%BVar, 0)) {
 
           ;; Retrieve value
-          %Value = $bvar(%BVar, %X, $calc($v2 - %X)).text
+          %Value = $bvar(%BVar, %X $+ -).text
 
           ;; Log command call and call command
           jfm_log -I Calling: $2 %Value
