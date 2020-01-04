@@ -15,27 +15,6 @@
             }
         }
     };
-
-    // gets number of bytes
-    String.prototype.byteCount = function () {
-        var len = 0;
-        for (var i = 0; i < s.length; i++) {
-          var code = this.charCodeAt(i);
-          if (code <= 0x7f) {
-            len += 1;
-          } else if (code <= 0x7ff) {
-            len += 2;
-          } else if (code >= 0xd800 && code <= 0xdfff) {
-            len += 4;
-            i++;
-          } else if (code < 0xffff) {
-            len += 3;
-          } else {
-            len += 4;
-          }
-        }
-        return len;
-    };
     
     // http/web object detection
     HTTPObject = ['MSXML2.SERVERXMLHTTP.6.0', 'MSXML2.SERVERXMLHTTP.3.0', 'MSXML2.SERVERXMLHTTP'].find(function (xhr) {
@@ -462,7 +441,7 @@
                 // numbers and strings:
                 } else if (type === 'number' || type === 'string') {
                     value = '' + value;
-                    if (value.length <= 1000 || value.byteCount() < 4001) {
+                    if (value.length <= 8100) {
                         res.push('' + value);
                     } else {
                         throw new Error('LINE_LENGTH_LIMIT');
