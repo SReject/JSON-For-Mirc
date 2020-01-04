@@ -454,9 +454,7 @@
                 });
 
             } else if (type === 'array') {
-                self._json.value.forEach(function (item) {
-                    addItem(item);
-                });
+                self._json.value.forEach(addItem);
 
             } else {
                 throw new Error('ILLEGAL_REFERENCE');
