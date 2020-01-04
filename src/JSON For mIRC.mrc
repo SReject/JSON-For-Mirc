@@ -1274,7 +1274,7 @@ alias JSONForEach {
             }
 
             ;; Log the command call, call the command, close the child com
-            jfm_log -I Calling $1 %Name
+            jfm_log -I Calling $2 %Name
             $2 %Name
             .comclose %Name
             jfm_log -D
