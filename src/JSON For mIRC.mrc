@@ -1980,7 +1980,7 @@ alias -l jfm_Exec {
 ;;
 ;;     @Message - optional
 ;;         The message to be logged
-#SReject/JSONForMirc/Log on
+#SReject/JSONForMirc/Log off
 alias -l jfm_log {
 
   ;; Local variable declartion
