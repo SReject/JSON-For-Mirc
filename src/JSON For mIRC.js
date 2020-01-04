@@ -1,5 +1,5 @@
 (function(root) {
-    
+
     // es5 .forEach() semi-polyfill
     Array.prototype.forEach = function (callback) {
         for (var i = 0; i < this.length; i += 1) {
@@ -419,11 +419,24 @@
                 args = Array.prototype.slice.call(arguments),
                 res = [],
                 type = self.type();
+                binaryStream = new ActiveXObject('ADODB.stream');
+
+            binaryStream.open();
+            binaryStream.type = 2;
+            binaryStream.charset = "iso-8859-1";
+
+            function writeItem(value) {
+                if (value !== null) {
+                    binaryStream.writeText(value);
+                }
+                binaryStream.writeText('\0');
+            }
 
             function addItem(value) {
                 args.forEach(function (key, index) {
                     value = value[key];
                     if (value === undefined) {
+                        binaryStream.close();
                         throw new Error(index + 1 === args.length ? 'REFERENCE_NOT_FOUND' : 'ILLEGAL_REFERENCE');
                     }
                 });
@@ -432,23 +445,26 @@
 
                 // null
                 if (type === 'null') {
-                    res.push('');
+                    writeItem(null);
 
                 // boolean
                 } else if (type === 'boolean') {
-                    res.push('$' + value);
+                    writeItem('$' + value);
 
                 // numbers and strings:
                 } else if (type === 'number' || type === 'string') {
                     value = '' + value;
                     if (value.length <= 8100) {
-                        res.push('' + value);
+                        writeItem(value);
+
                     } else {
+                        binaryStream.close();
                         throw new Error('LINE_LENGTH_LIMIT');
                     }
 
                 // other
                 } else {
+                    binaryStream.close();
                     throw new Error('INVALID_VALUE');
                 }
             }
@@ -462,10 +478,18 @@
                 self._json.value.forEach(addItem);
 
             } else {
+                binaryStream.close();
                 throw new Error('ILLEGAL_REFERENCE');
             }
 
-            return res.join('\x01');
+            // read stream as a VT_UI1 array the close the stream
+            binaryStream.position = 0;
+            binaryStream.type = 1;
+            res = binaryStream.read();
+            binaryStream.close();
+
+            // return VT_UI1 array
+            return res;
         },
 
         type: function () {

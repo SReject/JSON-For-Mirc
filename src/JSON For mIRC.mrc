@@ -1137,7 +1137,7 @@ alias JSONForValues {
 
         ;; Loop over each \1 delimited 'string' in the result
         %X = 1
-        while ($bfind(%BVar, %X, 1)) {
+        while ($bfind(%BVar, %X, 0)) {
 
           ;; Get text for the value
           %N = $v1
@@ -1980,7 +1980,7 @@ alias -l jfm_Exec {
 ;;
 ;;     @Message - optional
 ;;         The message to be logged
-#SReject/JSONForMirc/Log off
+#SReject/JSONForMirc/Log on
 alias -l jfm_log {
 
   ;; Local variable declartion
