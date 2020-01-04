@@ -1,20 +1,3 @@
-;; v0.2.41 compatibility mode public commands
-#SReject/JSONForMirc/CompatMode off
-alias JSONUrlMethod {
-  if ($isid) return
-  JSONHttpMethod $1-
-}
-alias JSONUrlHeader {
-  if ($isid) return
-  JSONHttpHeader $1-
-}
-alias JSONUrlGet {
-  if ($isid) return
-  JSONHttpFetch $1-
-}
-#SReject/JSONForMirc/CompatMode end
-
-
 ;; Check to make sure mIRC/AdiIRC is of an applicable version
 on *:LOAD:{
 
@@ -37,7 +20,6 @@ on *:LOAD:{
   ;; mIRC check
   elseif ($version < 7.48) {
     echo -ag [JSON For mIRC] mIRC v7.48 or later is required
-    .disable #SReject/JSONForMirc/CompatMode
     .unload -rs $qt($script)
   }
 }
@@ -64,7 +46,6 @@ on *:EXIT:{
 
 ;; Free resources when the script is unloaded
 on *:UNLOAD:{
-  .disable #SReject/JSONForMirc/CompatMode
   JSONShutDown
 }
 
@@ -737,22 +718,6 @@ alias JSONShutDown {
 }
 
 
-;; /JSONCompat
-;;     Toggles v0.2.42 compatability mode on
-;;     To disable: //disable #SReject/JSONForMirc/CompatMode
-;;
-;; $JSONCompat
-;;     Returns $true if the script is in v0.2.4x compatability mode
-alias JSONCompat {
-  if ($isid) {
-    return $iif($group(#SReject/JSONForMirc/CompatMode) == on, $true, $false)
-  }
-  .enable #SReject/JSONForMirc/CompatMode
-}
-
-
-
-
 
 ;;======================================;;
 ;;                                      ;;
@@ -895,30 +860,6 @@ alias JSON {
     ;; URL props have been depreciated, switch the prop to the HTTP equivulant
     %Prop = $regsubex(%Prop, /^url/i, http)
 
-    ;; v0.2.x compatibility mode props:
-    if ($JSONCompat) {
-
-      ;; .status has been depreciated; use .state
-      if (%Prop == status) {
-        %Prop = state
-      }
-
-      ;; .data has been depreciated; use .input
-      if (%Prop == data) {
-        %Prop = input
-      }
-
-      ;; .isRef has been depreciated; use .isChild
-      if (%Prop == isRef) {
-        %Prop = isChild
-      }
-
-      ;; .isParent is depreciated; use .isContainer
-      if (%Prop == isParent) {
-        %Prop = isContainer
-      }
-    }
-
     ;; If the suffix is 'tofile', validate the 2nd parameter
     if (%Suffix == tofile) {
       if ($0 < 2) {
@@ -1022,32 +963,8 @@ alias JSON {
       jfm_log
     }
 
-    ;; v0.2.x compatbility mode - If no prop has been specified:
-    ;;     If the referenced item is a container, return a reference to that item
-    ;;     If the reference is not a container, return the value
-    if ($JSONCompat) && ($prop == $null) {
-
-      ;; Attempt to retrieve the reference type and if its an object or an array,
-      ;; the result is a reference to that item.
-      if ($jfm_exec(%Com, type)) {
-        %Error = $v1
-      }
-      elseif ($bvar($hget(SReject/JSONForMirc, Exec), 1-).text == object) || ($v1 == array) {
-        %Result = $jfm_TmpBvar
-        bset -t %Result 1 %Com
-      }
-
-      ;; Attempt to retrieve the reference's value
-      elseif ($jfm_Exec(%Com, value)) {
-        %Error = $v1
-      }
-      else {
-        %Result = $hget(SReject/JSONForMirc, Exec)
-      }
-    }
-
     ;; No Prop? then the result is the child com's name
-    elseif (!%Prop) {
+    if (!%Prop) {
       %Result = $jfm_TmpBvar
       bset -t %Result 1 %Com
     }
@@ -1604,7 +1521,7 @@ alias JSONDebug {
     else {
       %aline mIRC v $+ $version $iif($beta, beta $v1) $bits $+ bit
     }
-    %aline $JSONVersion $iif($JSONCompat, [CompatMode], [NormalMode])
+    %aline $JSONVersion
     %aline -
   }
 
