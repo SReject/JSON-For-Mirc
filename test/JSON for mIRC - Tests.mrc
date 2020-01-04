@@ -1135,6 +1135,45 @@ alias -l jfm_test {
   $(%echo,2) $!JSONForEach(<object>, ...) : Passed Check
 
 
+  ;;==============================;;
+  ;;                              ;;
+  ;;     $JSONForValues Tests     ;;
+  ;;                              ;;
+  ;;==============================;;
+
+  ;; Test $JSONForValues() on arrays
+  inc %testnum
+  unset %_jfm_foreach
+  %res = $JSONForValues($JSON(jfm_test, array), _jfm_ForValues)
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSONForValues(<array>, ...) : Reported invalid error: $v2
+  }
+  if (%_jfm_foreach) {
+    return %testnum $!JSONForValues(<array>, ...) /_jfm_ForEach : $v1
+  }
+  if (3 !== %res) {
+    return %testnum $!JSONForValues(<array>, ...) : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSONForValues(<array>, ...) : Passed Check
+
+  ;; Test $JSONForValues() on objects
+  inc %testnum
+  unset %_jfm_foreach
+  %res = $JSONForValues($JSON(jfm_test, object), _jfm_ForValues)
+  %err = $JSONError
+  if ($null !== %err) {
+    return %testnum $!JSONForValues(<object>, ...) : Reported invalid error: $v2
+  }
+  if (%_jfm_foreach) {
+    return %testnum $!JSONForValues(<object>, ...) /_jfm_ForEach : $v1
+  }
+  if (3 !== %res) {
+    return %testnum $!JSONForValues(<object>, ...) : Returned incorrect value: $v2
+  }
+  $(%echo,2) $!JSONForValues(<object>, ...) : Passed Check
+
+
   ;; Close the JSON handle
   JSONClose jfm_test
 
@@ -1313,6 +1352,15 @@ alias _jfm_ForEach {
       elseif (item? !iswm %res) {
         set -u1 %_jfm_ForEach Retrieved item value invalid: $v2
       }
+    }
+  }
+}
+
+;; Verifies passed inputs from $JSONForValues()
+alias _jfm_ForValues {
+  if (!%_jfm_ForEach) {
+    if (item? !iswm $1) {
+      set -u1 %_jfm_ForEach Retrieved item value invalid: $v2
     }
   }
 }
