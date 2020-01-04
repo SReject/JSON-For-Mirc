@@ -1,4 +1,4 @@
-(function() {
+(function(root) {
     
     // es5 .forEach() semi-polyfill
     Array.prototype.forEach = function (callback) {
@@ -500,6 +500,8 @@
         }
     };
 
+    root.JSONInstance = JSONInstance;
+
     // (slv) Added: 'insecure' bool
     JSONCreate = function(type, source, parse, insecure) {
         var self = new JSONInstance();
@@ -521,4 +523,4 @@
         }
         return self;
     };
-}());
+}(this));
