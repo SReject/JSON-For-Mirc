@@ -18,8 +18,8 @@ on *:LOAD:{
   }
 
   ;; mIRC check
-  elseif ($version < 7.48) {
-    echo -ag [JSON For mIRC] mIRC v7.48 or later is required
+  elseif ($version < 7.53) {
+    echo -ag [JSON For mIRC] mIRC v7.53 or later is required
     .unload -rs $qt($script)
   }
 }
