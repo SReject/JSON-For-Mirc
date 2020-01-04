@@ -1,5 +1,17 @@
 (function(root) {
 
+    // use to create a binary stream
+    var binaryStream = new ActiveXObject('ADODB.Stream');
+    binaryStream.type = 2;
+    binaryStream.open();
+    binaryStream.charset = 'iso-8859-1';
+    function binaryStreamReset() {
+        binaryStream.position = 0;
+        binaryStream.setEOS();
+        binaryStream.type = 2;
+        binaryStream.charset = 'iso-8859-1';
+    }
+
     // es5 .forEach() semi-polyfill
     Array.prototype.forEach = function (callback) {
         for (var i = 0; i < this.length; i += 1) {
@@ -419,11 +431,6 @@
                 args = Array.prototype.slice.call(arguments),
                 res = [],
                 type = self.type();
-                binaryStream = new ActiveXObject('ADODB.stream');
-
-            binaryStream.open();
-            binaryStream.type = 2;
-            binaryStream.charset = "iso-8859-1";
 
             function writeItem(value) {
                 if (value !== null) {
@@ -436,7 +443,7 @@
                 args.forEach(function (key, index) {
                     value = value[key];
                     if (value === undefined) {
-                        binaryStream.close();
+                        binaryStreamReset();
                         throw new Error(index + 1 === args.length ? 'REFERENCE_NOT_FOUND' : 'ILLEGAL_REFERENCE');
                     }
                 });
@@ -458,13 +465,13 @@
                         writeItem(value);
 
                     } else {
-                        binaryStream.close();
+                        binaryStreamReset();
                         throw new Error('LINE_LENGTH_LIMIT');
                     }
 
                 // other
                 } else {
-                    binaryStream.close();
+                    binaryStreamReset();
                     throw new Error('INVALID_VALUE');
                 }
             }
@@ -478,7 +485,7 @@
                 self._json.value.forEach(addItem);
 
             } else {
-                binaryStream.close();
+                binaryStreamReset();
                 throw new Error('ILLEGAL_REFERENCE');
             }
 
@@ -486,7 +493,7 @@
             binaryStream.position = 0;
             binaryStream.type = 1;
             res = binaryStream.read();
-            binaryStream.close();
+            binaryStreamReset();
 
             // return VT_UI1 array
             return res;
