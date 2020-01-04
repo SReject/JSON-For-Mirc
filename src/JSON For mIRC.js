@@ -465,7 +465,7 @@
                 throw new Error('ILLEGAL_REFERENCE');
             }
 
-            return res.join('\x00');
+            return res.join('\x01');
         },
 
         type: function () {
