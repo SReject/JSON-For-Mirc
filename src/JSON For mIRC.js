@@ -413,6 +413,58 @@
             return res;
         },
 
+        /* forValues(submembers...) */
+        forValues: function () {
+            var self = PARSED(this),
+                args = Array.prototype.slice.call(arguments),
+                res = [],
+                type = self.type();
+
+            function addItem(value) {
+                args.forEach(function (key, index) {
+                    value = value[key];
+                    if (value === undefined) {
+                        throw new Error(index + 1 === args.length ? 'REFERENCE_NOT_FOUND' : 'ILLEGAL_REFERENCE');
+                    }
+                });
+
+                var type = GETTYPE(value);
+
+                // null
+                if (type === 'null') {
+                    res.push('');
+
+                // boolean
+                } else if (type === 'boolean') {
+                    res.push('$' + value);
+
+                // numbers and strings:
+                } else if (type === 'number' || type === 'string') {
+                    res.push('' + value);
+
+                // other
+                } else {
+                    throw new Error('INVALID_VALUE');
+                }
+            }
+
+            if (type === 'object') {
+                GETKEYS(self._json.value).forEach(function (key) {
+                    addItem(self._json.value[key]);
+                });
+
+            } else if (type === 'array') {
+                self._json.value.forEach(function (item) {
+                    addItem(item);
+                });
+
+            } else {
+                throw new Error('ILLEGAL_REFERENCE');
+            }
+
+            return res.join('\x00');
+        },
+
         type: function () {
             return GETTYPE(PARSED(this)._json.value);
         },
