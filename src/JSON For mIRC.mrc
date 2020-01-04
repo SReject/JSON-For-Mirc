@@ -96,6 +96,7 @@ menu @SReject/JSONForMirc/Log {
 ;;     -d:  Closes the handler after the script finishes
 ;;     -b:  The input is a bvar
 ;;     -f:  The input is a file
+;;     -k:  Used with -u; Ignore all certificate errors
 ;;     -u:  The input is from a url
 ;;     -U:  The input is from a url and its data should not be parsed
 ;;     -w:  Used with -u; The handle should wait for /JSONHttpGet to be called to perform the url request
@@ -153,6 +154,9 @@ alias JSONOpen {
   }
   elseif (u !isin %Switches) && (w isincs %Switches) {
     %Error = SWITCH_NOT_APPLICABLE:w
+  }
+  elseif (u !isin %Switches) && (k isincs %Switches) {
+    %Error = SWITCH_NOT_APPLICABLE:k
   }
 
   ;; Validate handler name input
