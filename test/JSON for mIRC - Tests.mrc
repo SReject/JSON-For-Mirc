@@ -21,6 +21,8 @@ alias -l jfm_test {
   var %testnum = 0
   var %err
   var %res
+  var %cert_url
+  var %cert_re
   var %echo = echo 03 -sgi6 $!+([#,$base(%testNum,10,10,3),])
 
   jsonshutdown
@@ -179,6 +181,19 @@ alias -l jfm_test {
     return %testnum /JSONOpen -uU : Reported incorrect error: $v2
   }
   $(%echo,2) /JSONOpen -w : Passed Check: SWITCH_NOT_APPLICABLE
+
+  ; (slv) Added i switch
+  ;; test to make sure /JSONOpen raises "SWITCH_NOT_APPLICABLE" when -i is specified without -u/-U
+  inc %testnum
+  JSONOpen -i jfm_test "a"
+  %err = $JSONError
+  if (%err == $null) {
+    return %testnum /JSONOpen -uU : Failed to report error (SWITCH_NOT_APPLICABLE)
+  }
+  if (SWITCH_NOT_APPLICABLE:* !iswm %err) {
+    return %testnum /JSONOpen -uU : Reported incorrect error: $v2
+  }
+  $(%echo,2) /JSONOpen -i : Passed Check: SWITCH_NOT_APPLICABLE
 
 
   ;; test to make sure /JSONOpen raises "PARAMETER_MISSING" if -b is specified
@@ -1184,14 +1199,34 @@ alias -l jfm_test {
   ;;                              ;;
   ;;==============================;;
 
+  ;; (slv) Added Test: Attempt to use invalid SSL cert with/without i switch
+  %cert_url = https://self-signed.badssl.com
+  %cert_re = /^The certificate authority is invalid or incorrect/
+  inc %testnum
+  JSONOpen -u jfm_test %cert_url
+  if (!$regex($JSONError,%cert_re)) {
+    return %testnum /JSONOpen -u %cert_url : Request reported unexpected error: $v2
+  }
+  $(%echo,2) /JSONOpen -u %cert_url : Passed Check
+  JSONClose jfm_test
+  inc %testnum
+  JSONOpen -ui jfm_test %cert_url
+  if ($regex($JSONError,%cert_re)) {
+    return %testnum /JSONOpen -ui %cert_url : Request reported error: $v2
+  }
+  $(%echo,2) /JSONOpen -ui %cert_url : Request succeeded
+  JSONClose jfm_test
+
   ;; Attempt to retrieve data from a remote source
   inc %testnum
   JSONOpen -u jfm_test http://echo.jsontest.com/key/value
   if ($null !== $JSONError) {
+    if ($JSONError == INVALID_JSON) {
+      return %testnum /JSONOpen -u : Request reported error: $v2 WARNING: possible issue with jsontest.com ('Over Quota')
+    }
     return %testnum /JSONOpen -u : Request reported error: $v2
   }
   $(%echo,2) /JSONOpen -u : Request succeeded
-
 
   ;; Check to make sure the parsed json can be accessed
   inc %testnum
@@ -1209,7 +1244,7 @@ alias -l jfm_test {
   ;; Check $JSON().HttpStatus
   inc %testnum
   %res = $JSON(jfm_test).HttpStatus  
-  %Err = $JSONError
+  %err = $JSONError
   if ($null !== %err) {
     return %testnum $!JSON(jfm_test).HttpStatus : Reported invalid error: $v2
   }

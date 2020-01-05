@@ -149,10 +149,12 @@
         this._parse = parent._parse === false ? false : true;
         this._error = parent._error || false;
         this._input = parent._input;
+        // (slv) Added 'insecure'
         this._http = parent._http || {
             method: 'GET',
             url: '',
-            headers: []
+            headers: [],
+            insecure: false
         };
     }
 
@@ -245,6 +247,13 @@
                         // Create the request, and store it witht he handler
                         request = new ActiveXObject(HTTPObject);
                         this._http.response = request;
+
+                        // (slv) Added: 'Ignore all certificate errors' option
+                        //       Info:  - https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ms763811(v=vs.85)
+                        //              - https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ms753798(v=vs.85)
+                        if (this._http.insecure === true) {
+                            request.setOption(2, 13056);
+                        }
                         
                         // initialize the request
                         request.open(this._http.method, this._http.url, false);
@@ -579,7 +588,8 @@
 
     root.JSONInstance = JSONInstance;
 
-    root.JSONCreate = function(type, source, parse) {
+    // (slv) Added: 'insecure' bool
+    root.JSONCreate = function(type, source, parse, insecure) {
         var self = new JSONInstance();
         self._state = 'init';
         self._type = (type || 'text').toLowerCase();
@@ -592,6 +602,7 @@
             }
             self._state = 'http_pending';
             self._http.url = source;
+            self._http.insecure = insecure;
         } else {
             self._state = 'parse_pending';
             self._input = source;
