@@ -589,7 +589,7 @@
     root.JSONInstance = JSONInstance;
 
     // (slv) Added: 'insecure' bool
-    JSONCreate = function(type, source, parse, insecure) {
+    root.JSONCreate = function(type, source, parse, insecure) {
         var self = new JSONInstance();
         self._state = 'init';
         self._type = (type || 'text').toLowerCase();

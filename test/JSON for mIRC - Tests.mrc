@@ -21,6 +21,8 @@ alias -l jfm_test {
   var %testnum = 0
   var %err
   var %res
+  var %cert_url
+  var %cert_re
   var %echo = echo 03 -sgi6 $!+([#,$base(%testNum,10,10,3),])
 
   jsonshutdown
@@ -180,10 +182,10 @@ alias -l jfm_test {
   }
   $(%echo,2) /JSONOpen -w : Passed Check: SWITCH_NOT_APPLICABLE
 
-  ; (slv) Added k switch
-  ;; test to make sure /JSONOpen raises "SWITCH_NOT_APPLICABLE" when -k is specified without -u/-U
+  ; (slv) Added i switch
+  ;; test to make sure /JSONOpen raises "SWITCH_NOT_APPLICABLE" when -i is specified without -u/-U
   inc %testnum
-  JSONOpen -k jfm_test "a"
+  JSONOpen -i jfm_test "a"
   %err = $JSONError
   if (%err == $null) {
     return %testnum /JSONOpen -uU : Failed to report error (SWITCH_NOT_APPLICABLE)
@@ -191,7 +193,7 @@ alias -l jfm_test {
   if (SWITCH_NOT_APPLICABLE:* !iswm %err) {
     return %testnum /JSONOpen -uU : Reported incorrect error: $v2
   }
-  $(%echo,2) /JSONOpen -k : Passed Check: SWITCH_NOT_APPLICABLE
+  $(%echo,2) /JSONOpen -i : Passed Check: SWITCH_NOT_APPLICABLE
 
 
   ;; test to make sure /JSONOpen raises "PARAMETER_MISSING" if -b is specified
@@ -1197,7 +1199,7 @@ alias -l jfm_test {
   ;;                              ;;
   ;;==============================;;
 
-  ;; (slv) Added Test: Attempt to use invalid SSL cert with/without k switch
+  ;; (slv) Added Test: Attempt to use invalid SSL cert with/without i switch
   %cert_url = https://self-signed.badssl.com
   %cert_re = /^The certificate authority is invalid or incorrect/
   inc %testnum
@@ -1208,11 +1210,11 @@ alias -l jfm_test {
   $(%echo,2) /JSONOpen -u %cert_url : Passed Check
   JSONClose jfm_test
   inc %testnum
-  JSONOpen -uk jfm_test %cert_url
+  JSONOpen -ui jfm_test %cert_url
   if ($regex($JSONError,%cert_re)) {
-    return %testnum /JSONOpen -uk %cert_url : Request reported error: $v2
+    return %testnum /JSONOpen -ui %cert_url : Request reported error: $v2
   }
-  $(%echo,2) /JSONOpen -uk %cert_url : Request succeeded
+  $(%echo,2) /JSONOpen -ui %cert_url : Request succeeded
   JSONClose jfm_test
 
   ;; Attempt to retrieve data from a remote source
@@ -1220,9 +1222,7 @@ alias -l jfm_test {
   JSONOpen -u jfm_test http://echo.jsontest.com/key/value
   if ($null !== $JSONError) {
     if ($JSONError == INVALID_JSON) {
-      echo -ast There might be an issue with jsontest.com : $v2
-      echo -ast Possible reason could be 'Over Quota', halting further tests...
-      halt
+      return %testnum /JSONOpen -u : Request reported error: $v2 WARNING: possible issue with jsontest.com ('Over Quota')
     }
     return %testnum /JSONOpen -u : Request reported error: $v2
   }

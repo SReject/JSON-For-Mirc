@@ -77,7 +77,7 @@ menu @SReject/JSONForMirc/Log {
 ;;     -d:  Closes the handler after the script finishes
 ;;     -b:  The input is a bvar
 ;;     -f:  The input is a file
-;;     -k:  Used with -u; Ignore all certificate errors
+;;     -i:  Used with -u; Ignore all certificate errors
 ;;     -u:  The input is from a url
 ;;     -U:  The input is from a url and its data should not be parsed
 ;;     -w:  Used with -u; The handle should wait for /JSONHttpGet to be called to perform the url request
@@ -123,8 +123,8 @@ alias JSONOpen {
   }
 
   ;; Basic switch validation
-  ; (slv) Added k Switch
-  elseif (!$regex(SReject/JSONOpen/switches, %Switches, ^[dbfuUwk]*$)) {
+  ; (slv) Added i Switch
+  elseif (!$regex(SReject/JSONOpen/switches, %Switches, ^[dbfuUwi]*$)) {
     %Error = SWITCH_INVALID
   }
   elseif ($regex(%Switches, ([dbfuUw]).*?\1)) {
@@ -136,8 +136,8 @@ alias JSONOpen {
   elseif (u !isin %Switches) && (w isincs %Switches) {
     %Error = SWITCH_NOT_APPLICABLE:w
   }
-  elseif (u !isin %Switches) && (k isincs %Switches) {
-    %Error = SWITCH_NOT_APPLICABLE:k
+  elseif (u !isin %Switches) && (i isincs %Switches) {
+    %Error = SWITCH_NOT_APPLICABLE:i
   }
 
   ;; Validate handler name input
@@ -195,7 +195,7 @@ alias JSONOpen {
         inc %HttpOptions 2
       }
       ; (slv) Added k Switch
-      if (k isincs %Switches) {
+      if (i isincs %Switches) {
         %HttpInsecure = -1
       }
       %Type = http
@@ -1579,7 +1579,7 @@ alias JSONError {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %Ver = 1.1.0002
+    var %Ver = 1.1.0003
     if ($0) {
       return %Ver
     }
