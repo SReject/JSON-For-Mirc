@@ -18,8 +18,8 @@ on *:LOAD:{
   }
 
   ;; mIRC check
-  elseif ($version < 7.48) {
-    echo -ag [JSON For mIRC] mIRC v7.48 or later is required
+  elseif ($version < 7.53) {
+    echo -ag [JSON For mIRC] mIRC v7.53 or later is required
     .unload -rs $qt($script)
   }
 }
@@ -725,6 +725,9 @@ alias JSONShutDown {
   if ($hget(SReject/JSONForMirc)) {
     hfree $v1
   }
+
+  ;; disable debug group
+  .disable #SReject/JSONForMirc/Log
 }
 
 
@@ -1041,6 +1044,161 @@ alias JSON {
     hadd -mu0 SReject/JSONForMirc Error %Error
     jfm_log -EeDF %Error
   }
+  else {
+    jfm_log -EsDF %Result
+    return %Result
+  }
+}
+
+
+;; $JSONForValues(@Name|Ref|N, /callback[, sub-members])
+alias JSONForValues {
+
+  ;; Insure the alias was called as an identifier
+  if (!$isid) {
+    return
+  }
+
+  ;; Unset the global error variable incase the last call ended in error
+  if ($hget(SReject/JSONForMirc,Error)) {
+    hdel SReject/JSONForMirc Error
+  }
+
+  var %Error, %Log, %Call, %X = 0, %JSON, %BVar, %N, %Value, %Result = 0
+
+  ;; Build log message and call parameter portion
+  ;;   Log: $JSONForValues(@Name, @Command, @sub-members...)
+  ;;   Call: ,forValues,1[,bstr,$N,...]
+  %Log = $!JSONForValues(
+  %Call = ,forValues,1
+
+  while (%X < $0) {
+    inc %X
+    %Log = %Log $+ $($ $+ %X, 2) $+ ,
+    if (%X > 2) {
+      %Call = %Call $+ ,bstr, $+ $ $+ %X
+    }
+  }
+
+  ;; Log the alias call
+  jfm_log -I $left(%log, -1) $+ $chr(41)
+
+  ;; Basic input validation
+  if ($0 < 2) {
+    %Error = INVALID_PARAMETERS
+  }
+  elseif ($1 === 0) {
+    %Error = INVALID_HANDLE
+  }
+
+  ;; Validate @Name|Ref|N
+  elseif (!$1) || ($1 == 0) || (!$regex($1, /^((?:[^?:*]+)|(?:JSON:[^?:*]+(?::\d+)))$/)) {
+    %Error = NAME_INVALID
+  }
+  else {
+
+    ;; Deduce json handle
+    ;; This could be done by calling $JSON() but this way is much faster
+    if (JSON:?* iswm $1) {
+      %JSON = $com($1)
+    }
+    elseif ($regex($1, /^\d+$/i)) {
+      %X = 1
+      %JSON = 0
+      while ($com(%X)) {
+        if ($regex($1, /^JSON:[^?*:]+$/)) {
+          inc %JSON
+          if (%JSON == $1) {
+            %JSON = $com(%X)
+            break
+          }
+          elseif (%X == $com(0)) {
+            %JSON = $null
+          }
+        }
+        inc %X
+      }
+    }
+    else {
+      %JSON = $com(JSON: $+ $1)
+    }
+
+    if (!%JSON) {
+      %Error = HANDLE_NOT_FOUND
+    }
+    else {
+
+      ;; Finish building com call: $com(com_name,forValues,1,[call_parameters])
+      %Call = $!com( $+ %JSON $+ %Call $+ )
+
+      ;; Log the call
+      jfm_log %Call
+
+      ;; Make the com call and check for errors
+      if (!$(%Call, 2)) || ($comerr) {
+        %Error = $jfm_GetError
+      }
+
+      ;; Com call is success
+      else {
+
+        ;; Get a bvar to store the result in
+        %BVar = $jfm_TmpBVar
+
+        ;; Retrieve the result
+        noop $com(%JSON, %BVar).result
+
+        ;; Loop over each \1 delimited 'string' in the result
+        %X = 1
+        while ($bfind(%BVar, %X, 0)) {
+
+          ;; Get text for the value
+          %N = $v1
+          %Value = $bvar(%BVar, %X, $calc(%N - %X)).text
+
+          ;; Log command call and call command
+          jfm_log -I Calling: $2 %Value
+          $2 %Value
+          jfm_log -D
+
+          ;; Increase number of items looped over
+          inc %Result
+
+          ;; Prep for next item
+          %X = %N + 1
+        }
+
+        ;; One item not looped over
+        if (%X <= $bvar(%BVar, 0)) {
+
+          ;; Retrieve value
+          %Value = $bvar(%BVar, %X $+ -).text
+
+          ;; Log command call and call command
+          jfm_log -I Calling: $2 %Value
+          $2 %Value
+          jfm_log -D
+
+          ;; Increase number of items looped over
+          inc %Result
+        }
+      }
+    }
+  }
+
+  ;; Error handling: if an client error occured, store the error message then clear the error state
+  if ($error) {
+    %Error = $error
+  }
+  reseterror
+
+  ;; If an error occured, store and log the error
+  if (%Error) {
+    hadd -mu0 SReject/JSONForMirc Error %Error
+    jfm_log -EeDF %Error
+  }
+
+  ;; Successful, return the number of results looped over
   else {
     jfm_log -EsDF %Result
     return %Result
@@ -1421,7 +1579,7 @@ alias JSONError {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %Ver = 1.0.4000
+    var %Ver = 1.1.0002
     if ($0) {
       return %Ver
     }

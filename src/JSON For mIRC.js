@@ -1,5 +1,17 @@
 (function(root) {
-    
+
+    // use to create a binary stream
+    var binaryStream = new ActiveXObject('ADODB.Stream');
+    binaryStream.type = 2;
+    binaryStream.open();
+    binaryStream.charset = 'iso-8859-1';
+    function binaryStreamReset() {
+        binaryStream.position = 0;
+        binaryStream.setEOS();
+        binaryStream.type = 2;
+        binaryStream.charset = 'iso-8859-1';
+    }
+
     // es5 .forEach() semi-polyfill
     Array.prototype.forEach = function (callback) {
         for (var i = 0; i < this.length; i += 1) {
@@ -419,6 +431,80 @@
                 throw new Error('ILLEGAL_REFERENCE');
             }
             walk(self._json.value, self._json.path.slice(0), 1);
+            return res;
+        },
+
+        /* forValues(submembers...) */
+        forValues: function () {
+            var self = PARSED(this),
+                args = Array.prototype.slice.call(arguments),
+                res = [],
+                type = self.type();
+
+            function writeItem(value) {
+                if (value !== null) {
+                    binaryStream.writeText(value);
+                }
+                binaryStream.writeText('\0');
+            }
+
+            function addItem(value) {
+                args.forEach(function (key, index) {
+                    value = value[key];
+                    if (value === undefined) {
+                        binaryStreamReset();
+                        throw new Error(index + 1 === args.length ? 'REFERENCE_NOT_FOUND' : 'ILLEGAL_REFERENCE');
+                    }
+                });
+
+                var type = GETTYPE(value);
+
+                // null
+                if (type === 'null') {
+                    writeItem(null);
+
+                // boolean
+                } else if (type === 'boolean') {
+                    writeItem('$' + value);
+
+                // numbers and strings:
+                } else if (type === 'number' || type === 'string') {
+                    value = '' + value;
+                    if (value.length <= 8100) {
+                        writeItem(value);
+
+                    } else {
+                        binaryStreamReset();
+                        throw new Error('LINE_LENGTH_LIMIT');
+                    }
+
+                // other
+                } else {
+                    binaryStreamReset();
+                    throw new Error('INVALID_VALUE');
+                }
+            }
+
+            if (type === 'object') {
+                GETKEYS(self._json.value).forEach(function (key) {
+                    addItem(self._json.value[key]);
+                });
+
+            } else if (type === 'array') {
+                self._json.value.forEach(addItem);
+
+            } else {
+                binaryStreamReset();
+                throw new Error('ILLEGAL_REFERENCE');
+            }
+
+            // read stream as a VT_UI1 array the close the stream
+            binaryStream.position = 0;
+            binaryStream.type = 1;
+            res = binaryStream.read();
+            binaryStreamReset();
+
+            // return VT_UI1 array
             return res;
         },
 
