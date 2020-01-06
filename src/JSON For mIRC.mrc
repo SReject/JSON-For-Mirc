@@ -106,7 +106,7 @@ alias JSONOpen {
 
   ;; Local variable declarations
   ; (slv) Added %HttpInsecure
-  var %Switches, %Error, %Com = $false, %Type = text, %HttpOptions = 0, %BVar, %BUnset = $true, %HttpInsecure = 0
+  var %Switches, %Error, %Com = $false, %Type = text, %HttpOptions = 0, %BVar, %BUnset = $true
 
   ;; Log the /JSONOpen command is being called
   jfm_log -I /JSONOpen $1-
@@ -196,7 +196,7 @@ alias JSONOpen {
       }
       ; (slv) Added k Switch
       if (i isincs %Switches) {
-        %HttpInsecure = -1
+        inc %HttpOptions 4
       }
       %Type = http
       bset -t %BVar 1 $2
@@ -215,7 +215,7 @@ alias JSONOpen {
     jfm_ToggleTimers -p
 
     ;; Attempt to create the handler
-    %Error = $jfm_Create(%Com, %Type, %BVar, %HttpOptions, %HttpInsecure)
+    %Error = $jfm_Create(%Com, %Type, %BVar, %HttpOptions)
 
     jfm_ToggleTimers -r
   }
@@ -1894,10 +1894,10 @@ alias -l jfm_Create {
 
   ;; Local variable declaration
   ; (slv) Added %Insecure
-  var %Wait = $iif(1 & $4, $true, $false), %Parse = $iif(2 & $4, $false, $true), %Insecure = $iif($4 == -1 || $5 == -1, $true, $false), %Error
+  var %Wait = $iif(1 & $4, $true, $false), %Parse = $iif(2 & $4, $false, $true), %Insecure = $iif(4 & $4, $true, $false), %Error
 
   ;; Log the alias call
-  jfm_log -I $!jfm_create( $+ $1 $+ , $+ $2 $+ , $+ $3 $+ , $+ $4 $+ , $+ $5 $+ )
+  jfm_log -I $!jfm_create( $+ $1 $+ , $+ $2 $+ , $+ $3 $+ , $+ $4)
 
   ;; Attempt to create the json handler and if an error occurs retrieve the error, log it and return it
   ; (slv) Added %Insecure
