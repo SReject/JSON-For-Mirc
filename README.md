@@ -1,5 +1,5 @@
 [![Donate](https://img.shields.io/badge/Link-Donate-blue.svg)](https://streamjar.tv/tip/SReject) 
-[![Discord Chat](https://img.shields.io/badge/Chat-Discord-brightgreen.svg "Join us on Discord")](https://discord.gg/tqyRbab)  
+[![Discord Chat](https://img.shields.io/badge/Chat-Discord-brightgreen.svg "Join us on Discord")](https://discord.gg/aqvyfyC)  
 
 # [Downloads](https://github.com/SReject/JSON-For-Mirc/releases)  
 
