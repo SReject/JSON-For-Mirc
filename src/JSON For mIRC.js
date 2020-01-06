@@ -569,6 +569,7 @@
                     url: this._http.url,
                     method: this._http.method,
                     headers: this._http.headers,
+                    insecure: this._http.insecure,
                     data: this._http.data
                 },
                 isChild: this._isChild,
