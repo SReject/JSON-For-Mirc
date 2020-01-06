@@ -171,6 +171,9 @@ alias JSONOpen {
   elseif (f isincs %Switches) && (!$isfile($2-)) {
     %Error = PARAMETER_INVALID:FILE_DOESNOT_EXIST
   }
+  elseif (f isincs %Switches) && (!$file($2-)) {
+    %Error = PARAMETER_INVALID:FILE_EMPTY
+  }
 
   ;; All checks passed
   else {
