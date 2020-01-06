@@ -518,7 +518,7 @@ alias JSONHttpFetch {
       }
 
       ;; Attempt to store the data with the handler instance
-      %Error = $jfm_Exec(%Com, httpSetData, & %BVar).fromBvar
+      %Error = $jfm_RawExec(%Com, httpSetData, array &ui1, %BVar)
     }
 
     ;; Call the js-side parse function for the handler
@@ -1974,6 +1974,45 @@ alias -l jfm_Exec {
   }
 }
 
+alias -l jfm_RawExec {
+  ;; Local variable declaration
+  var %Index = 0, %Args, %Params, %Error
+
+  ;; Cleanup from previous call
+  if ($hget(SReject/JSONForMirc, Exec)) {
+    hdel SReject/JSONForMirc Exec
+  }
+
+  ;; Loop over inputs, storing them in %Args(for logging), and %Params(for com calling)
+  while (%Index < $0) {
+    inc %Index
+    %Args = %Args $+ $iif($len(%Args), $chr(44)) $+ $($ $+ %Index, 2)
+    if (%Index >= 3) {
+      %Params = %Params $+ ,$ $+ %Index
+    }
+  }
+
+  %Params = $!com($1,$2,1 $+ %Params $+ )
+
+  ;; Log the call
+  jfm_log -I $!jfm_Exec( $+ %Args $+ )
+
+
+  ;; Attempt the com call and if an error occurs
+  ;;   retrieve the error, log the error, and return it
+  if (!$(%Params, 2) || $comerr) {
+    %Error = $jfm_GetError
+    jfm_log -EeD %Error
+    return %Error
+  }
+
+  ;; Otherwise create a temp bvar, store the result in the the bvar
+  else {
+    hadd -mu0 SReject/JSONForMirc Exec $jfm_tmpbvar
+    noop $com($1, $hget(SReject/JSONForMirc, Exec)).result
+    jfm_log -EsD Result stored in $hget(SReject/JSONForMirc,Exec)
+  }
+}
 
 ;; When debug is enabled
 ;;     The /jfm_log alias with this group gets called
