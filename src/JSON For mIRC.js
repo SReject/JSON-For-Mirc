@@ -216,7 +216,7 @@
         },
 
         httpResponse: function () {
-            return this.httpHead() + '\r\n\r\n' + this._http.response.reponseText;
+            return this.httpHead() + '\r\n\r\n' + this._http.response.responseText;
         },
 
         // Retrieves and parses input json
