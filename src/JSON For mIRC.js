@@ -187,8 +187,11 @@
             HTTPPENDING(this).headers.push([header, value]);
         },
 
-        httpSetData: function (data) {
-            HTTPPENDING(this).data = data;
+        httpSetData: function (data, length) {
+            var http = HTTPPENDING(this);
+            http.headers.unshift(['Content-Length', length]);
+            http.headers.unshift(['Content-Type', 'application/x-www-form-urlencoded']);
+            http.data = data;
         },
 
         httpStatus: function() {
@@ -227,11 +230,7 @@
                 throw new Error('PARSE_NOT_PENDING');
             };
 
-            var setDefaults     = true,
-                setTypeHeader   = false,
-                setLengthHeader = false,
-                request,
-                json;
+            var request, json;
 
             this._state = 'done';
             try {
@@ -240,7 +239,6 @@
                 if (this._type === 'http') {
                     try {
                         if (this._http.data == undefined) {
-                            setDefaults      = false;
                             this._http.data  = null;
                         }
 
@@ -248,9 +246,9 @@
                         request = new ActiveXObject(HTTPObject);
                         this._http.response = request;
 
-                        // (slv) Added: 'Ignore all certificate errors' option
-                        //       Info:  - https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ms763811(v=vs.85)
-                        //              - https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ms753798(v=vs.85)
+                        // Option to ignore all ssl certificate errors
+                        //   https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ms763811(v=vs.85)
+                        //   https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ms753798(v=vs.85)
                         if (this._http.insecure === true) {
                             request.setOption(2, 13056);
                         }
@@ -261,28 +259,7 @@
                         // Apply headers
                         this._http.headers.forEach(function (header) {
                             request.setRequestHeader(header[0], header[1]);
-                            if (header[0].toLowerCase() === "content-type") {
-                                setTypeHeader = true;
-                            }
-                            if (header[0].toLowerCase() === "content-length") {
-                                setLengthHeader = true;
-                            }
                         });
-
-                        // if there's data to be sent, apply default headers as needed
-                        if (setDefaults) {
-                            if (!setTypeHeader) {
-                                request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                            }
-                            if (!setLengthHeader) {
-                                if (this._http.data == null) {
-                                    request.setRequestHeader("Content-Length", 0);
-
-                                } else {
-                                    request.setRequestHeader("Content-Length", String(this._http.data).length);
-                                }
-                            }
-                        }
 
                         // make the request
                         request.send(this._http.data);
