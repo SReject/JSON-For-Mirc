@@ -1717,14 +1717,10 @@ alias -l jfm_TmpBVar {
   ;; Local variable declaration
   var %N = $ticks $+ 00000
 
-  ;; Log the alias call
-  jfm_log -I $!jfm_TmpBVar
-
   ;; Loop until a bvar that isn't in use is found
   while ($bvar(&SReject/JSONForMirc/Tmp $+ %N)) {
     inc %N
   }
-  jfm_log -EsD &SReject/JSONForMirc/Tmp $+ %N
   return &SReject/JSONForMirc/Tmp $+ %N
 }
 
