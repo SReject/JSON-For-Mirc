@@ -1,9 +1,6 @@
 ;; Check to make sure mIRC/AdiIRC is of an applicable version
 on *:LOAD:{
 
-  ;; call jsonshutdown so the JS engine from a previously loaded version gets shutdown
-  JSONShutdown
-
   ;; Adiirc check
   if ($~adiircexe) {
     if ($version < 3.0) {
@@ -119,7 +116,7 @@ alias JSONOpen {
     %Error = NAME_INVALID
   }
   elseif ($com(JSON: $+ $1)) {
-    %Error = NAME_INUSE
+    %Error = NAME_IN_USE
   }
 
   ;; Validate URL where appropriate
@@ -128,19 +125,13 @@ alias JSONOpen {
   }
 
   ;; Validate bvar where appropriate
-  elseif (b isincs %Switches) && ($0 != 2) {
+  elseif (b isincs %Switches) && ($0 != 2 || !$bvar($2, 0)) {
     %Error = PARAMETER_INVALID:BVAR
-  }
-  elseif (b isincs %Switches) && (&* !iswm $2) {
-    %Error = PARAMETER_INVALID:NOT_BVAR
-  }
-  elseif (b isincs %Switches) && (!$bvar($2, 0)) {
-    %Error = PARAMETER_INVALID:BVAR_EMPTY
   }
 
   ;; Validate file where appropriate
-  elseif (f isincs %Switches) && (!$isfile($2-)) {
-    %Error = PARAMETER_INVALID:FILE_DOESNOT_EXIST
+  elseif (f isincs %Switches) && (!$file($2-).size) {
+    %Error = PARAMETER_INVALID:FILE
   }
 
   ;; All checks passed
