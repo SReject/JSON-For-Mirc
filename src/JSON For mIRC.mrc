@@ -1464,7 +1464,7 @@ alias -l jfm_64bitTest {
 alias -l jfm_ComInit {
 
   ;; Local variable declaration
-  var %Error, %Js = $jfm_tmpbvar
+  var %Error, %Js = $jfm_tmpbvar, %File = $scriptdirJSON For Mirc.js
 
   ;; If the JS Shell and engine are already open return
   if ($com(SReject/JSONForMirc/JSONShell) && $com(SReject/JSONForMirc/JSONEngine)) {
@@ -1472,7 +1472,7 @@ alias -l jfm_ComInit {
   }
 
   ;; Retrieve the javascript to execute
-  jfm_jscript %Js
+  bread $qt(%File) 0 $file(%File).size %Js
 
   ;; Close the Engine and shell coms if either but not both are open
   if ($com(SReject/JSONForMirc/JSONEngine)) {
@@ -1700,11 +1700,4 @@ alias -l jfm_RawExec {
     hadd -mu0 SReject/JSONForMirc Exec $jfm_tmpbvar
     noop $com($1, $hget(SReject/JSONForMirc, Exec)).result
   }
-}
-
-;; /jfm_jscript @Bvar
-;;     Fills the specified bvar with the required jscript
-alias -l jfm_jscript {
-  var %File = $scriptdirJSON For Mirc.js
-  bread $qt(%File) 0 $file(%File).size $1
 }
