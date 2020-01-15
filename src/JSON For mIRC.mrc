@@ -92,8 +92,8 @@ alias JSONOpen {
   }
 
   ;; Basic switch validation
-  elseif (!$regex(SReject/JSONOpen/switches, %Switches, ^[dbfuUwi]*$)) {
-    %Error = SWITCH_INVALID
+  elseif (!$regex(%Switches, ^[dbfuUwi]*$)) {
+    %Error = INVALID_SWITCH
   }
   elseif ($regex(%Switches, ([dbfuUw]).*?\1)) {
     %Error = SWITCH_DUPLICATE: $+ $regml(1)
