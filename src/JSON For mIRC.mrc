@@ -47,7 +47,6 @@ on *:UNLOAD:{
 ;;                                   ;;
 ;;===================================;;
 
-
 ;; /JSONOpen -dbfuUwtN @Name @Input
 ;;     Creates a JSON handle instance
 ;;
@@ -1405,7 +1404,7 @@ alias JSONError {
 ;;         Returns the short version
 alias JSONVersion {
   if ($isid) {
-    var %Ver = 2.0.2004
+    var %Ver = 2.0.2005
     if ($0) {
       return %Ver
     }
