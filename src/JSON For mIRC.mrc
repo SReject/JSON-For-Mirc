@@ -92,10 +92,10 @@ alias JSONOpen {
   }
 
   ;; Basic switch validation
-  elseif (!$regex(%Switches, ^[dbfuUwi]*$)) {
-    %Error = INVALID_SWITCH
+  elseif ($regex(%Switches, /([^dbfuUwi])/)) {
+    %Error = SWITCH_INVALID: $+ $regml(1)
   }
-  elseif ($regex(%Switches, ([dbfuUw]).*?\1)) {
+  elseif ($regex(%Switches, /([dbfuUw]).*?\1/)) {
     %Error = SWITCH_DUPLICATE: $+ $regml(1)
   }
   elseif ($regex(%Switches, /([bfuU])/g) > 1) {
@@ -121,7 +121,7 @@ alias JSONOpen {
 
   ;; Validate URL where appropriate
   elseif (u isin %Switches) && ($0 != 2) {
-    %Error = PARAMETER_INVALID:URL_SPACES
+    %Error = PARAMETER_INVALID:URL
   }
 
   ;; Validate bvar where appropriate
