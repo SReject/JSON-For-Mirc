@@ -1433,21 +1433,28 @@ alias -l jfm_TmpBVar {
   return &SReject/JSONForMirc/Tmp $+ %N
 }
 
+;; $jfm_64bitTest
+;;     Returns $true if tsc64.dll is com-registered
 alias -l jfm_64bitTest {
 
+  ;; Deduce a com name to use
   var %Com = SReject/JSONForMirc/64bitScriptControlTest, %X = 0, %Result = $false
   while ($com(%Com $+ %X)) {
     inc %X
   }
+
+  ;; Attempt to open the com
   .comopen %Com ScriptControl
+
+  ;; Com successfully opened
   if ($com(%Com) && !$comerr) {
     %Result = $true
   }
 
+  ;; Clean up and return the result
   if ($com(%com)) {
     .comclose %Com
   }
-
   return %Result
 }
 
