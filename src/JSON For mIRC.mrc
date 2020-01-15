@@ -95,7 +95,6 @@ alias JSONOpen {
   }
 
   ;; Basic switch validation
-  ; (slv) Added i Switch
   elseif (!$regex(SReject/JSONOpen/switches, %Switches, ^[dbfuUwi]*$)) {
     %Error = SWITCH_INVALID
   }
@@ -183,8 +182,6 @@ alias JSONOpen {
       bset -t %BVar 1 $2-
     }
 
-    jfm_ToggleTimers -p
-
     ;; Attempt to create the json handler and if an error occurs retrieve the error
     if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, %Type, &bstr, %BVar, bool, %Parse, bool, %Insecure, dispatch* %Com)) || ($comerr) || (!$com(%Com)) {
       %Error = $jfm_GetError
@@ -192,10 +189,16 @@ alias JSONOpen {
 
     ;; Attempt to call the parse method if the handler should not wait for the http request
     elseif (%Type !== http) || (%Type == http && !%HttpWait) {
-      %Error = $jfm_Exec($1, parse)
-    }
 
-    jfm_ToggleTimers -r
+      ;; Pause jfm related timers
+      ;;   Work-around for mIRC's timers possibly activating while the com processes
+      .timerSReject/JSON:?* -p
+
+      %Error = $jfm_Exec($1, parse)
+
+      ;; resume all jfm related timers
+      .timerSReject/JSON:?* -r
+    }
   }
 
   ;; Error handling: if an client error occured, store the error message then clear the error state
@@ -216,13 +219,13 @@ alias JSONOpen {
   if (%Error) {
     hadd -mu0 SReject/JSONForMirc Error %Error
     if (%Com) && ($com(%Com)) {
-      .timer $+ %Com -iom 1 0 JSONClose $unsafe($1)
+      .timerSReject/ $+ %Com -iom 1 0 JSONClose $unsafe($1)
     }
   }
 
   ;; Otherwise, if the -d switch was specified start a timer to close the com
   elseif (d isincs %Switches) {
-    .timer $+ %Com -iom 1 0 JSONClose $unsafe($1)
+    .timerSReject/ $+ %Com -iom 1 0 JSONClose $unsafe($1)
   }
 }
 
@@ -473,11 +476,11 @@ alias JSONHttpFetch {
 
     ;; Call the js-side parse function for the handler
     if (!%Error) {
-      jfm_ToggleTimers -p
+      .timerSReject/JSON:?* -p
 
       %Error = $jfm_Exec(%Com, parse)
 
-      jfm_ToggleTimers -r
+      .timerSReject/JSON:?* -r
     }
   }
 
@@ -567,8 +570,8 @@ alias JSONClose {
 
         ;; Close the com and turn off timers associated to the com
         .comclose %Com
-        if ($timer(%Com)) {
-          .timer $+ %Com off
+        if ($timer(SReject/ $+ %Com)) {
+          .timerSReject/ $+ %Com off
         }
       }
 
@@ -855,7 +858,7 @@ alias JSON {
       }
 
       ;; Otherwise, close the child com after script execution, update the %Com variable to indicate the child com
-      .timer $+ %ChildCom -iom 1 0 JSONClose %ChildCom
+      .timerSReject/ $+ %ChildCom -iom 1 0 JSONClose %ChildCom
       %Com = %ChildCom
     }
 
@@ -1176,7 +1179,7 @@ alias JSONForEach {
       else {
 
         ;; Start a timer to close the com
-        .timer $+ %Com -iom 1 0 JSONClose $unsafe(%Com)
+        .timerSReject/ $+ %Com -iom 1 0 JSONClose $unsafe(%Com)
 
         ;; Check length
         if (!$com(%Com, length, 2)) || ($comerr) {
@@ -1547,19 +1550,6 @@ alias -l jfm_ComInit {
       .comclose $v1
     }
     return %Error
-  }
-}
-
-;; /jfm_ToggleTimers -r|-p
-;;   Pauses/resumes all jfm related timers
-alias -l jfm_ToggleTimers {
-  var %x = 1, %timer
-  while ($timer(%x)) {
-    %timer = $v1
-    if ($regex(%timer, /^JSON:[^\?\*\:]+$/i)) {
-      $+(.timer, %timer) $1
-    }
-    inc %x
   }
 }
 
