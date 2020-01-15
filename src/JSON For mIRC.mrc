@@ -773,7 +773,7 @@ alias JSON {
       }
 
       ;; Store each parameter in %Args delimited by a comma(,)
-      %Args = %Args $+ $($ $+ %X, 2)
+      %Args = %Args $+ $eval($ $+ %X, 2)
 
       ;; If the parameter is greater than the offset store it the parameter under %Params
       if (%X >= %Offset) {
@@ -932,7 +932,7 @@ alias JSON {
     if ($calc($0 - %Offset) < 0) {
       %Error = INVALID_PARAMETERS
     }
-    elseif ($jfm_Exec(%Com, httpHeader, $($ $+ %Offset, 2))) {
+    elseif ($jfm_Exec(%Com, httpHeader, $eval($ $+ %Offset, 2))) {
       %Error = $v1
     }
     else {
@@ -1074,7 +1074,7 @@ alias JSONForValues {
 
   while (%X < $0) {
     inc %X
-    %Log = %Log $+ $($ $+ %X, 2) $+ ,
+    %Log = %Log $+ $eval($ $+ %X, 2) $+ ,
     if (%X > 2) {
       %Call = %Call $+ ,bstr, $+ $ $+ %X
     }
@@ -1135,7 +1135,7 @@ alias JSONForValues {
       jfm_log %Call
 
       ;; Make the com call and check for errors
-      if (!$(%Call, 2)) || ($comerr) {
+      if (!$eval(%Call, 2)) || ($comerr) {
         %Error = $jfm_GetError
       }
 
@@ -1239,7 +1239,7 @@ alias JSONForEach {
 
   while (%X < $0) {
     inc %x
-    %Log = %Log $+ $($ $+ %X, 2) $+ ,
+    %Log = %Log $+ $eval($ $+ %X, 2) $+ ,
     if (%X > 2) {
       %Call = %Call $+ ,bstr, $+ $ $+ %X
     }
@@ -1317,7 +1317,7 @@ alias JSONForEach {
       jfm_log %Call
 
       ;; Make the com call and check for errors
-      if (!$(%Call, 2)) || ($comerr) || (!$com(%Com)) {
+      if (!$eval(%Call, 2)) || ($comerr) || (!$com(%Com)) {
         %Error = $jfm_GetError
       }
 
@@ -1485,7 +1485,7 @@ alias JSONPath {
 
   while (%X < $0) {
     inc %X
-    %Param = %Param $+ $($ $+ %X, 2) $+ ,
+    %Param = %Param $+ $eval($ $+ %X, 2) $+ ,
   }
 
   ;; Log the call
@@ -1940,9 +1940,9 @@ alias -l jfm_Exec {
   ;; Loop over inputs, storing them in %Args(for logging), and %Params(for com calling)
   while (%Index < $0) {
     inc %Index
-    %Args = %Args $+ $iif($len(%Args), $chr(44)) $+ $($ $+ %Index, 2)
+    %Args = %Args $+ $iif($len(%Args), $chr(44)) $+ $eval($ $+ %Index, 2)
     if (%Index >= 3) {
-      if ($prop == fromBvar) && ($regex($($ $+ %Index, 2), /^& (&\S+)$/)) {
+      if ($prop == fromBvar) && ($regex($eval($ $+ %Index, 2), /^& (&\S+)$/)) {
         %Params = %Params $+ ,&bstr, $+ $regml(1)
       }
       else {
@@ -1957,7 +1957,7 @@ alias -l jfm_Exec {
 
   ;; Attempt the com call and if an error occurs
   ;;   retrieve the error, log the error, and return it
-  if (!$(%Params, 2) || $comerr) {
+  if (!$eval(%Params, 2) || $comerr) {
     %Error = $jfm_GetError
     jfm_log -EeD %Error
     return %Error
@@ -1982,7 +1982,7 @@ alias -l jfm_RawExec {
   ;; Loop over inputs, storing them in %Args(for logging), and %Params(for com calling)
   while (%Index < $0) {
     inc %Index
-    %Args = %Args $+ $iif($len(%Args), $chr(44)) $+ $($ $+ %Index, 2)
+    %Args = %Args $+ $iif($len(%Args), $chr(44)) $+ $eval($ $+ %Index, 2)
     if (%Index >= 3) {
       %Params = %Params $+ ,$ $+ %Index
     }
@@ -1996,7 +1996,7 @@ alias -l jfm_RawExec {
 
   ;; Attempt the com call and if an error occurs
   ;;   retrieve the error, log the error, and return it
-  if (!$(%Params, 2) || $comerr) {
+  if (!$eval(%Params, 2) || $comerr) {
     %Error = $jfm_GetError
     jfm_log -EeD %Error
     return %Error
