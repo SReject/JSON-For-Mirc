@@ -15,7 +15,7 @@ alias JSONTest {
 alias -l jfm_test {
   ;; variables that will be needed within testing
   var %jsondata = {"null":null,"true":true,"false":false,"int":1,"dec":1.1,"negint":-1,"negdec":-1.1,"string":"string","array":["item0","item1","item2"],"object":{"key0":"item0","key1":"item1","key2":"item2"}}
-  var %debugdata = {"state":"done","input":"{\"null\":null,\"true\":true,\"false\":false,\"int\":1,\"dec\":1.1,\"negint\":-1,\"negdec\":-1.1,\"string\":\"string\",\"array\":[\"item0\",\"item1\",\"item2\"],\"object\":{\"key0\":\"item0\",\"key1\":\"item1\",\"key2\":\"item2\"}}","type":"text","error":false,"parse":true,"http":{"url":"","method":"GET","headers":[]},"isChild":false,"json":{"path":[],"value":{"null":null,"true":true,"false":false,"int":1,"dec":1.1,"negint":-1,"negdec":-1.1,"string":"string","array":["item0","item1","item2"],"object":{"key0":"item0","key1":"item1","key2":"item2"}}}}
+  var %debugdata = {"state":"done","input":"{\"null\":null,\"true\":true,\"false\":false,\"int\":1,\"dec\":1.1,\"negint\":-1,\"negdec\":-1.1,\"string\":\"string\",\"array\":[\"item0\",\"item1\",\"item2\"],\"object\":{\"key0\":\"item0\",\"key1\":\"item1\",\"key2\":\"item2\"}}","type":"text","error":false,"parse":true,"http":{"url":"","method":"GET","headers":[],"insecure":false},"isChild":false,"json":{"path":[],"value":{"null":null,"true":true,"false":false,"int":1,"dec":1.1,"negint":-1,"negdec":-1.1,"string":"string","array":["item0","item1","item2"],"object":{"key0":"item0","key1":"item1","key2":"item2"}}}}
 
   ;; state variables
   var %testnum = 0
@@ -25,16 +25,11 @@ alias -l jfm_test {
   var %cert_re
   var %echo = echo 03 -sgi6 $!+([#,$base(%testNum,10,10,3),])
 
-  jsonshutdown
-  jsondebug on
-  window -n @SReject/JSONForMirc/Log
-
   ;;============================;;
   ;;                            ;;
   ;;     $JSONVersion tests     ;;
   ;;                            ;;
   ;;============================;;
-
 
 
   ;; Check $JSONVersion
@@ -85,7 +80,7 @@ alias -l jfm_test {
   if (%err == $null) {
     return %testnum /JSONOpen -q : Failed to report error (SWITCH_INVALID)
   }
-  if (SWITCH_INVALID !iswm %err) {
+  if (SWITCH_INVALID:? !iswm %err) {
     return %testnum /JSONOpen -q : Reported incorrect error: $v2
   }
   $(%echo,2) /JSONOpen -q : Passed Check: SWITCH_INVALID
@@ -209,20 +204,20 @@ alias -l jfm_test {
   $(%echo,2) /JSONOpen -b : Passed Check: PARAMETER_MISSING
 
 
-  ;; test to make sure /JSONOpen raises "PARAMETER_INVALID:NOT_BVAR" if -b is specified without a valid bvar
+  ;; test to make sure /JSONOpen raises "PARAMETER_INVALID:BVAR" if -b is specified without a valid bvar
   inc %testnum
   JSONOpen -b jfm_test nope
   %err = $JSONError
   if (%err == $null) {
     return %testnum /JSONOpen -b : Failed to report error (PARAMETER_INVALID:NOT_BVAR)
   }
-  if (PARAMETER_INVALID:NOT_BVAR !== %err) {
+  if (PARAMETER_INVALID:BVAR !== %err) {
     return %testnum /JSONOpen -b : Reported incorrect error: $v2
   }
-  $(%echo,2) /JSONOpen -b : Passed Check: PARAMETER_INVALID:NOT_BVAR
+  $(%echo,2) /JSONOpen -b : Passed Check: PARAMETER_INVALID:BVAR
 
 
-  ;; test to make sure /JSONOpen raises "PARAMETER_INVALID:NOT_BVAR" if -b is specified without a valid bvar
+  ;; test to make sure /JSONOpen raises "PARAMETER_INVALID:BVAR" if -b is specified without a valid bvar
   inc %testnum
   JSONOpen -b jfm_test &jfm_test nope
   %err = $JSONError
@@ -235,17 +230,17 @@ alias -l jfm_test {
   $(%echo,2) /JSONOpen -b : Passed Check: PARAMETER_INVALID:BVAR
 
 
-  ;; test to make sure /JSONOpen raises "PARAMETER_INVALID:BVAR_EMPTY" if -b is specified and the bvar is empty or doesn't exist
+  ;; test to make sure /JSONOpen raises "PARAMETER_INVALID:BVAR" if -b is specified and the bvar is empty or doesn't exist
   inc %testnum
   JSONOpen -b jfm_test &jfm_test
   %err = $JSONError
   if (%err == $null) {
-    return %testnum /JSONOpen -b : Failed to report error (PARAMETER_INVALID:BVAR_EMPTY)
+    return %testnum /JSONOpen -b : Failed to report error (PARAMETER_INVALID:BVAR)
   }
-  if (PARAMETER_INVALID:BVAR_EMPTY !== %err) {
+  if (PARAMETER_INVALID:BVAR !== %err) {
     return %testnum /JSONOpen -b : Reported incorrect error: $v2
   }
-  $(%echo,2) /JSONOpen -b : Passed Check: PARAMETER_INVALID:BVAR_EMPTY
+  $(%echo,2) /JSONOpen -b : Passed Check: PARAMETER_INVALID:BVAR
 
 
   ;; test to make sure /JSONOpen raises "PARAMETER_MISSING" if -f is specified
@@ -261,17 +256,17 @@ alias -l jfm_test {
   $(%echo,2) /JSONOpen -f : Passed Check: PARAMETER_MISSING
 
 
-  ;; test to make sure /JSONOpen raises "PARAMETER_INVALID:FILE_DOESNOT_EXIST" if -f is specified but the file does not exist
+  ;; test to make sure /JSONOpen raises "PARAMETER_INVALID:FILE" if -f is specified but the file does not exist
   inc %testnum
   JSONOpen -f jfm_test jfm_test
   %err = $JSONError
   if (%err == $null) {
-    return %testnum /JSONOpen -f : Failed to report error (PARAMETER_INVALID:FILE_DOESNOT_EXIST)
+    return %testnum /JSONOpen -f : Failed to report error (PARAMETER_INVALID:FILE)
   }
-  if (PARAMETER_INVALID:FILE_DOESNOT_EXIST !== %err) {
+  if (PARAMETER_INVALID:FILE !== %err) {
     return %testnum /JSONOpen -f : Reported incorrect error: $v2
   }
-  $(%echo,2) /JSONOpen -f : Passed Check: PARAMETER_INVALID:FILE_DOESNOT_EXIST
+  $(%echo,2) /JSONOpen -f : Passed Check: PARAMETER_INVALID:FILE
 
 
   ;; test to make sure /JSONOpen raises "PARAMETER_MISSING" if -u is specified but no url parameter is specified
@@ -287,17 +282,17 @@ alias -l jfm_test {
   $(%echo,2) /JSONOpen -u : Passed Check: PARAMETER_MISSING
 
 
-  ;; test to make sure /JSONOpen raises "PARAMETER_INVALID:URL_SPACES" if -u is specified but the url parameter contains spaces
+  ;; test to make sure /JSONOpen raises "PARAMETER_INVALID:URL" if -u is specified but the url parameter contains spaces
   inc %testnum
   JSONOpen -u jfm_test jfm test
   %err = $JSONError
   if (%err == $null) {
-    return %testnum /JSONOpen -u : Failed to report error (PARAMETER_INVALID:URL_SPACES)
+    return %testnum /JSONOpen -u : Failed to report error (PARAMETER_INVALID:URL)
   }
-  if (PARAMETER_INVALID:URL_SPACES !== %err) {
+  if (PARAMETER_INVALID:URL !== %err) {
     return %testnum /JSONOpen -u : Reported incorrect error: $v2
   }
-  $(%echo,2) /JSONOpen -u : Passed Check: PARAMETER_INVALID:URL_SPACES
+  $(%echo,2) /JSONOpen -u : Passed Check: PARAMETER_INVALID:URL
 
 
   ;; test to make sure /JSONOpen raises "PARAMETER_MISSING" if -u is specified but no url parameter is specified
@@ -313,17 +308,17 @@ alias -l jfm_test {
   $(%echo,2) /JSONOpen -U : Passed Check: PARAMETER_MISSING
 
 
-  ;; test to make sure /JSONOpen raises "PARAMETER_INVALID:URL_SPACES" if -U is specified but the url parameter contains spaces
+  ;; test to make sure /JSONOpen raises "PARAMETER_INVALID:URL" if -U is specified but the url parameter contains spaces
   inc %testnum
   JSONOpen -U jfm_test jfm test
   %err = $JSONError
   if (%err == $null) {
-    return %testnum /JSONOpen -U : Failed to report error (PARAMETER_INVALID:URL_SPACES)
+    return %testnum /JSONOpen -U : Failed to report error (PARAMETER_INVALID:URL)
   }
-  if (PARAMETER_INVALID:URL_SPACES !== %err) {
+  if (PARAMETER_INVALID:URL !== %err) {
     return %testnum /JSONOpen -U : Reported incorrect error: $v2
   }
-  $(%echo,2) /JSONOpen -U : Passed Check: PARAMETER_INVALID:URL_SPACES
+  $(%echo,2) /JSONOpen -U : Passed Check: PARAMETER_INVALID:URL
 
 
   ;; test to make sure /JSONOpen raises "INVALID_JSON" when applicable
