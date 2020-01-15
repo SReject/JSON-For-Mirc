@@ -10,8 +10,9 @@ on *:LOAD:{
       echo -ag [JSON For mIRC] AdiIRC v3.0 or later is required
       .unload -rs $qt($script)
     }
+
     ;; tsc64.dll check, this extra dll is required for adiirc 64bits version to work
-    if ($bits == 64) && (!$file($envvar(windir) $+ \System32\tsc64.dll)) {
+    if ($bits == 64) && (!$jfm_64bitTest) {
       echo -ag [JSON For mIRC] tsc64.dll v1.1.0.0 or later is required - Download and install it (restart the client after the installation) from: https://tablacus.github.io/scriptcontrol_en.html
       .unload -rs $qt($script)
     }
@@ -1431,6 +1432,24 @@ alias -l jfm_TmpBVar {
     inc %N
   }
   return &SReject/JSONForMirc/Tmp $+ %N
+}
+
+alias -l jfm_64bitTest {
+
+  var %Com = SReject/JSONForMirc/64bitScriptControlTest, %X = 0, %Result = $false
+  while ($com(%Com $+ %X)) {
+    inc %X
+  }
+  .comopen %Com ScriptControl
+  if ($com(%Com) && !$comerr) {
+    %Result = $true
+  }
+
+  if ($com(%com)) {
+    .comclose %Com
+  }
+
+  return %Result
 }
 
 ;; $jfm_ComInit
