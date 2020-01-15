@@ -81,7 +81,7 @@ alias JSONOpen {
   }
 
   ;; Local variable declarations
-  var %Switches, %Error, %Com = $false, %Type = text, %HttpOptions = 0, %BVar, %BUnset = $true
+  var %Switches, %Error, %Com = $false, %Type = text, %Wait = $false, %Parse = $true, %Insecure = $false, %BVar, %BUnset = $true
 
   ;; Remove switches from other input parameters
   if (-* iswm $1) {
@@ -161,14 +161,13 @@ alias JSONOpen {
     ;; bvar to the URL to request
     elseif (u isin %Switches) {
       if (w isincs %Switches) {
-        inc %HttpOptions 1
+        %Wait = $true
       }
       if (U isincs %Switches) {
-        inc %HttpOptions 2
+        %Parse = $false
       }
-      ; (slv) Added k Switch
       if (i isincs %Switches) {
-        inc %HttpOptions 4
+        %Insecure = $true
       }
       %Type = http
       bset -t %BVar 1 $2
@@ -186,8 +185,15 @@ alias JSONOpen {
 
     jfm_ToggleTimers -p
 
-    ;; Attempt to create the handler
-    %Error = $jfm_Create(%Com, %Type, %BVar, %HttpOptions)
+    ;; Attempt to create the json handler and if an error occurs retrieve the error
+    if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, %Type, &bstr, %BVar, bool, %Parse, bool, %Insecure, dispatch* %Com)) || ($comerr) || (!$com(%Com)) {
+      %Error = $jfm_GetError
+    }
+
+    ;; Attempt to call the parse method if the handler should not wait for the http request
+    elseif (%Type !== http) || (%Type == http && !%HttpWait) {
+      %Error = $jfm_Exec($1, parse)
+    }
 
     jfm_ToggleTimers -r
   }
@@ -459,8 +465,10 @@ alias JSONHttpFetch {
         bset -t %BVar 1 $2-
       }
 
-      ;; Attempt to store the data with the handler instance
-      %Error = $jfm_RawExec(%Com, httpSetData, array &ui1, %BVar, ui4, $bvar(%BVar, 0))
+      ;; Attempt to store the data to send
+      if (!$com(%com, httpSetData, array &ui1, %BVar, ui4, $bvar(%BVar, 0)) || $comerr) {
+        %Error = $jfm_GetError
+      }
     }
 
     ;; Call the js-side parse function for the handler
@@ -1586,45 +1594,6 @@ alias -l jfm_GetError {
   return %Error
 }
 
-;; $jfm_create(@Name, @type, @Source, @Wait)
-;;    Attempts to create the JSON handler com instance
-;;
-;;    @Name - String - Required
-;;        The name of the JSON handler to create
-;;
-;;    @Type - string - required
-;;        The type of json handler
-;;            text: the input is a bvar
-;;            http: the input is a url
-;;
-;;    @Source - string - required
-;;        The source of the input
-;;
-;;    @httpOption - Number - Optional
-;;        Indicates how the http request should be handled, as a bitwise comparison(add values to toggle options)
-;;          1: Wait for /JSONHttpFetch to be called
-;;          2: Do not parse the result of the HTTP request
-alias -l jfm_Create {
-
-  ;; Local variable declaration
-  var %Wait = $iif(1 & $4, $true, $false), %Parse = $iif(2 & $4, $false, $true), %Insecure = $iif(4 & $4, $true, $false), %Error
-
-  ;; Attempt to create the json handler and if an error occurs retrieve the error
-  if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, $2, &bstr, $3, bool, %Parse, bool, %Insecure, dispatch* $1)) || ($comerr) || (!$com($1)) {
-    %Error = $jfm_GetError
-  }
-
-  ;; Attempt to call the parse method if the handler should not wait for the http request
-  elseif ($2 !== http) || ($2 == http && !%Wait) {
-    %Error = $jfm_Exec($1, parse)
-  }
-
-  ;; If an error occured return the error
-  if (%Error) {
-    return %Error
-  }
-}
-
 ;; $jfm_Exec(@Name, @Method, [@Args])
 ;;     Executes the js method of the specified name
 ;;         Stores the result in a tmp bvar and stores the name in 'SReject/JSONForMirc Exec' hash
@@ -1658,36 +1627,6 @@ alias -l jfm_Exec {
       %Params = %Params $+ ,bstr,$ $+ %Index
     }
   }
-  %Params = $!com($1,$2,1 $+ %Params $+ )
-
-  ;; Attempt the com call and if an error occurs return the error
-  if (!$eval(%Params, 2) || $comerr) {
-    return $jfm_GetError
-  }
-
-  ;; Otherwise create a temp bvar, store the result in the the bvar
-  else {
-    hadd -mu0 SReject/JSONForMirc Exec $jfm_tmpbvar
-    noop $com($1, $hget(SReject/JSONForMirc, Exec)).result
-  }
-}
-
-alias -l jfm_RawExec {
-
-  ;; Cleanup from previous call
-  if ($hget(SReject/JSONForMirc, Exec)) {
-    hdel SReject/JSONForMirc Exec
-  }
-
-  ;; Local variable declaration
-  var %Index = 2, %Params
-
-  ;; Loop over inputs, storing them in %Params(for com calling)
-  while (%Index < $0) {
-    inc %Index
-    %Params = %Params $+ ,$ $+ %Index
-  }
-
   %Params = $!com($1,$2,1 $+ %Params $+ )
 
   ;; Attempt the com call and if an error occurs return the error
