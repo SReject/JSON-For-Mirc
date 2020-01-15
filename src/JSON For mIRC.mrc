@@ -458,7 +458,6 @@ alias JSONHttpFetch {
       else {
         bset -t %BVar 1 $2-
       }
-      echo -s Bvar: %BVar
 
       ;; Attempt to store the data to send
       if (!$com(%Com, httpSetData, 1, array &ui1, %BVar, ui4, $bvar(%BVar, 0)) || $comerr) {
@@ -1610,8 +1609,6 @@ alias -l jfm_Exec {
     }
   }
   %Params = $!com($1,$2, 1 $+ %Params $+ )
-
-  echo -s > %params > $1-
 
   ;; Attempt the com call and if an error occurs return the error
   if (!$eval(%Params, 2) || $comerr) {
