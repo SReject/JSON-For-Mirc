@@ -179,13 +179,13 @@ alias JSONOpen {
     }
 
     ;; Attempt to call the parse method if the handler should not wait for the http request
-    elseif (%Type !== http) || (%Type == http && !%HttpWait) {
+    elseif (%Type !== http) || (%Type == http && !%Wait) {
 
       ;; Pause jfm related timers
       ;;   Work-around for mIRC's timers possibly activating while the com processes
       .timerSReject/JSON:?* -p
 
-      %Error = $jfm_Exec($1, parse)
+      %Error = $jfm_Exec(%Com, parse)
 
       ;; resume all jfm related timers
       .timerSReject/JSON:?* -r
@@ -458,9 +458,10 @@ alias JSONHttpFetch {
       else {
         bset -t %BVar 1 $2-
       }
+      echo -s Bvar: %BVar
 
       ;; Attempt to store the data to send
-      if (!$com(%com, httpSetData, array &ui1, %BVar, ui4, $bvar(%BVar, 0)) || $comerr) {
+      if (!$com(%Com, httpSetData, 1, array &ui1, %BVar, ui4, $bvar(%BVar, 0)) || $comerr) {
         %Error = $jfm_GetError
       }
     }
@@ -1608,7 +1609,9 @@ alias -l jfm_Exec {
       %Params = %Params $+ ,bstr,$ $+ %Index
     }
   }
-  %Params = $!com($1,$2,1 $+ %Params $+ )
+  %Params = $!com($1,$2, 1 $+ %Params $+ )
+
+  echo -s > %params > $1-
 
   ;; Attempt the com call and if an error occurs return the error
   if (!$eval(%Params, 2) || $comerr) {
