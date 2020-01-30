@@ -67,7 +67,7 @@ alias -l jfm_test {
     return %testnum /JSONOpen : Failed to report error (PARAMETER_MISSING)
   }
   if (PARAMETER_MISSING !== %err) {
-    return %testnum /JSONOpen : Reported incorrect error: $v1
+    return %testnum /JSONOpen : Reported incorrect error: $v2
   }
   $(%echo,2) /JSONOpen : Passed Check: PARAMETER_MISSING
 
