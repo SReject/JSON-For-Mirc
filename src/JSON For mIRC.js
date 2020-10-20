@@ -154,7 +154,12 @@
             url: '',
             headers: [],
             insecure: false,
-            redirects: true
+            redirects: true,
+
+            hasData: false,
+            dataLength: 0,
+            dataType: 'application/x-www-form-urlencoded',
+            data: null
         };
     }
 
@@ -184,14 +189,29 @@
         },
 
         httpSetHeader: function (header, value) {
-            HTTPPENDING(this).headers.push([header, value]);
+            var http = HTTPPENDING(this);
+
+            var lcHeader = (header + "").toLowerCase();
+
+            if (lcHeader === 'content-type') {
+                http.dataType = value;
+
+            } else if (lcHeader === 'content-length') {
+                http.dataLength = value;
+
+            } else {
+                http.headers.push([header, value]);
+            }
         },
 
         httpSetData: function (data, length) {
             var http = HTTPPENDING(this);
-            http.headers.unshift(['Content-Length', length]);
-            http.headers.unshift(['Content-Type', 'application/x-www-form-urlencoded']);
-            http.data = data;
+
+            if (data != null) {
+                http.hasData = true;
+                http.dataLength = length != null ? length : http.dataLength;
+                http.data = data;
+            }
         },
 
         httpStatus: function() {
@@ -238,9 +258,6 @@
                 // if the type is an http request
                 if (this._type === 'http') {
                     try {
-                        if (this._http.data == undefined) {
-                            this._http.data  = null;
-                        }
 
                         // Create the request, and store it witht he handler
                         request = new ActiveXObject(HTTPObject);
@@ -264,8 +281,16 @@
                             request.setRequestHeader(header[0], header[1]);
                         });
 
-                        // make the request
-                        request.send(this._http.data);
+                        // make request with body
+                        if (this._http.hasData === true) {
+                            request.setRequestHeader('Content-Type',   this._http.dataType);
+                            request.setRequestHeader('Content-Length', this._http.dataLength);
+                            request.send(this._http.data);
+
+                        // make bodiless request
+                        } else {
+                            request.send();
+                        }
 
                         // if the response isn't to be parsed, return the handle instance
                         if (this._parse === false) {
