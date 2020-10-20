@@ -1329,8 +1329,10 @@ alias -l jfm_test {
   var %cert_re = /^The certificate authority is invalid or incorrect/
   inc %testnum
   JSONOpen -u jfm_test %cert_url
-  if (!$regex($JSONError, %cert_re)) {
-    return %testnum /JSONOpen -u %cert_url : Request reported unexpected error: $v2
+  %Err = $JSONError
+
+  if ($null == %err) {
+    return %testnum /JSONOpen -u %cert_url : Request failed to report an error
   }
   $(%echo,2) /JSONOpen -u %cert_url : Passed Check
   JSONClose jfm_test
@@ -1338,10 +1340,24 @@ alias -l jfm_test {
   ;; Attempt to use invalid SSL cert with i switch
   inc %testnum
   JSONOpen -ui jfm_test %cert_url
-  if ($regex($JSONError, %cert_re)) {
-    return %testnum /JSONOpen -ui %cert_url : Request reported error: $v2
+  %Err = $JSONError
+  if ($null == %Err) {
+    return %testnum /JSONOpen -ui %cert_url : Request failed to report SSL Cert error
   }
   $(%echo,2) /JSONOpen -ui %cert_url : Passed Check
+  JSONClose jfm_test
+
+  ;; check that -uR does not follow redirects
+  inc %testnum
+  JSONOpen -UR jfm_test https://forums.mirc.com
+  %Err = $JSONError
+  if ($null !== %err) {
+    return %testnum /JSONOpen -UR: Request reported error: %Err
+  }
+  if (3?? !iswm $JSON(jfm_test).httpStatus) {
+    return %testnum /JSONOpen -UR: Request did not stop at the first redirect : $JSON(jfm_test).httpStatus $JSON(jfm_test).httpStatusText
+  }
+  $(%echo,2) /JSONOpen -UR : Passed Check
   JSONClose jfm_test
 
 }
