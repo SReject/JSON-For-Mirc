@@ -47,13 +47,17 @@ on *:UNLOAD:{
 ;; /JSONOpen -dbfuUwtN @Name @Input
 ;;     Creates a JSON handle instance
 ;;
-;;     -d:  Closes the handler after the script finishes
-;;     -b:  The input is a bvar
-;;     -f:  The input is a file
-;;     -i:  Used with -u; Ignore all certificate errors
-;;     -u:  The input is from a url
-;;     -U:  The input is from a url and its data should not be parsed
-;;     -w:  Used with -u; The handle should wait for /JSONHttpGet to be called to perform the url request
+;;     -b:  @input is a bvar (*)
+;;     -f:  @input is a file (*)
+;;     -u:  @input is from a url (*)
+;;     -U:  @input is from a url but its data should not be parsed (*)
+;;     -i:  Ignore all certificate errors (**)
+;;     -R:  Do not follow redirects (**)
+;;     -w:  The handle should wait for /JSONHttpFetch to be called to perform the url request (**)
+;;     -d:  Closes the handler after the script finishes (**)
+;;       
+;;          (*) : Only one can be specified at a time
+;;          (**): Only applicable if -u or -U is used
 ;;
 ;;     @Name - String - Required
 ;;         The name to use to reference the JSON handler
@@ -62,6 +66,7 @@ on *:UNLOAD:{
 ;;
 ;;    @Input - String - Required
 ;;        The input json to parse
+;;        Assumed to be text
 ;;        If -b is used, the input is contained in the specified bvar
 ;;        if -f is used, the input is contained in the specified file
 ;;        if -u is used, the input is a URL that returns the json to parse
@@ -78,7 +83,7 @@ alias JSONOpen {
   }
 
   ;; Local variable declarations
-  var %Switches, %Error, %Com = $false, %Type = text, %Wait = $false, %Parse = $true, %Insecure = $false, %BVar, %BUnset = $true
+  var %Switches, %Error, %Com = $false, %Type = text, %Wait = $false, %Parse = $true, %Insecure = $false, %Redirects = $true, %BVar, %BUnset = $true
 
   ;; Remove switches from other input parameters
   if (-* iswm $1) {
@@ -92,10 +97,10 @@ alias JSONOpen {
   }
 
   ;; Basic switch validation
-  elseif ($regex(%Switches, /([^dbfuUwi])/)) {
+  elseif ($regex(%Switches, /([^dbfuUwiR])/)) {
     %Error = SWITCH_INVALID: $+ $regml(1)
   }
-  elseif ($regex(%Switches, /([dbfuUw]).*?\1/)) {
+  elseif ($regex(%Switches, /([dbfuUwiR]).*?\1/)) {
     %Error = SWITCH_DUPLICATE: $+ $regml(1)
   }
   elseif ($regex(%Switches, /([bfuU])/g) > 1) {
@@ -107,6 +112,10 @@ alias JSONOpen {
   elseif (u !isin %Switches) && (i isincs %Switches) {
     %Error = SWITCH_NOT_APPLICABLE:i
   }
+  elseif (u !isin %Switches) && (R isincs %Switches) {
+    %Error = SWITCH_NOT_APPLICABLE:R
+  }
+
 
   ;; Validate handler name input
   elseif ($0 < 2) {
@@ -159,6 +168,9 @@ alias JSONOpen {
       if (i isincs %Switches) {
         %Insecure = $true
       }
+      if (R isincs %Switches) {
+        %Redirects = $false
+      }
       %Type = http
       bset -t %BVar 1 $2
     }
@@ -174,7 +186,7 @@ alias JSONOpen {
     }
 
     ;; Attempt to create the json handler and if an error occurs retrieve the error
-    if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, %Type, &bstr, %BVar, bool, %Parse, bool, %Insecure, dispatch* %Com)) || ($comerr) || (!$com(%Com)) {
+    if (!$com(SReject/JSONForMirc/JSONEngine, JSONCreate, 1, bstr, %Type, &bstr, %BVar, bool, %Parse, bool, %Insecure, bool, %Redirects, dispatch* %Com)) || ($comerr) || (!$com(%Com)) {
       %Error = $jfm_GetError
     }
 
