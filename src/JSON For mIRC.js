@@ -29,9 +29,9 @@
     };
     
     // http/web object detection
-    HTTPObject = ['MSXML2.SERVERXMLHTTP.6.0', 'MSXML2.SERVERXMLHTTP.3.0', 'MSXML2.SERVERXMLHTTP'].find(function (xhr) {
+    HTTPObject = ['WinHttp.WinHttpRequest.5.1'].find(function (whr) {
         try {
-            return new ActiveXObject(xhr), xhr;
+            return new ActiveXObject(whr), whr;
         } catch (ignore) {}
     });
 
@@ -145,16 +145,16 @@
             this._json = json;
         }
         this._state = parent._state || 'init';
-        this._type = parent._type || 'text';
+        this._type  = parent._type || 'text';
         this._parse = parent._parse === false ? false : true;
         this._error = parent._error || false;
         this._input = parent._input;
-        // (slv) Added 'insecure'
         this._http = parent._http || {
             method: 'GET',
             url: '',
             headers: [],
-            insecure: false
+            insecure: false,
+            redirects: true
         };
     }
 
@@ -246,11 +246,14 @@
                         request = new ActiveXObject(HTTPObject);
                         this._http.response = request;
 
-                        // Option to ignore all ssl certificate errors
-                        //   https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ms763811(v=vs.85)
-                        //   https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ms753798(v=vs.85)
-                        if (this._http.insecure === true) {
-                            request.setOption(2, 13056);
+                        // If indicated, ignore all ssl certificate errors
+                        if (this._http.insecure) {
+                            request.Options(4) = 13056;
+                        }
+
+                        // If indicated, do not follow redirects
+                        if (!this._http.redirects) {
+                            request.Options(6) = false;
                         }
                         
                         // initialize the request
@@ -566,7 +569,7 @@
 
     root.JSONInstance = JSONInstance;
 
-    root.JSONCreate = function(type, source, parse, insecure) {
+    root.JSONCreate = function(type, source, parse, insecure, redirects) {
         var self = new JSONInstance();
         self._state = 'init';
         self._type = (type || 'text').toLowerCase();
@@ -580,6 +583,8 @@
             self._state = 'http_pending';
             self._http.url = source;
             self._http.insecure = insecure;
+            self._http.redirects = redirects;
+
         } else {
             self._state = 'parse_pending';
             self._input = source;
