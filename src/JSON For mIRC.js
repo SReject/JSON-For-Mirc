@@ -248,12 +248,12 @@
 
                         // If indicated, ignore all ssl certificate errors
                         if (this._http.insecure) {
-                            request.Options(4) = 13056;
+                            request.Option(4) = 13056;
                         }
 
                         // If indicated, do not follow redirects
                         if (!this._http.redirects) {
-                            request.Options(6) = false;
+                            request.Option(6) = false;
                         }
                         
                         // initialize the request
