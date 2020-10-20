@@ -21,8 +21,6 @@ alias -l jfm_test {
   var %testnum = 0
   var %err
   var %res
-  var %cert_url
-  var %cert_re
   var %echo = echo 03 -sgi6 $!+([#,$base(%testNum,10,10,3),])
 
   ;;============================;;
@@ -1194,24 +1192,6 @@ alias -l jfm_test {
   ;;                              ;;
   ;;==============================;;
 
-  ;; (slv) Added Test: Attempt to use invalid SSL cert with/without i switch
-  %cert_url = https://self-signed.badssl.com
-  %cert_re = /^The certificate authority is invalid or incorrect/
-  inc %testnum
-  JSONOpen -u jfm_test %cert_url
-  if (!$regex($JSONError,%cert_re)) {
-    return %testnum /JSONOpen -u %cert_url : Request reported unexpected error: $v2
-  }
-  $(%echo,2) /JSONOpen -u %cert_url : Passed Check
-  JSONClose jfm_test
-  inc %testnum
-  JSONOpen -ui jfm_test %cert_url
-  if ($regex($JSONError,%cert_re)) {
-    return %testnum /JSONOpen -ui %cert_url : Request reported error: $v2
-  }
-  $(%echo,2) /JSONOpen -ui %cert_url : Request succeeded
-  JSONClose jfm_test
-
   ;; Attempt to retrieve data from a remote source
   inc %testnum
   JSONOpen -u jfm_test http://echo.jsontest.com/key/value
@@ -1221,7 +1201,7 @@ alias -l jfm_test {
     }
     return %testnum /JSONOpen -u : Request reported error: $v2
   }
-  $(%echo,2) /JSONOpen -u : Request succeeded
+  $(%echo,2) /JSONOpen -u : Passed Check
 
   ;; Check to make sure the parsed json can be accessed
   inc %testnum
@@ -1342,6 +1322,26 @@ alias -l jfm_test {
   }
   $(%echo,2) $!JSON(jfm_test).HttpParse : Passed Check
 
+  JSONClose jfm_test
+
+  ;; Attempt to use invalid SSL cert without i switch
+  var %cert_url = https://self-signed.badssl.com
+  var %cert_re = /^The certificate authority is invalid or incorrect/
+  inc %testnum
+  JSONOpen -u jfm_test %cert_url
+  if (!$regex($JSONError, %cert_re)) {
+    return %testnum /JSONOpen -u %cert_url : Request reported unexpected error: $v2
+  }
+  $(%echo,2) /JSONOpen -u %cert_url : Passed Check
+  JSONClose jfm_test
+
+  ;; Attempt to use invalid SSL cert with i switch
+  inc %testnum
+  JSONOpen -ui jfm_test %cert_url
+  if ($regex($JSONError, %cert_re)) {
+    return %testnum /JSONOpen -ui %cert_url : Request reported error: $v2
+  }
+  $(%echo,2) /JSONOpen -ui %cert_url : Passed Check
   JSONClose jfm_test
 
 }
