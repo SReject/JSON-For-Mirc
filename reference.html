@@ -20,6 +20,7 @@ category: reference
         Lists all open JSON handles.
     </div>
 </article>
+
 <article class="codedoc" id="cmd/jsonopen">
     <header>
         <a href="#cmd/jsonopen"><i class="fa fa-link"></i></a>/JSONOpen -dbfuUw Name Input
@@ -64,6 +65,20 @@ category: reference
             </div>
         </div>
         <div class="switch">
+            <div>-i</div>
+            <div>
+                The HTTP request will ignore al SSL certificate errors.<br>
+                This switch can only be used if the <span class="highlight">-u</span> or <span class="highlight">-U</span> switch is specified.
+            </div>
+        </div>
+        <div class="switch">
+            <div>-R</div>
+            <div>
+                The HTTP request will not follow redirects<br>
+                This switch can only be used if the <span class="highlight">-u</span> or <span class="highlight">-U</span> switch is specified.
+            </div>
+        </div>
+        <div class="switch">
             <div>-w</div>
             <div>
                 The HTTP request should wait until <a href="#cmd/jsonhttpfetch">/JSONHttpFetch</a> is called. This is to allow the request method and headers to be set.<br>
@@ -94,6 +109,7 @@ category: reference
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="cmd/jsonhttpmethod">
     <header>
         <a href="#cmd/jsonhttpmethod"><i class="fa fa-link"></i></a>/JSONHttpMethod Name Method
@@ -121,6 +137,7 @@ category: reference
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="cmd/jsonhttpheader">
     <header>
         <a href="#cmd/jsonhttpheader"><i class="fa fa-link"></i></a>/JSONHttpHeader Name Header Value
@@ -154,6 +171,7 @@ category: reference
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="cmd/jsonhttpfetch">
     <header>
         <a href="#cmd/jsonhttpfetch"><i class="fa fa-link"></i></a>/JSONHttpFetch -bf Name Data
@@ -209,12 +227,13 @@ User-Agent: Mozilla/4.0 (compatible; Win32; WinHttp.WinHttpRequest.5)
 Accept: */*
 Accept-Language: &lt;system_lang&gt;
 
-<span class="comment">Only applicable if data is being send:</span>
+<span class="comment">Only applicable if data is being sent:</span>
 Content-Type: application/x-www-form-urlencoded
 Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="cmd/jsonclose">
     <header>
         <a href="#cmd/jsonclose"><i class="fa fa-link"></i></a>/JSONClose -w Name
@@ -244,6 +263,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="cmd/jsonshutdown">
     <header>
         <a href="#cmd/json"><i class="fa fa-link"></i></a>/JSONShutdown
@@ -252,6 +272,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         Closes all JSON handles and frees all resources related to the script.
     </div>
 </article>
+
 <article class="codedoc" id="id/jsonerror">
     <header>
         <a href="#id/jsonerror"><i class="fa fa-link"></i></a>$JSONError
@@ -261,6 +282,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         The error flag is reset with each JSON call so this should be checked after each call to insure an error isn't masked by a subsequent call.
     </div>
 </article>
+
 <article class="codedoc" id="id/json">
     <header>
         <a href="#id/json"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N, Members...)
@@ -293,6 +315,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/fuzzy">
     <header>
         <a href="#"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N, Members...) Fuzzy Prefix
@@ -325,6 +348,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/tobvar">
     <header>
         <a href="#id/json/tobvar"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N, Members...) ToBvar Suffix
@@ -355,6 +379,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/tofile">
     <header>
         <a href="#id/json/tofile"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N, File, Members...) ToFile Suffix
@@ -396,6 +421,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/state">
     <header>
         <a href="#id/json/state"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N).State
@@ -416,6 +442,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/inputtype">
     <header>
         <a href="#id/json/inputtype"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N).InputType
@@ -436,6 +463,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/input">
     <header>
         <a href="#id/json/input"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N).Input
@@ -456,6 +484,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/ischild">
     <header>
         <a href="#id/json/ischild"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N).IsChild
@@ -476,6 +505,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/httpparse">
     <header>
         <a href="#id/json/httpparse"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N).HttpParse
@@ -496,6 +526,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/httpstatus">
     <header>
         <a href="#id/json/httpstatus"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N).HttpStatus
@@ -516,6 +547,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/httpstatustext">
     <header>
         <a href="#id/json/httpstatustext"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N).HttpStatusText
@@ -536,6 +568,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/httpheader">
     <header>
         <a href="#id/json/httpheader"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N, Header).HttpHeader
@@ -564,6 +597,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/httpheaders">
     <header>
         <a href="#id/json/httpheaders"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N).HttpHeaders
@@ -584,6 +618,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/httphead">
     <header>
         <a href="#id/json/httphead"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N).HttpHead
@@ -604,6 +639,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/httpbody">
     <header>
         <a href="#id/json/httpbody"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N).HttpBody
@@ -624,6 +660,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/httpresponse">
     <header>
         <a href="#id/json/httpresponse"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N).HttpResponse
@@ -644,6 +681,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/path">
     <header>
         <a href="#id/json/path"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N, Members...).Path
@@ -672,6 +710,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/type">
     <header>
         <a href="#id/json/type"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N, Members...).Type
@@ -700,6 +739,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/iscontainer">
     <header>
         <a href="#id/json/iscontainer"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N, Members...).IsContainer
@@ -728,6 +768,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/length">
     <header>
         <a href="#id/json/length"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N, Members...).Lengh
@@ -757,6 +798,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/value">
     <header>
         <a href="#id/json/value"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N, Members...).Value
@@ -786,6 +828,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/string">
     <header>
         <a href="#id/json/string"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N, Members...).String
@@ -814,6 +857,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/debug">
     <header>
         <a href="#id/json/debug"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N, Members...).Debug
@@ -842,6 +886,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/json/error">
     <header>
         <a href="#id/json/error"><i class="fa fa-link"></i></a>$JSON(Name|Ref|N, Members...).Error
@@ -870,6 +915,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/jsonpath">
     <header>
         <a href="#id/jsonpath"><i class="fa fa-link"></i></a>$JSONPath(Name|Ref, Index)
@@ -898,6 +944,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/jsonforeach">
     <header>
         <a href="#id/jsonforeach"><i class="fa fa-link"></i></a>$JSONForEach(Name|Ref|N, Command, Members...)
@@ -962,6 +1009,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
+
 <article class="codedoc" id="id/jsonitem">
     <header>
         <a href="#id/jsonitem"><i class="fa fa-link"></i></a>$JSONItem(Query)
@@ -982,52 +1030,7 @@ Content-Length: &lt;data_length&gt;</code></pre>
         </div>
     </div>
 </article>
-<article class="codedoc" id="cmd/jsoncompat">
-    <header>
-        <a href="#cmd/jsoncompat"><i class="fa fa-link"></i></a>/JSONCompat
-    </header>
-    <div class="description">
-        Enables compatibility mode for scripts that depend on v0.2.41 functionality.<br>
-        Such scripts should be migrated to newer JSON For Mirc versions as compatibility mode will be removed in later versions.
-    </div>
-</article>
-<article class="codedoc" id="id/jsoncompat">
-    <header>
-        <a href="#id/jsoncompat"><i class="fa fa-link"></i></a>$JSONCompat
-    </header>
-    <div class="description">
-        Returns <code>$true</code> or <code>$false</code> dependent on the state of compatibility mode.
-    </div>
-</article>
-<article class="codedoc" id="cmd/jsondebug">
-    <header>
-        <a href="#cmd/jsondebug"><i class="fa fa-link"></i></a>/JSONDebug State
-    </header>
-    <div class="description">
-        Toggles the JSON debugger state.
-    </div>
-    <div class="parameters">
-        <div class="head">Parameters</div>
-        <div class="parameter">
-            <div>
-                <div><span class="highlight">State</span> <span class="smaller">- Optional</span></div>
-            </div>
-            <div>
-                The state of which to set the debug flag.<br>
-                Applicable inputs include: <code>on</code>, <code>enable</code>, <code>off</code>, and <code>disable</code>.<br>
-                If not specified the debug state is toggled from its current state to the opposite.
-            </div>
-        </div>
-    </div>
-</article>
-<article class="codedoc" id="id/jsondebug">
-    <header>
-        <a href="#id/jsondebug"><i class="fa fa-link"></i></a>$JSONDebug
-    </header>
-    <div class="description">
-        Returns <code>$true</code> or <code>$false</code> dependent on the current debug state.
-    </div>
-</article>
+
 <article class="codedoc" id="id/jsonversion">
     <header>
         <a href="#id/jsonversion"><i class="fa fa-link"></i></a>$JSONVersion(Short)
