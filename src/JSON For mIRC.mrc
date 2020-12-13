@@ -1,6 +1,13 @@
 ;; Check to make sure mIRC/AdiIRC is of an applicable version
 on *:LOAD:{
 
+  ;; Check for 'JSON For Mirc.js' file because it's required
+  var %JsFile = $scriptdirJSON For Mirc.js
+  if (!$file(%JsFile)) {
+    echo -ag [JSON For mIRC] The 'JSON For Mirc.js' file is required to work, that file is already included in the .zip file, place it in the same folder as you did for the .mrc file
+    .unload -rs $qt($script)
+  }
+  
   ;; Adiirc check
   if ($~adiircexe) {
     if ($version < 3.0) {
