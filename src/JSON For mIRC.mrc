@@ -663,7 +663,7 @@ alias JSONShutDown {
 ; /JSONHelp @Param
 ;;     Opening the online doc for help
 ;;
-;;     @Parm - string - Optional
+;;     @Param - string - Optional
 ;;         The identifier or the command that you want help
 alias JSONHelp {
   ;; If the given parameter is /command
