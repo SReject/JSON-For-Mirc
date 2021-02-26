@@ -17,7 +17,13 @@ JSON For mIRC
 >
 > The reason for a JSON parser vs. some other 'tool' is because of its overwhelming use around the web. Now-a-days, when you want data from a website they probably package it as an API that generally returns results in JSON format. Examples include: Google.com, Youtube.com, Pastebin.com, and Weather.com  
 
-Contribution and Distributation:
+TLS/SSL Error
+===
+If you are on windows 7, Windows Server 2012, or Windows Server 2008 and are getting the error message "`an error occurred in the secure channel support`" then you may need to install the patch mentioned [here](https://stackoverflow.com/questions/21354992/an-error-occurred-in-the-secure-channel-support-classic-asp-http-request#answer-52841060)
+
+This error is **not** the result of the script, but rather newer technologies being used by the server you are accessing.  
+
+Contribution and Distributation
 ===
 > By submitting a pull request to this repository, you acknowledge that you own or have rights to distribute and sublicense the source code contained therein, and that your content does not infringe upon the intellectual property rights of a third party. By opening a pull request you understand that, while maintaining copyright, you grant all current and future maintainers of this repository a non-exclusive, transferable, sub-licensable, royalty-free, worldwide license to use the contents of your pull request as the maintainers of this repository deem fit.  
 >
