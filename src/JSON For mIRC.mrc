@@ -660,6 +660,22 @@ alias JSONShutDown {
   }
 }
 
+; /JSONHelp @Param
+;;     Opening the online doc for help
+;;
+;;     @Param - string - Optional
+;;         The identifier or the command that you want help
+alias JSONHelp {
+  ;; If the given parameter is /command
+  if ($1) && ($left($1,1) == $chr(47)) { url https://sreject.github.io/JSON-For-Mirc/reference#cmd/ $+ $right($1,-1) | return }
+
+  ;; If the given parameter is $identifier
+  if ($1) && ($left($1,1) == $chr(36)) { url https://sreject.github.io/JSON-For-Mirc/reference#id/ $+ $right($1,-1) | return }
+
+  ;; If no parameters opening the general reference page
+  url https://sreject.github.io/JSON-For-Mirc/reference
+}
+
 
 ;;======================================;;
 ;;                                      ;;
